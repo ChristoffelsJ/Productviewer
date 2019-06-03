@@ -8,16 +8,6 @@ import java.util.List;
 
 public class ProductDAO {
 
-    public static void addProduct(String productTitle, String category, String price, String description) throws SQLException, ClassNotFoundException {
-        String update = "INSERT INTO products VALUES ('" + productTitle + "','" + category + "','" + price + "','" + description + "')";
-        try {
-            util.DBUtil.updateQuery(update);
-        } catch (SQLException ex) {
-            System.out.println("Error when implementing data in database");
-            throw ex;
-        }
-    }
-
     public static void addProduct(String productTitle, String category, String price, String description, ImageView file, int productId) throws SQLException, ClassNotFoundException {
 
         String update = "INSERT INTO products VALUES ('" + 0 +"','" + productTitle + "','" + category + "','" + price + "','" + description + "','" + file + "')";

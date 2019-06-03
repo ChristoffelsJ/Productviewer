@@ -13,7 +13,7 @@ import java.io.*;
 import java.net.MalformedURLException;
 import java.sql.SQLException;
 
-public class PopupAddProduct {
+public class PopupAddProductController {
     @FXML private Button addProductButton;
     @FXML private TextField productTitle;
     @FXML private ComboBox <String> category;
