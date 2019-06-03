@@ -117,13 +117,12 @@ public class MainController {
         try (
                 Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/productViewer?serverTimezone=UTC", "root", "blablabla");
         ) {
-            PreparedStatement stmt = connection.prepareStatement("UPDATE products SET " + column + " = ? WHERE productId =? " );
+            PreparedStatement stmt = connection.prepareStatement("UPDATE products SET " + column + " = ? WHERE productId =? ");
             stmt.setString(1, newValue);
             stmt.setInt(2, id);
             stmt.execute();
         } catch (SQLException ex) {
             System.err.println("Error filling in database from tableview");
-
             ex.printStackTrace(System.err);
         }
     }
@@ -143,7 +142,7 @@ public class MainController {
     }
 
     @FXML
-    private void Exit(ActionEvent actionEvent) throws ClassNotFoundException, SQLException {
+    private void Exit(ActionEvent actionEvent) {
         Platform.exit();
 
     }
@@ -161,7 +160,7 @@ public class MainController {
                     } else {
                         String[] productLine = line.split(";");
                         List<String> productLineList = new LinkedList<String>(Arrays.asList(productLine));
-                        if (productLineList.size() > 4) { // maak hier pop-up van!
+                        if (productLineList.size() > 4) { // maak hier pop-up van! + zet default value van switch op dit ipv de if else
                             System.out.println("Error in the CSV file!");
                             break;
                         }
@@ -199,6 +198,7 @@ public class MainController {
                 initialize();
             } catch (IOException e) {
                 System.out.println("Something went wrong when reading the file");
+                e.printStackTrace();
             }
         }
 
@@ -219,7 +219,7 @@ public class MainController {
     }
 
     @FXML
-    public void saveCSV(ActionEvent actionEvent) throws IOException, SQLException {
+    public void saveCSV(ActionEvent actionEvent) throws SQLException {
         File file = fileChooser.showSaveDialog(pane.getScene().getWindow());
         if (file != null) {
             try {
@@ -229,7 +229,6 @@ public class MainController {
                 e.printStackTrace();
             }
         }
-
     }
 
 
@@ -242,8 +241,9 @@ public class MainController {
             stage.setTitle("Add product");
             stage.setScene(new Scene(root1, 520, 120));
             stage.show();
-        } catch (Exception E) {
+        } catch (Exception e) {
             System.out.println("Something went wrong when opening the add product pop-up");
+            e.printStackTrace();
         }
     }
 
@@ -256,8 +256,9 @@ public class MainController {
             stage.setTitle("Add category");
             stage.setScene(new Scene(root1, 300, 80));
             stage.show();
-        } catch (Exception E) {
-            System.out.println("Something went wrong");
+        } catch (Exception e) {
+            System.out.println("Something went wrong when openening the add category popup");
+            e.printStackTrace();
         }
     }
 
@@ -270,8 +271,9 @@ public class MainController {
             stage.setScene(new Scene(root1, 600, 400));
             stage.setTitle("Help");
             stage.show();
-        } catch (Exception E) {
-            System.out.println("Something went wrong");
+        } catch (Exception e) {
+            System.out.println("Something went wrong when openening the help popup");
+            e.printStackTrace();
         }
     }
 
@@ -283,7 +285,7 @@ public class MainController {
                 Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/productViewer?serverTimezone=UTC", "root", "blablabla");
         ) {
             PreparedStatement stmt = connection.prepareStatement("delete from products WHERE productId = ? ");
-           stmt.setInt(1, productId);
+            stmt.setInt(1, productId);
             stmt.execute();
         } catch (SQLException ex) {
             System.err.println("Error filling in database from tableview");

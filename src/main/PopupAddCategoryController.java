@@ -11,7 +11,7 @@ import model.Product;
 
 import java.sql.SQLException;
 
-public class PopupAddCategory {
+public class PopupAddCategoryController {
     @FXML
     private TextField category;
     @FXML

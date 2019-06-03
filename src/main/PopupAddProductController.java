@@ -14,27 +14,17 @@ import java.io.*;
 import java.net.MalformedURLException;
 import java.sql.SQLException;
 
-public class PopupAddProduct {
-    @FXML
-    private Button addProductButton;
-    @FXML
-    private TextField productTitle;
-    @FXML
-    private ComboBox<String> category;
-    @FXML
-    private TextField price;
-    @FXML
-    private TextField description;
-    @FXML
-    private Button addPictureButton;
-    @FXML
-    private File selectedFile;
-    @FXML
-    private Image imageFile;
-    @FXML
-    private ImageView imageView;
-    @FXML
-    private FileInputStream fis;
+public class PopupAddProductController {
+    @FXML private Button addProductButton;
+    @FXML private TextField productTitle;
+    @FXML private ComboBox <String> category;
+    @FXML private TextField price;
+    @FXML private TextField description;
+    @FXML private Button addPictureButton;
+    @FXML private File selectedFile;
+    @FXML private Image imageFile;
+    @FXML private ImageView imageView;
+    @FXML private FileInputStream fis;
 
     @FXML
     public void initialize() throws SQLException, ClassNotFoundException {

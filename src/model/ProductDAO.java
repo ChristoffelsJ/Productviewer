@@ -10,7 +10,6 @@ import java.util.OptionalInt;
 
 public class ProductDAO {
 
-
     public static void addProduct(String productTitle, String category, String price, String description, ImageView file, int productId) throws SQLException, ClassNotFoundException {
 
         String update = "INSERT INTO products (productTitle, subCategory, price, productDescription, image) VALUES ('" + productTitle + "','" + category + "','" + price + "','" + description + "','" + file + "')";
