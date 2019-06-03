@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.collections.FXCollections?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="main.PopupAddProduct"
+            prefHeight="400.0" prefWidth="1000">
+ <BorderPane >
+     <left>
+         <FlowPane hgap="20">
+             <TextField fx:id="productTitle" text="Product to add" />
+             <ComboBox prefHeight="20" prefWidth="165" promptText="Select Category" fx:id="category">
+                 <items>
+                    <FXCollections fx:factory = "observableArrayList"/>
+                 </items>
+             </ComboBox>
+             <TextField fx:id="price" promptText="Product price" />
+             <TextField fx:id="description" promptText="Product description"/>
+             <Button fx:id="addProductButton" onAction="#addProduct" text="Add Product" />
+             <Button fx:id="addPictureButton" onAction="#PictureButtonAction" text="Add Picture" />
+         </FlowPane>
+     </left>
+     <center>
+         <ListView prefWidth="100" prefHeight="150">
+             <ImageView fx:id="imageView"/>
+         </ListView>
+     </center>
+ </BorderPane>
+</AnchorPane>

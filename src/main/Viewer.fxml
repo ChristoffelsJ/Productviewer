@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.stage.FileChooser?>
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="main.MainController"
+      fx:id="pane">
+    <fx:define>
+        <FileChooser fx:id="fileChooser" title="Select a file"/>
+    </fx:define>
+    <VBox>
+        <MenuBar>
+            <Menu text="File">
+                <MenuItem fx:id="openCSV" text="Open CSV" onAction="#openCSV"/>
+                <MenuItem fx:id="saveCSV" text="Save CSV" onAction="#saveCSV"/>
+                <SeparatorMenuItem/>
+                <MenuItem text="Exit" onAction="#Exit"/>
+            </Menu>
+            <Menu text="Edit">
+                <MenuItem fx:id="addProductPopup" text="Add Product" onAction="#openAddProductPopup"/>
+                <MenuItem fx:id="addCategoryPopup" text="Add Category" onAction="#openAddCategoryPopup"/>
+            </Menu>
+            <Menu text="Help">
+                <MenuItem fx:id="openHelpPopup" text="Help..." onAction="#openHelpPopup"/>
+            </Menu>
+        </MenuBar>
+    </VBox>
+
+    <BorderPane VBox.vgrow="ALWAYS">
+        <top>
+            <VBox spacing="20">
+                <FlowPane hgap="20">
+                    <TextField promptText="search" fx:id="search"/>
+                    <Button text="Search" onAction="#search"/>
+                    <Button text="Refresh" onAction="#refresh"/>
+                </FlowPane>
+                <FlowPane hgap="20">
+                    <Button text="Delete row" onAction="#deleteRow"/>
+                </FlowPane>
+            </VBox>
+        </top>
+        <center>
+            <ScrollPane>
+                <GridPane alignment="CENTER" hgap="10" vgap="10">
+                    <TableView fx:id="productTable" AnchorPane.bottomAnchor="5" AnchorPane.leftAnchor="5"
+                               AnchorPane.rightAnchor="5" AnchorPane.topAnchor="5">
+                        <columns>
+                            <TableColumn fx:id="columnPicture" prefWidth="60" text="Picture"/>
+                            <TableColumn fx:id="columnProductTitle" prefWidth="185" text="Product title"/>
+                            <TableColumn fx:id="columnCategory" prefWidth="185" text="Category"/>
+                            <TableColumn fx:id="columnPrice" prefWidth="185" text="Price"/>
+                            <TableColumn fx:id="columnProductDescription" prefWidth="180.0" text="Description"/>
+                            <TableColumn fx:id="columnProductId" prefWidth="150" text="Product ID"/>
+                        </columns>
+                    </TableView>
+                </GridPane>
+            </ScrollPane>
+        </center>
+    </BorderPane>
+</VBox>
