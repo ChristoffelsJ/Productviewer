@@ -115,7 +115,7 @@ public class MainController {
 
     private void updateData(String column, String newValue, int id) {
         try (
-                Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/productViewer?serverTimezone=UTC", "root", "Xqv513jc13");
+                Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/productViewer?serverTimezone=UTC", "root", "blablabla");
         ) {
             PreparedStatement stmt = connection.prepareStatement("UPDATE products SET " + column + " = ? WHERE productId =? " );
             stmt.setString(1, newValue);
@@ -280,7 +280,7 @@ public class MainController {
         Product selectedItem = productTable.getSelectionModel().getSelectedItem();
         int productId = selectedItem.getProductId();
                try (
-                Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/productViewer?serverTimezone=UTC", "root", "Xqv513jc13");
+                Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/productViewer?serverTimezone=UTC", "root", "blablabla");
         ) {
             PreparedStatement stmt = connection.prepareStatement("delete from products WHERE productId = ? ");
            stmt.setInt(1, productId);

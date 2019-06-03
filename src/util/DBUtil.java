@@ -1,6 +1,7 @@
 package util;
 
 import model.Product;
+import model.ProductDAO;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -11,7 +12,7 @@ import java.util.*;
 public class DBUtil {
     private static String url = "jdbc:mysql://localhost/productViewer?serverTimezone=UTC";
     private static String userName = "root";
-    private static String password = "Xqv513jc13";
+    private static String password = "blablabla";
     private static String driverName = "com.mysql.cj.jdbc.Driver";
     private static Connection connection = null;
 
@@ -93,6 +94,8 @@ public class DBUtil {
             while (resultSet.next()) {
                 Product product = new Product(resultSet.getString("productTitle"), resultSet.getString("subCategory")
                         , resultSet.getString("price"), resultSet.getString("productDescription"), resultSet.getBinaryStream("image"), 0);
+
+               /* product.setProductId(ProductDAO.getProductId(product));*/
                 productlist.add(product);
             }
         } catch (SQLException ex) {

@@ -9,21 +9,32 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+
 import java.io.*;
 import java.net.MalformedURLException;
 import java.sql.SQLException;
 
 public class PopupAddProduct {
-    @FXML private Button addProductButton;
-    @FXML private TextField productTitle;
-    @FXML private ComboBox <String> category;
-    @FXML private TextField price;
-    @FXML private TextField description;
-    @FXML private Button addPictureButton;
-    @FXML private File selectedFile;
-    @FXML private Image imageFile;
-    @FXML private ImageView imageView;
-    @FXML private FileInputStream fis;
+    @FXML
+    private Button addProductButton;
+    @FXML
+    private TextField productTitle;
+    @FXML
+    private ComboBox<String> category;
+    @FXML
+    private TextField price;
+    @FXML
+    private TextField description;
+    @FXML
+    private Button addPictureButton;
+    @FXML
+    private File selectedFile;
+    @FXML
+    private Image imageFile;
+    @FXML
+    private ImageView imageView;
+    @FXML
+    private FileInputStream fis;
 
     @FXML
     public void initialize() throws SQLException, ClassNotFoundException {
@@ -50,11 +61,13 @@ public class PopupAddProduct {
 
         }
     }
+
     @FXML
     private void addProduct(ActionEvent actionEvent) throws ClassNotFoundException, SQLException {
-        model.ProductDAO.addProduct(productTitle.getText(), category.getValue(), price.getText(), description.getText(), imageView,0);
+        model.ProductDAO.addProduct(productTitle.getText(), category.getValue(), price.getText(), description.getText(), imageView, 0);
         Stage stage = (Stage) addProductButton.getScene().getWindow();
         stage.close();
+
     }
 }
 
