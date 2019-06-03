@@ -12,19 +12,9 @@ import java.util.*;
 public class DBUtil {
     private static String url = "jdbc:mysql://localhost/productViewer?serverTimezone=UTC";
     private static String userName = "root";
-    private static String password = "blablabla";
+    private static String password = "MySQLJava2019!";
     private static String driverName = "com.mysql.cj.jdbc.Driver";
     private static Connection connection = null;
-
-    //sluit de database
-    private static void closeDataBase() throws SQLException {
-        try {
-            if (connection != null && !connection.isClosed()) ;
-            connection.close();
-        } catch (Exception ex) {
-            throw ex;
-        }
-    }
 
     //connectie methode
     private static Connection getConnection() throws SQLException {

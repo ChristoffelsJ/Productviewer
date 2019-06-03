@@ -114,16 +114,12 @@ public class MainController {
 
 
     private void updateData(String column, String newValue, int id) {
-        try (
-                Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/productViewer?serverTimezone=UTC", "root", "blablabla");
-        ) {
-            PreparedStatement stmt = connection.prepareStatement("UPDATE products SET " + column + " = ? WHERE productId =? ");
-            stmt.setString(1, newValue);
-            stmt.setInt(2, id);
-            stmt.execute();
-        } catch (SQLException ex) {
-            System.err.println("Error filling in database from tableview");
-            ex.printStackTrace(System.err);
+        String query = "UPDATE products SET " + column + " = " + newValue +  "WHERE productId = " + id;
+        try {
+            DBUtil.updateQuery(query);
+        } catch (ClassNotFoundException | SQLException e) {
+            System.err.println("Error in updating the data in database");
+            e.printStackTrace(System.err);
         }
     }
 
@@ -277,19 +273,14 @@ public class MainController {
         }
     }
 
-    public void deleteRow(ActionEvent actionEvent) {
-
+    public void deleteRow(ActionEvent actionEvent) throws SQLException, ClassNotFoundException {
         Product selectedItem = productTable.getSelectionModel().getSelectedItem();
         int productId = selectedItem.getProductId();
-               try (
-                Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/productViewer?serverTimezone=UTC", "root", "blablabla");
-        ) {
-            PreparedStatement stmt = connection.prepareStatement("delete from products WHERE productId = ? ");
-            stmt.setInt(1, productId);
-            stmt.execute();
+        String query = "delete from products WHERE productId = " + productId;
+        try{
+        DBUtil.executeQuery(query);
         } catch (SQLException ex) {
-            System.err.println("Error filling in database from tableview");
-
+            System.err.println("Error in deleting product from DB");
             ex.printStackTrace(System.err);
         }
         productTable.getItems().remove(selectedItem);
