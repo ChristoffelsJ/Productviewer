@@ -12,7 +12,6 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -22,17 +21,18 @@ import util.DBUtil;
 
 import java.io.*;
 import java.nio.file.Files;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 public class MainController {
-
-    public MenuItem saveCSV;
+    @FXML
+    private MenuItem saveCategoryCSV;
+    @FXML
+    private MenuItem saveProductCSV;
+    @FXML
+    private MenuItem openCategoryCSV;
     @FXML
     private TableView<Product> productTable;
     @FXML
@@ -51,7 +51,7 @@ public class MainController {
     @FXML
     private TextField search;
     @FXML
-    public MenuItem openCSV;
+    public MenuItem openProductCSV;
     @FXML
     private FileChooser fileChooser;
     @FXML
@@ -144,8 +144,12 @@ public class MainController {
     }
 
     @FXML
-    private void openCSV(ActionEvent actionEvent) throws ClassNotFoundException, SQLException {
+    private void openProductCSV(ActionEvent actionEvent) throws ClassNotFoundException, SQLException {
+
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
+        fileChooser.getExtensionFilters().add(extFilter);
         File file = fileChooser.showOpenDialog(pane.getScene().getWindow());
+
         if (file != null && file.isFile() && file.getName().endsWith(".csv")) {
             try (BufferedReader reader = Files.newBufferedReader(file.toPath())) {
                 String line = reader.readLine();
@@ -215,11 +219,22 @@ public class MainController {
     }
 
     @FXML
-    public void saveCSV(ActionEvent actionEvent) throws SQLException {
+    public void OpenCategoryCSV(ActionEvent actionEvent) throws SQLException {
+    }
+
+
+
+
+
+
+    @FXML
+    public void saveProductCSV(ActionEvent actionEvent) throws SQLException {
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
+        fileChooser.getExtensionFilters().add(extFilter);
         File file = fileChooser.showSaveDialog(pane.getScene().getWindow());
         if (file != null) {
             try {
-                DBUtil.saveCSV(file);
+                DBUtil.saveProductCSV(file);
             } catch (ClassNotFoundException e) {
                 System.out.println("Something went wrong with saving the file");
                 e.printStackTrace();
@@ -227,6 +242,20 @@ public class MainController {
         }
     }
 
+    @FXML
+    public void saveCategoryCSV(ActionEvent actionEvent) throws SQLException {
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
+        fileChooser.getExtensionFilters().add(extFilter);
+        File file = fileChooser.showSaveDialog(pane.getScene().getWindow());
+        if (file != null) {
+            try {
+                DBUtil.saveCategoryCSV(file);
+            } catch (ClassNotFoundException e) {
+                System.out.println("Something went wrong with saving the file");
+                e.printStackTrace();
+            }
+        }
+    }
 
     @FXML
     private void openAddProductPopup(ActionEvent actionEvent) {

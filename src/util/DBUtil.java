@@ -71,7 +71,7 @@ public class DBUtil {
         return categoryList;
     }
 
-    public static void saveCSV(File file) throws SQLException, ClassNotFoundException {
+    public static void saveProductCSV(File file) throws SQLException, ClassNotFoundException {
         StringBuilder sb=new StringBuilder();
         String query="select * from products";
         try(Connection connection = getConnection(); Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery(query)) {
@@ -110,7 +110,43 @@ public class DBUtil {
             e.printStackTrace();
         }
     }
+
+    public static void saveCategoryCSV(File file) throws SQLException, ClassNotFoundException {
+        StringBuilder sb=new StringBuilder();
+        String query="select * from category";
+        try(Connection connection = getConnection(); Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery(query)) {
+            int count = 0;
+            while(resultSet.next()){
+                if (count ==0){
+                    sb.append("subCategory");
+                    sb.append(";");
+                    sb.append("mainCategory");
+                    sb.append(";");
+                    sb.append("\r\n");
+                    count++;
+                }
+                else {
+                    sb.append(resultSet.getString("subCategory"));
+                    sb.append(";");
+                    sb.append(resultSet.getString("mainCategory"));
+                    sb.append(";");
+                    sb.append("\r\n");
+                    count++;
+                }
+            }
+            FileWriter fileWriter= new FileWriter(file);
+            fileWriter.write(sb.toString());
+            fileWriter.close();
+            System.out.println("CSV created");
+
+        } catch (Exception e) {
+            System.out.println("error when saving the database to CSV file");
+            e.printStackTrace();
+        }
+    }
 }
+
+
 
 
 //        public static Set<String> fillListWithPrice (String query) throws SQLException, ClassNotFoundException {

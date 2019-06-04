@@ -12,8 +12,10 @@
     <VBox>
         <MenuBar>
             <Menu text="File">
-                <MenuItem fx:id="openCSV" text="Open CSV" onAction="#openCSV"/>
-                <MenuItem fx:id="saveCSV" text="Save CSV" onAction="#saveCSV"/>
+                <MenuItem fx:id="openProductCSV" text="Open Product CSV" onAction="#openProductCSV"/>
+                <MenuItem fx:id="openCategoryCSV" text="Open Category CSV" onAction="#OpenCategoryCSV"/>
+                <MenuItem fx:id="saveProductCSV" text="Save Product CSV" onAction="#saveProductCSV"/>
+                <MenuItem fx:id="saveCategoryCSV" text="Save Category CSV" onAction="#saveCategoryCSV"/>
                 <SeparatorMenuItem/>
                 <MenuItem text="Exit" onAction="#Exit"/>
             </Menu>
