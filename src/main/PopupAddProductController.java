@@ -63,7 +63,7 @@ public class PopupAddProductController {
 
     @FXML
     private void addProduct(ActionEvent actionEvent) throws ClassNotFoundException, SQLException, IOException {
-        model.ProductDAO.addProduct(productTitle.getText(),Integer.parseInt(subCategory.getValue()), Integer.parseInt(mainCategory.getValue()), price.getText(), description.getText(), imagePath,0);
+        model.ProductDAO.addProduct(productTitle.getText(),subCategory.getValue(), mainCategory.getValue(), price.getText(), description.getText(), imagePath,0);
         Stage stage = (Stage) addProductButton.getScene().getWindow();
         stage.close();
 
