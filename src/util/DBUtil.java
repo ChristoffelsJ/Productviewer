@@ -61,7 +61,7 @@ public class DBUtil {
 
 
                 Product product = new Product(resultSet.getString("productTitle"), resultSet.getString("subCategory")
-                        , resultSet.getString("price"), resultSet.getString("productDescription"), resultSet.getBinaryStream("image"), resultSet.getInt("productId"));
+                        , resultSet.getString("price"), resultSet.getString("productDescription"), imageView, resultSet.getInt("productId"));
 
                 /* product.setProductId(ProductDAO.getProductId(product));*/
                 productlist.add(product);
