@@ -12,7 +12,7 @@ import java.util.*;
 public class DBUtil {
     private static String url = "jdbc:mysql://localhost/productViewer?serverTimezone=UTC";
     private static String userName = "root";
-    private static String password = "MySQLJava2019!";
+    private static String password = "blablabla";
     private static String driverName = "com.mysql.cj.jdbc.Driver";
     private static Connection connection = null;
 
@@ -41,12 +41,12 @@ public class DBUtil {
         }
     }
 
-    public static List<Product> fillListWithProducts(String query) throws SQLException, ClassNotFoundException {
+            public static List<Product> fillListWithProducts(String query) throws SQLException, ClassNotFoundException {
         List<Product> productlist = new ArrayList<>();
         try(Connection connection = getConnection(); Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery(query)) {
             while (resultSet.next()) {
                 Product product = new Product(resultSet.getString("productTitle"), resultSet.getString("subCategory")
-                        , resultSet.getString("price"), resultSet.getString("productDescription"), resultSet.getBinaryStream("image"), 0);
+                        , resultSet.getString("price"), resultSet.getString("productDescription"), resultSet.getBinaryStream("image"),resultSet.getInt("productId"));
 
                /* product.setProductId(ProductDAO.getProductId(product));*/
                 productlist.add(product);
