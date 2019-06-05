@@ -14,6 +14,7 @@ import java.io.*;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 
 public class PopupAddProductController {
@@ -25,7 +26,6 @@ public class PopupAddProductController {
     @FXML private Button addPictureButton;
     @FXML private ImageView imageView;
     @FXML private FileInputStream fis;
-
     private Path imagePath;
 
     @FXML
@@ -59,6 +59,9 @@ public class PopupAddProductController {
 
     @FXML
     private void addProduct(ActionEvent actionEvent) throws ClassNotFoundException, SQLException, IOException {
+        if (imagePath == null){
+            imagePath = Paths.get("standardImage.jpg");
+        }
         model.ProductDAO.addProduct(productTitle.getText(), category.getValue(), price.getText(), description.getText(), imagePath,0);
         Stage stage = (Stage) addProductButton.getScene().getWindow();
         stage.close();

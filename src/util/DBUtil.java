@@ -13,7 +13,7 @@ import java.util.*;
 public class DBUtil {
     private static String url = "jdbc:mysql://localhost/productViewer?serverTimezone=UTC";
     private static String userName = "root";
-    private static String password = "blablabla";
+    private static String password = "Xqv513jc13";
     private static String driverName = "com.mysql.cj.jdbc.Driver";
     private static Connection connection = null;
 
@@ -61,7 +61,7 @@ public class DBUtil {
 
 
                 Product product = new Product(resultSet.getString("productTitle"), resultSet.getString("subCategory")
-                        , resultSet.getString("price"), resultSet.getString("productDescription"), resultSet.getBinaryStream("image"),resultSet.getInt("productId"));
+                        , resultSet.getString("price"), resultSet.getString("productDescription"), imageView,resultSet.getInt("productId"));
 
                /* product.setProductId(ProductDAO.getProductId(product));*/
                 productlist.add(product);
@@ -74,15 +74,6 @@ public class DBUtil {
         }
  catch (IOException e) {
             e.printStackTrace();
-        }
-        finally {
-            if (resultSet != null) {
-                resultSet.close();
-            }
-            if (statement != null) {
-                statement.close();
-            }
-            closeDataBase();
         }
         return productlist;
     }

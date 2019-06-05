@@ -28,7 +28,7 @@ public class ProductDAO {
     }
 
     public static void addProduct(String productTitle, String category, String price, String description, Path imagePath, int productId) throws SQLException, ClassNotFoundException, IOException {
-        String update = "INSERT INTO products VALUES ('" + 0 +"','" + productTitle + "','" + category + "','" + price + "','" + description + "',?)";
+        String update = "INSERT INTO products VALUES ('" + 0 +"','" + productTitle + "','" + 0 +"','" + category + "','" + price + "','" + description + "',?)";
 
 
         try(InputStream inputStream = Files.newInputStream(imagePath);
