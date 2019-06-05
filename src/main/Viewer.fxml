@@ -48,7 +48,7 @@
                     <TableView fx:id="productTable" AnchorPane.bottomAnchor="5" AnchorPane.leftAnchor="5"
                                AnchorPane.rightAnchor="5" AnchorPane.topAnchor="5">
                         <columns>
-                            <TableColumn fx:id="columnPicture" prefWidth="60" text="Picture"/>
+                            <TableColumn fx:id="columnPicture" prefWidth="60"  text="Picture"/>
                             <TableColumn fx:id="columnProductTitle" prefWidth="185" text="Product title"/>
                             <TableColumn fx:id="columnCategory" prefWidth="185" text="Category"/>
                             <TableColumn fx:id="columnPrice" prefWidth="185" text="Price"/>

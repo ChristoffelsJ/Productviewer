@@ -44,7 +44,7 @@ public class MainController {
     @FXML
     private TableColumn<Product, String> columnProductDescription;
     @FXML
-    private TableColumn<Product, ImageView> columnImageView;
+    private TableColumn<Product, ImageView> columnPicture;
     @FXML
     private TableColumn<Product, Integer> columnProductId;
 
@@ -63,7 +63,9 @@ public class MainController {
         columnCategory.setCellValueFactory(new PropertyValueFactory<>("category"));
         columnPrice.setCellValueFactory(new PropertyValueFactory<>("price"));
         columnProductDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
+        columnPicture.setCellValueFactory(new PropertyValueFactory<>("image"));
         productTable.getItems().setAll(generateInitialProducts());
+
 
         editableColumn();
         loadDate();
