@@ -12,7 +12,7 @@ import java.util.*;
 public class DBUtil {
     private static String url = "jdbc:mysql://localhost/productViewer?serverTimezone=UTC";
     private static String userName = "root";
-    private static String password = "blablabla";
+    private static String password = "MySQLJava2019!";
     private static String driverName = "com.mysql.cj.jdbc.Driver";
     private static Connection connection = null;
 
@@ -23,7 +23,7 @@ public class DBUtil {
 
     //voert een query uit die meegegeven wordt
     public static void executeQuery(String query) throws SQLException, ClassNotFoundException {
-        try(Connection connection = getConnection(); Statement statement = connection.createStatement()) {
+        try (Connection connection = getConnection(); Statement statement = connection.createStatement()) {
             statement.execute(query);
         } catch (SQLException ex) {
             System.out.println("Error when executing the querry");
@@ -33,7 +33,7 @@ public class DBUtil {
 
     //voert een update uit die meegegeven wordt
     public static void updateQuery(String query) throws SQLException, ClassNotFoundException {
-        try(Connection connection = getConnection(); Statement statement = connection.createStatement()) {
+        try (Connection connection = getConnection(); Statement statement = connection.createStatement()) {
             statement.executeUpdate(query);
         } catch (SQLException ex) {
             System.out.println("Error");
@@ -41,14 +41,14 @@ public class DBUtil {
         }
     }
 
-            public static List<Product> fillListWithProducts(String query) throws SQLException, ClassNotFoundException {
+    public static List<Product> fillListWithProducts(String query) throws SQLException, ClassNotFoundException {
         List<Product> productlist = new ArrayList<>();
-        try(Connection connection = getConnection(); Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery(query)) {
+        try (Connection connection = getConnection(); Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery(query)) {
             while (resultSet.next()) {
                 Product product = new Product(resultSet.getString("productTitle"), resultSet.getString("subCategory")
-                        , resultSet.getString("price"), resultSet.getString("productDescription"), resultSet.getBinaryStream("image"),resultSet.getInt("productId"));
+                        , resultSet.getString("price"), resultSet.getString("productDescription"), resultSet.getBinaryStream("image"), resultSet.getInt("productId"));
 
-               /* product.setProductId(ProductDAO.getProductId(product));*/
+                /* product.setProductId(ProductDAO.getProductId(product));*/
                 productlist.add(product);
             }
         } catch (SQLException ex) {
@@ -60,7 +60,7 @@ public class DBUtil {
     // category uit database halen en in een Set zetten
     public static List<String> fillListWithCategory(String query) throws SQLException, ClassNotFoundException {
         List<String> categoryList = new ArrayList<>();
-        try(Connection connection = getConnection(); Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery(query)) {
+        try (Connection connection = getConnection(); Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery(query)) {
             while (resultSet.next()) {
                 String category = resultSet.getString("subCategory");
                 categoryList.add(category);
@@ -72,12 +72,12 @@ public class DBUtil {
     }
 
     public static void saveProductCSV(File file) throws SQLException, ClassNotFoundException {
-        StringBuilder sb=new StringBuilder();
-        String query="select * from products";
-        try(Connection connection = getConnection(); Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery(query)) {
+        StringBuilder sb = new StringBuilder();
+        String query = "select * from products";
+        try (Connection connection = getConnection(); Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery(query)) {
             int count = 0;
-            while(resultSet.next()){
-                if (count ==0){
+            while (resultSet.next()) {
+                if (count == 0) {
                     sb.append("productTitle");
                     sb.append(";");
                     sb.append("subCategory");
@@ -87,8 +87,7 @@ public class DBUtil {
                     sb.append("productDescription");
                     sb.append("\r\n");
                     count++;
-                }
-                else {
+                } else {
                     sb.append(resultSet.getString("productTitle"));
                     sb.append(";");
                     sb.append(resultSet.getString("subCategory"));
@@ -100,7 +99,7 @@ public class DBUtil {
                     count++;
                 }
             }
-            FileWriter fileWriter= new FileWriter(file);
+            FileWriter fileWriter = new FileWriter(file);
             fileWriter.write(sb.toString());
             fileWriter.close();
             System.out.println("CSV created");
@@ -112,20 +111,19 @@ public class DBUtil {
     }
 
     public static void saveCategoryCSV(File file) throws SQLException, ClassNotFoundException {
-        StringBuilder sb=new StringBuilder();
-        String query="select * from category";
-        try(Connection connection = getConnection(); Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery(query)) {
+        StringBuilder sb = new StringBuilder();
+        String query = "select * from category";
+        try (Connection connection = getConnection(); Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery(query)) {
             int count = 0;
-            while(resultSet.next()){
-                if (count ==0){
+            while (resultSet.next()) {
+                if (count == 0) {
                     sb.append("subCategory");
                     sb.append(";");
                     sb.append("mainCategory");
                     sb.append(";");
                     sb.append("\r\n");
                     count++;
-                }
-                else {
+                } else {
                     sb.append(resultSet.getString("subCategory"));
                     sb.append(";");
                     sb.append(resultSet.getString("mainCategory"));
@@ -134,7 +132,7 @@ public class DBUtil {
                     count++;
                 }
             }
-            FileWriter fileWriter= new FileWriter(file);
+            FileWriter fileWriter = new FileWriter(file);
             fileWriter.write(sb.toString());
             fileWriter.close();
             System.out.println("CSV created");
@@ -145,8 +143,6 @@ public class DBUtil {
         }
     }
 }
-
-
 
 
 //        public static Set<String> fillListWithPrice (String query) throws SQLException, ClassNotFoundException {
