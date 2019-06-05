@@ -2,7 +2,14 @@ package model;
 
 
 import javafx.scene.image.ImageView;
+import util.DBUtil;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -18,11 +25,17 @@ public class ProductDAO {
         }
     }
 
-    public static void addProduct(String productTitle, String category, String price, String description, ImageView file, int productId) throws SQLException, ClassNotFoundException {
+    public static void addProduct(String productTitle, String category, String price, String description, Path imagePath, int productId) throws SQLException, ClassNotFoundException, IOException {
+        String update = "INSERT INTO products VALUES ('" + 0 +"','" + productTitle + "','" + category + "','" + price + "','" + description + "',?)";
 
-        String update = "INSERT INTO products VALUES ('" + 0 +"','" + productTitle + "','" + category + "','" + price + "','" + description + "','" + file + "')";
-        try {
-            util.DBUtil.updateQuery(update);
+
+        try(InputStream inputStream = Files.newInputStream(imagePath);
+            Connection con = DBUtil.getConnection();
+            PreparedStatement pstmt = con.prepareStatement(update)){
+            pstmt.setBinaryStream(1, inputStream);
+
+            pstmt.executeUpdate();
+
         } catch (SQLException ex) {
             System.out.println("Error when implementing data in database");
             throw ex;

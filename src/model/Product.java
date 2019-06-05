@@ -1,8 +1,10 @@
 package model;
 
-import javax.swing.text.html.ImageView;
-import java.io.FileInputStream;
-import java.io.InputStream;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
+
+import java.io.*;
 
 public class Product {
     private String title;
@@ -10,17 +12,25 @@ public class Product {
     private String price;
     private String description;
     private int productId;
-    private InputStream fis;
+    private InputStream iS;
+    private ImageView image;
 
 
-    public Product(String title, String category, String price, String description, InputStream fis, int productId) {
+    public Product(String title, String category, String price, String description, ImageView image, int productId) {
         this.title = title;
         this.category = category;
         this.price = price;
         this.description = description;
-        this.fis = fis;
+        this.image = image;
         this.productId = productId;
     }
+//    {
+//        try {
+//            changeToImage();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     public String getTitle() {
         return title;
@@ -54,12 +64,12 @@ public class Product {
         this.description = description;
     }
 
-    public InputStream getFis() {
-        return fis;
+    public InputStream getiS() {
+        return iS;
     }
 
-    public void setFis(InputStream fis) {
-        this.fis = fis;
+    public void setiS(InputStream iS) {
+        this.iS = iS;
     }
 
     public int getProductId() {
@@ -69,4 +79,29 @@ public class Product {
     public void setProductId(int productId) {
         this.productId = productId;
     }
+
+    public ImageView getImage() {
+        return image;
+    }
+
+    public void setImage(ImageView image) {
+        this.image = image;
+    }
+
+    public ImageView changeToImage () throws IOException {
+       OutputStream oS = new FileOutputStream(new File("photo.jpg"));
+       byte [] content= new byte [1024];
+       int size = 0;
+       while ((size = getiS().read(content)) != -1){
+    oS.write(content,0,size);
+       }
+       oS.close();
+       iS.close();
+       Image image = new Image("file:photo.jpg",100,150,true,true);
+       ImageView imageView = new ImageView(image);
+       imageView.setFitWidth(100);
+       imageView.setFitHeight(150);
+       imageView.setPreserveRatio(true);
+       return imageView;
+   }
 }

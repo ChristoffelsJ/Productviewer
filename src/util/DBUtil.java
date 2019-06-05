@@ -1,9 +1,10 @@
 package util;
 
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import model.Product;
 
-import java.io.File;
-import java.io.FileWriter;
+import java.io.*;
 import java.sql.*;
 import java.util.*;
 
@@ -42,7 +43,7 @@ public class DBUtil {
     }
 
     //connectie methode
-    private static Connection getConnection() throws SQLException {
+    public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(url, userName, password);
     }
 
@@ -91,13 +92,34 @@ public class DBUtil {
             statement = connection.createStatement();
             resultSet = statement.executeQuery(query);
             while (resultSet.next()) {
+
+
+                InputStream is= resultSet.getBinaryStream("image");
+                OutputStream os = new FileOutputStream(new File("photo.jpg"));
+                byte[] contents = new byte[1024];
+                int size = 0;
+                while ((size = is.read(contents)) != -1){
+                    os.write(contents,0,size);
+                }
+                Image image = new Image("file:photo.jpg",100,80,true,true);
+                ImageView imageView = new ImageView();
+                imageView.setImage(image);
+
+
                 Product product = new Product(resultSet.getString("productTitle"), resultSet.getString("subCategory")
-                        , resultSet.getString("price"), resultSet.getString("productDescription"), resultSet.getBinaryStream("image"), 0);
+                        , resultSet.getString("price"), resultSet.getString("productDescription"), imageView, 0);
                 productlist.add(product);
             }
         } catch (SQLException ex) {
             System.out.println("Error while filling the productsList");
-        } finally {
+        }
+        catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+ catch (IOException e) {
+            e.printStackTrace();
+        }
+        finally {
             if (resultSet != null) {
                 resultSet.close();
             }

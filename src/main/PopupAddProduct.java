@@ -11,6 +11,8 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import java.io.*;
 import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.SQLException;
 
 public class PopupAddProduct {
@@ -20,10 +22,10 @@ public class PopupAddProduct {
     @FXML private TextField price;
     @FXML private TextField description;
     @FXML private Button addPictureButton;
-    @FXML private File selectedFile;
-    @FXML private Image imageFile;
     @FXML private ImageView imageView;
     @FXML private FileInputStream fis;
+
+    private Path imagePath;
 
     @FXML
     public void initialize() throws SQLException, ClassNotFoundException {
@@ -39,20 +41,23 @@ public class PopupAddProduct {
     public void PictureButtonAction(ActionEvent actionEvent) throws MalformedURLException {
         FileChooser chooser = new FileChooser();
         chooser.setTitle("Open File");
-        selectedFile = chooser.showOpenDialog(new Stage());
+        File selectedFile = chooser.showOpenDialog(new Stage());
         if (selectedFile != null) {
-            String imagepath = selectedFile.toURI().toURL().toString();
-            imageFile = new Image(imagepath);
-            imageView.setImage(imageFile);
-            imageView.setFitWidth(100);
-            imageView.setFitHeight(150);
-            imageView.setPreserveRatio(true);
-
+            imagePath = selectedFile.toPath();
+            try(InputStream is = Files.newInputStream(imagePath)){
+                Image imageFile = new Image(is);
+                imageView.setImage(imageFile);
+                imageView.setFitWidth(100);
+                imageView.setFitHeight(150);
+                imageView.setPreserveRatio(true);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
     @FXML
-    private void addProduct(ActionEvent actionEvent) throws ClassNotFoundException, SQLException {
-        model.ProductDAO.addProduct(productTitle.getText(), category.getValue(), price.getText(), description.getText(), imageView,0);
+    private void addProduct(ActionEvent actionEvent) throws ClassNotFoundException, SQLException, IOException {
+        model.ProductDAO.addProduct(productTitle.getText(), category.getValue(), price.getText(), description.getText(), imagePath,0);
         Stage stage = (Stage) addProductButton.getScene().getWindow();
         stage.close();
     }
