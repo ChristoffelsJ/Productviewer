@@ -12,7 +12,6 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -22,17 +21,18 @@ import util.DBUtil;
 
 import java.io.*;
 import java.nio.file.Files;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 public class MainController {
-
-    public MenuItem saveCSV;
+    @FXML
+    private MenuItem saveCategoryCSV;
+    @FXML
+    private MenuItem saveProductCSV;
+    @FXML
+    private MenuItem openCategoryCSV;
     @FXML
     private TableView<Product> productTable;
     @FXML
@@ -51,7 +51,7 @@ public class MainController {
     @FXML
     private TextField search;
     @FXML
-    public MenuItem openCSV;
+    public MenuItem openProductCSV;
     @FXML
     private FileChooser fileChooser;
     @FXML
@@ -69,7 +69,7 @@ public class MainController {
 
         editableColumn();
         loadDate();
-    }
+        }
 
     private void loadDate() throws SQLException, ClassNotFoundException {
         ObservableList<Product> productObservableList = FXCollections.observableArrayList();
@@ -116,17 +116,12 @@ public class MainController {
 
 
     private void updateData(String column, String newValue, int id) {
-        try (
-                Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/productViewer?serverTimezone=UTC", "root", "Xqv513jc13");
-        ) {
-            PreparedStatement stmt = connection.prepareStatement("UPDATE products SET " + column + " = ? WHERE productId =? " );
-            stmt.setString(1, newValue);
-            stmt.setInt(2, id);
-            stmt.execute();
-        } catch (SQLException ex) {
-            System.err.println("Error filling in database from tableview");
-
-            ex.printStackTrace(System.err);
+        String query = "UPDATE products SET " + column + " = '" + newValue +  "' WHERE productId = " + id +"";
+        try {
+            DBUtil.updateQuery(query);
+        } catch (ClassNotFoundException | SQLException e) {
+            System.err.println("Error in updating the data in database");
+            e.printStackTrace(System.err);
         }
     }
 
@@ -145,14 +140,18 @@ public class MainController {
     }
 
     @FXML
-    private void Exit(ActionEvent actionEvent) throws ClassNotFoundException, SQLException {
+    private void Exit(ActionEvent actionEvent) {
         Platform.exit();
 
     }
 
     @FXML
-    private void openCSV(ActionEvent actionEvent) throws ClassNotFoundException, SQLException {
+    private void openProductCSV(ActionEvent actionEvent) throws ClassNotFoundException, SQLException {
+
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
+        fileChooser.getExtensionFilters().add(extFilter);
         File file = fileChooser.showOpenDialog(pane.getScene().getWindow());
+
         if (file != null && file.isFile() && file.getName().endsWith(".csv")) {
             try (BufferedReader reader = Files.newBufferedReader(file.toPath())) {
                 String line = reader.readLine();
@@ -163,7 +162,7 @@ public class MainController {
                     } else {
                         String[] productLine = line.split(";");
                         List<String> productLineList = new LinkedList<String>(Arrays.asList(productLine));
-                        if (productLineList.size() > 4) { // maak hier pop-up van!
+                        if (productLineList.size() > 4) { // maak hier pop-up van! + zet default value van switch op dit ipv de if else
                             System.out.println("Error in the CSV file!");
                             break;
                         }
@@ -201,6 +200,7 @@ public class MainController {
                 initialize();
             } catch (IOException e) {
                 System.out.println("Something went wrong when reading the file");
+                e.printStackTrace();
             }
         }
 
@@ -215,25 +215,51 @@ public class MainController {
         String category = productLineList.get(1);
         String price = productLineList.get(2);
         String productDescription = productLineList.get(3);
+
+
         //hier de 0 nog vervangen door opgehaalde data uit database
         return new Product(productTitle, category, price, productDescription, null, 0);
 
     }
 
     @FXML
-    public void saveCSV(ActionEvent actionEvent) throws IOException, SQLException {
+    public void OpenCategoryCSV(ActionEvent actionEvent) throws SQLException {
+    }
+
+
+
+
+
+
+    @FXML
+    public void saveProductCSV(ActionEvent actionEvent) throws SQLException {
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
+        fileChooser.getExtensionFilters().add(extFilter);
         File file = fileChooser.showSaveDialog(pane.getScene().getWindow());
         if (file != null) {
             try {
-                DBUtil.saveCSV(file);
+                DBUtil.saveProductCSV(file);
             } catch (ClassNotFoundException e) {
                 System.out.println("Something went wrong with saving the file");
                 e.printStackTrace();
             }
         }
-
     }
 
+    @FXML
+    public void saveCategoryCSV(ActionEvent actionEvent) throws SQLException {
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
+        fileChooser.getExtensionFilters().add(extFilter);
+        File file = fileChooser.showSaveDialog(pane.getScene().getWindow());
+        if (file != null) {
+            try {
+                DBUtil.saveCategoryCSV(file);
+            } catch (ClassNotFoundException e) {
+                System.out.println("Something went wrong with saving the file");
+                e.printStackTrace();
+            }
+        }
+    }
 
     @FXML
     private void openAddProductPopup(ActionEvent actionEvent) {
@@ -244,8 +270,9 @@ public class MainController {
             stage.setTitle("Add product");
             stage.setScene(new Scene(root1, 520, 120));
             stage.show();
-        } catch (Exception E) {
+        } catch (Exception e) {
             System.out.println("Something went wrong when opening the add product pop-up");
+            e.printStackTrace();
         }
     }
 
@@ -258,8 +285,9 @@ public class MainController {
             stage.setTitle("Add category");
             stage.setScene(new Scene(root1, 300, 80));
             stage.show();
-        } catch (Exception E) {
-            System.out.println("Something went wrong");
+        } catch (Exception e) {
+            System.out.println("Something went wrong when openening the add category popup");
+            e.printStackTrace();
         }
     }
 
@@ -272,24 +300,20 @@ public class MainController {
             stage.setScene(new Scene(root1, 600, 400));
             stage.setTitle("Help");
             stage.show();
-        } catch (Exception E) {
-            System.out.println("Something went wrong");
+        } catch (Exception e) {
+            System.out.println("Something went wrong when openening the help popup");
+            e.printStackTrace();
         }
     }
-
-    public void deleteRow(ActionEvent actionEvent) {
-
+//werkt
+    public void deleteRow(ActionEvent actionEvent) throws SQLException, ClassNotFoundException {
         Product selectedItem = productTable.getSelectionModel().getSelectedItem();
         int productId = selectedItem.getProductId();
-               try (
-                Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/productViewer?serverTimezone=UTC", "root", "Xqv513jc13");
-        ) {
-            PreparedStatement stmt = connection.prepareStatement("delete from products WHERE productId = ? ");
-           stmt.setInt(1, productId);
-            stmt.execute();
+        String query = "delete from products WHERE productId = " + productId;
+        try{
+        DBUtil.executeQuery(query);
         } catch (SQLException ex) {
-            System.err.println("Error filling in database from tableview");
-
+            System.err.println("Error in deleting product from DB");
             ex.printStackTrace(System.err);
         }
         productTable.getItems().remove(selectedItem);

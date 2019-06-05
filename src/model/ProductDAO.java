@@ -12,6 +12,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
+import java.util.OptionalInt;
 
 public class ProductDAO {
 
@@ -40,18 +42,37 @@ public class ProductDAO {
             System.out.println("Error when implementing data in database");
             throw ex;
         }
+
     }
+/*
+    public static int getProductId(Product product){
+        String getIdQuerry= "select productId from products as p where p.productTitle = '"+product.getTitle()+
+                "' and p.subCategory='"+product.getCategory()+"' and p.price='"+product.getPrice()+
+                "' and p.productDescription='"+product.getDescription()+"')";
+        try {
+            Optional firstInput= util.DBUtil.fillListWithProducts(getIdQuerry).stream().findFirst();
+            return firstInput;
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            System.out.println("Error in getProductId");
+            e.printStackTrace();
+        }
+    }
+*/
 
     public static void addProduct(Product product) throws SQLException, ClassNotFoundException {
 
-        String update = "INSERT INTO products VALUES ('" + product.getTitle() + "','" + product.getCategory() + "','" + product.getPrice() + "','" + product.getDescription() + "','" + null + "','" + 0 +"' )";
+        String update = "INSERT INTO products (productTitle, subCategory, price, productDescription, image) VALUES ('" + product.getTitle() + "','" + product.getCategory() + "','" + product.getPrice() + "','" + product.getDescription() + "','" + null + "' )";
         try {
             util.DBUtil.updateQuery(update);
         } catch (SQLException ex) {
             System.out.println("Error when implementing data in database");
             throw ex;
         }
-   }
+    }
 
     public static void changeProducts(String productTitle, String category, String price, String description, int productID) throws SQLException, ClassNotFoundException {
 
