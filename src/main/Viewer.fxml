@@ -50,10 +50,10 @@
                         <columns>
                             <TableColumn fx:id="columnPicture" prefWidth="60"  text="Picture"/>
                             <TableColumn fx:id="columnProductTitle" prefWidth="185" text="Product title"/>
-                            <TableColumn fx:id="columnCategory" prefWidth="185" text="Category"/>
+                            <TableColumn fx:id="columnSubCategory" prefWidth="185" text="Subcategory"/>
+                            <TableColumn fx:id="columnMainCategory" prefWidth="185" text="Maincategory"/>
                             <TableColumn fx:id="columnPrice" prefWidth="185" text="Price"/>
                             <TableColumn fx:id="columnProductDescription" prefWidth="180.0" text="Description"/>
-                            <TableColumn fx:id="columnProductId" prefWidth="150" text="Product ID"/>
                         </columns>
                     </TableView>
                 </GridPane>
