@@ -17,25 +17,29 @@ import java.nio.file.Path;
 import java.sql.SQLException;
 
 public class PopupAddProductController {
+
     @FXML private Button addProductButton;
     @FXML private TextField productTitle;
-    @FXML private ComboBox <String> category;
+    @FXML private ComboBox <String> mainCategory;
+    @FXML private ComboBox<String> subCategory;
     @FXML private TextField price;
     @FXML private TextField description;
-    @FXML private Button addPictureButton;
     @FXML private ImageView imageView;
-    @FXML private FileInputStream fis;
 
     private Path imagePath;
 
     @FXML
     public void initialize() throws SQLException, ClassNotFoundException {
-        category.setItems(generateInitialCategory());
+        mainCategory.setItems(generateInitialMainCategory());
+        subCategory.setItems(generateInitialSubCategory());
     }
 
-    private ObservableList<String> generateInitialCategory() throws SQLException, ClassNotFoundException {
-        ObservableList<String> oListCategory = FXCollections.observableArrayList(model.CategoryDAO.getInitialCategory());
-        return oListCategory;
+    private ObservableList<String> generateInitialMainCategory() throws SQLException, ClassNotFoundException {
+        return FXCollections.observableArrayList(model.CategoryDAO.getInitialMainCategory());
+    }
+
+    private ObservableList<String> generateInitialSubCategory() throws SQLException, ClassNotFoundException {
+        return FXCollections.observableArrayList(model.CategoryDAO.getInitialSubCategory());
     }
 
     @FXML
@@ -59,7 +63,7 @@ public class PopupAddProductController {
 
     @FXML
     private void addProduct(ActionEvent actionEvent) throws ClassNotFoundException, SQLException, IOException {
-        model.ProductDAO.addProduct(productTitle.getText(), category.getValue(), price.getText(), description.getText(), imagePath,0);
+        model.ProductDAO.addProduct(productTitle.getText(),Integer.parseInt(subCategory.getValue()), Integer.parseInt(mainCategory.getValue()), price.getText(), description.getText(), imagePath,0);
         Stage stage = (Stage) addProductButton.getScene().getWindow();
         stage.close();
 

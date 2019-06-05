@@ -51,7 +51,7 @@ public class DBUtil {
                 InputStream is= resultSet.getBinaryStream("image");
                 OutputStream os = new FileOutputStream(new File("photo.jpg"));
                 byte[] contents = new byte[1024];
-                int size = 0;
+                int size;
                 while ((size = is.read(contents)) != -1){
                     os.write(contents,0,size);
                 }
@@ -60,45 +60,45 @@ public class DBUtil {
                 imageView.setImage(image);
 
 
-                Product product = new Product(resultSet.getString("productTitle"), resultSet.getString("subCategory")
-                        , resultSet.getString("price"), resultSet.getString("productDescription"), resultSet.getBinaryStream("image"), resultSet.getInt("productId"));
+                Product product = new Product(resultSet.getString("productTitle"), resultSet.getString("subCategory"), resultSet.getString("mainCategory")
+                        ,resultSet.getString("price"), resultSet.getString("productDescription"), imageView, resultSet.getInt("productId"));
 
                 /* product.setProductId(ProductDAO.getProductId(product));*/
                 productlist.add(product);
             }
         } catch (SQLException ex) {
             System.out.println("Error while filling the productsList");
-        }
-        catch (FileNotFoundException e) {
+        } catch (IOException e) {
             e.printStackTrace();
-        }
- catch (IOException e) {
-            e.printStackTrace();
-        }
-        finally {
-            if (resultSet != null) {
-                resultSet.close();
-            }
-            if (statement != null) {
-                statement.close();
-            }
-            closeDataBase();
         }
         return productlist;
     }
 
-    // category uit database halen en in een Set zetten
-    public static List<String> fillListWithCategory(String query) throws SQLException, ClassNotFoundException {
-        List<String> categoryList = new ArrayList<>();
+    // main category uit database halen en in een List zetten
+    public static List<String> fillListWithMainCategory(String query) throws SQLException, ClassNotFoundException {
+        List<String> mainCategoryList = new ArrayList<>();
+        try (Connection connection = getConnection(); Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery(query)) {
+            while (resultSet.next()) {
+                String category = resultSet.getString("mainCategory");
+                mainCategoryList.add(category);
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error while filling the mainCategory List");
+        }
+        return mainCategoryList;
+    }
+    // sub category uit database halen en in een List zetten
+    public static List<String> fillListWithSubCategory(String query) throws SQLException, ClassNotFoundException {
+        List<String> subCategoryList = new ArrayList<>();
         try (Connection connection = getConnection(); Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery(query)) {
             while (resultSet.next()) {
                 String category = resultSet.getString("subCategory");
-                categoryList.add(category);
+                subCategoryList.add(category);
             }
         } catch (SQLException ex) {
-            System.out.println("Error while filling the categoryList");
+            System.out.println("Error while filling the subCategory List");
         }
-        return categoryList;
+        return subCategoryList;
     }
 
     public static void saveProductCSV(File file) throws SQLException, ClassNotFoundException {

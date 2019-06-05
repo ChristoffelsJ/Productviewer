@@ -28,6 +28,8 @@ import java.util.List;
 
 public class MainController {
     @FXML
+    private TableColumn<Product, String> columnMainCategory;
+    @FXML
     private MenuItem saveCategoryCSV;
     @FXML
     private MenuItem saveProductCSV;
@@ -38,7 +40,7 @@ public class MainController {
     @FXML
     private TableColumn<Product, String> columnProductTitle;
     @FXML
-    private TableColumn<Product, String> columnCategory;
+    private TableColumn<Product, String> columnSubCategory;
     @FXML
     private TableColumn<Product, String> columnPrice;
     @FXML
@@ -60,7 +62,8 @@ public class MainController {
     @FXML
     public void initialize() throws SQLException, ClassNotFoundException {
         columnProductTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
-        columnCategory.setCellValueFactory(new PropertyValueFactory<>("category"));
+        columnSubCategory.setCellValueFactory(new PropertyValueFactory<>("subCategory"));
+        columnMainCategory.setCellValueFactory(new PropertyValueFactory<>("mainCategory"));
         columnPrice.setCellValueFactory(new PropertyValueFactory<>("price"));
         columnProductDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
         columnPicture.setCellValueFactory(new PropertyValueFactory<>("image"));
@@ -88,11 +91,11 @@ public class MainController {
             updateData("productTitle", event.getNewValue(), product.getProductId());
         });
         //met de category moeten we andere dingen gaan doen, moet gelinkt zijn aan de category db
-        columnCategory.setCellFactory(TextFieldTableCell.forTableColumn());
-        columnCategory.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setCategory(e.getNewValue()));
-        columnCategory.setOnEditCommit(event -> {
+        columnSubCategory.setCellFactory(TextFieldTableCell.forTableColumn());
+        columnSubCategory.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setSubCategory((e.getNewValue())));
+        columnSubCategory.setOnEditCommit(event -> {
             Product product = event.getRowValue();
-            product.setCategory(event.getNewValue());
+            product.setSubCategory((event.getNewValue()));
             updateData("subCategory", event.getNewValue(), product.getProductId());
         });
         //deze werkt, afblijven
@@ -212,13 +215,14 @@ public class MainController {
 
     private static Product createProduct(List<String> productLineList) {
         String productTitle = productLineList.get(0);
-        String category = productLineList.get(1);
+        String subCategory = productLineList.get(1);
+        String mainCategory = productLineList.get(4);
         String price = productLineList.get(2);
         String productDescription = productLineList.get(3);
 
 
         //hier de 0 nog vervangen door opgehaalde data uit database
-        return new Product(productTitle, category, price, productDescription, null, 0);
+        return new Product(productTitle, subCategory, mainCategory, price, productDescription, null, 0);
 
     }
 
