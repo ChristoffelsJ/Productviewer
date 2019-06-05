@@ -290,6 +290,7 @@ public class MainController {
     }
 
 
+
     public void openHelpPopup(ActionEvent actionEvent) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("PopupHelp.fxml"));
