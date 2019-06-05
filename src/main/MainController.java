@@ -67,7 +67,7 @@ public class MainController {
 
         editableColumn();
         loadDate();
-    }
+        }
 
     private void loadDate() throws SQLException, ClassNotFoundException {
         ObservableList<Product> productObservableList = FXCollections.observableArrayList();
@@ -114,7 +114,7 @@ public class MainController {
 
 
     private void updateData(String column, String newValue, int id) {
-        String query = "UPDATE products SET " + column + " = " + newValue +  "WHERE productId = " + id;
+        String query = "UPDATE products SET " + column + " = '" + newValue +  "' WHERE productId = " + id +"";
         try {
             DBUtil.updateQuery(query);
         } catch (ClassNotFoundException | SQLException e) {
@@ -213,6 +213,8 @@ public class MainController {
         String category = productLineList.get(1);
         String price = productLineList.get(2);
         String productDescription = productLineList.get(3);
+
+
         //hier de 0 nog vervangen door opgehaalde data uit database
         return new Product(productTitle, category, price, productDescription, null, 0);
 
@@ -297,7 +299,7 @@ public class MainController {
             e.printStackTrace();
         }
     }
-
+//werkt
     public void deleteRow(ActionEvent actionEvent) throws SQLException, ClassNotFoundException {
         Product selectedItem = productTable.getSelectionModel().getSelectedItem();
         int productId = selectedItem.getProductId();
