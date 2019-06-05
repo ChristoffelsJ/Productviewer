@@ -227,10 +227,6 @@ public class MainController {
     }
 
 
-
-
-
-
     @FXML
     public void saveProductCSV(ActionEvent actionEvent) throws SQLException {
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
