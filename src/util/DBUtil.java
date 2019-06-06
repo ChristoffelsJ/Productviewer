@@ -48,20 +48,20 @@ public class DBUtil {
             while (resultSet.next()) {
 
 
-                InputStream is= resultSet.getBinaryStream("image");
+                InputStream is = resultSet.getBinaryStream("image");
                 OutputStream os = new FileOutputStream(new File("photo.jpg"));
                 byte[] contents = new byte[1024];
                 int size;
-                while ((size = is.read(contents)) != -1){
-                    os.write(contents,0,size);
+                while ((size = is.read(contents)) != -1) {
+                    os.write(contents, 0, size);
                 }
-                Image image = new Image("file:photo.jpg",100,80,true,true);
+                Image image = new Image("file:photo.jpg", 100, 80, true, true);
                 ImageView imageView = new ImageView();
                 imageView.setImage(image);
 
 
                 Product product = new Product(resultSet.getString("productTitle"), resultSet.getString("subCategory"), resultSet.getString("mainCategory")
-                        ,resultSet.getString("price"), resultSet.getString("productDescription"), imageView, resultSet.getInt("productId"));
+                        , resultSet.getString("price"), resultSet.getString("productDescription"), imageView, resultSet.getInt("productId"));
 
                 /* product.setProductId(ProductDAO.getProductId(product));*/
                 productlist.add(product);
@@ -87,6 +87,7 @@ public class DBUtil {
         }
         return mainCategoryList;
     }
+
     // sub category uit database halen en in een List zetten
     public static List<String> fillListWithSubCategory(String query) throws SQLException, ClassNotFoundException {
         List<String> subCategoryList = new ArrayList<>();
@@ -173,70 +174,3 @@ public class DBUtil {
         }
     }
 }
-
-
-//        public static Set<String> fillListWithPrice (String query) throws SQLException, ClassNotFoundException {
-//            Statement statement = null;
-//            ResultSet resultSet = null;
-//            Set<String> pricelist = new TreeSet<>();
-//            try {
-//                connectDatabase();
-//                statement = connection.createStatement();
-//                resultSet = statement.executeQuery(query);
-//                while (resultSet.next()) {
-//                    Product product = new Product(resultSet.getString("productTitle"), resultSet.getString("category")
-//                            , resultSet.getString("price"), resultSet.getString("productDescription"));
-//                    while (resultSet.next()) {
-//                        Product product = new Product(resultSet.getString("productTitle"), resultSet.getInt("catId")
-//                                , resultSet.getString("price"), resultSet.getString("productDescription"), resultSet.getInt("productId"));
-//                        pricelist.add(product.getPrice());
-//                    }
-//                } catch(SQLException ex){
-//                    System.out.println("Error while filling the pricelist");
-//                } finally{
-//                    if (resultSet != null) {
-//                        resultSet.close();
-//                    }
-//                    if (statement != null) {
-//                        statement.close();
-//                    }
-//                    closeDataBase();
-//                }
-//                return pricelist;
-//            }
-//        }
-
-//            public static Set<String> fillListWithDescription (String query) throws SQLException, ClassNotFoundException
-//            {
-//                Statement statement = null;
-//                ResultSet resultSet = null;
-//                Set<String> descriptionList = new TreeSet<>();
-//                try {
-//                    connectDatabase();
-//                    statement = connection.createStatement();
-//                    resultSet = statement.executeQuery(query);
-//                    while (resultSet.next()) {
-//                        Product product = new Product(resultSet.getString("productTitle"), resultSet.getString("category")
-//                                , resultSet.getString("price"), resultSet.getString("productDescription"));
-//                        while (resultSet.next()) {
-//                            Product product = new Product(resultSet.getString("productTitle"), resultSet.getInt("catId")
-//                                    , resultSet.getString("price"), resultSet.getString("productDescription"), resultSet.getInt("productId"));
-//                            descriptionList.add(product.getDescription());
-//                        }
-//                    } catch(SQLException ex){
-//                        System.out.println("Error while filling the descriptionlist");
-//                    } finally{
-//                        if (resultSet != null) {
-//                            resultSet.close();
-//                        }
-//                        if (statement != null) {
-//                            statement.close();
-//                        }
-//                        closeDataBase();
-//                    }
-//                    return descriptionList;
-//                }
-//            }
-
-
-
