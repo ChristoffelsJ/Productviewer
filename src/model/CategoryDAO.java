@@ -6,7 +6,7 @@ import java.util.List;
 public class CategoryDAO {
 
     public static List<String> getInitialMainCategory() throws SQLException, ClassNotFoundException {
-        String query = "select mainCategory FROM category";
+        String query = "select distinct mainCategory FROM category";
         try {
             return util.DBUtil.fillListWithMainCategory(query);
         } catch (SQLException ex) {

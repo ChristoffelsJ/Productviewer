@@ -98,6 +98,14 @@ public class MainController {
             product.setSubCategory((event.getNewValue()));
             updateData("subCategory", event.getNewValue(), product.getProductId());
         });
+        //met de category moeten we andere dingen gaan doen, moet gelinkt zijn aan de category db
+        columnMainCategory.setCellFactory(TextFieldTableCell.forTableColumn());
+        columnMainCategory.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setSubCategory((e.getNewValue())));
+        columnMainCategory.setOnEditCommit(event -> {
+            Product product = event.getRowValue();
+            product.setMainCategory((event.getNewValue()));
+            updateData("mainCategory", event.getNewValue(), product.getProductId());
+        });
         //deze werkt, afblijven
         columnPrice.setCellFactory(TextFieldTableCell.forTableColumn());
         columnPrice.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setPrice(e.getNewValue()));
@@ -155,7 +163,7 @@ public class MainController {
         fileChooser.getExtensionFilters().add(extFilter);
         File file = fileChooser.showOpenDialog(pane.getScene().getWindow());
 
-        if (file != null && file.isFile() && file.getName().endsWith(".csv")) {
+        if (file != null && file.isFile()) {
             try (BufferedReader reader = Files.newBufferedReader(file.toPath())) {
                 String line = reader.readLine();
                 int lineCounter = 0;
@@ -164,36 +172,45 @@ public class MainController {
                         line = reader.readLine();
                     } else {
                         String[] productLine = line.split(";");
-                        List<String> productLineList = new LinkedList<String>(Arrays.asList(productLine));
-                        if (productLineList.size() > 4) { // maak hier pop-up van! + zet default value van switch op dit ipv de if else
+                        List<String> productLineList = new LinkedList<>(Arrays.asList(productLine));
+                        if (productLineList.size() > 5) { // maak hier pop-up van! + zet default value van switch op dit ipv de if else
                             System.out.println("Error in the CSV file!");
                             break;
                         }
                         switch (productLineList.size()) {
-                            case 4:
+                            case 5:
                                 Product product = createProduct(productLineList);
                                 model.ProductDAO.addProduct(product);
                                 line = reader.readLine();
                                 break;
-                            case 3:
+                            case 4:
                                 productLineList.add("");
                                 Product product1 = createProduct(productLineList);
                                 model.ProductDAO.addProduct(product1);
                                 line = reader.readLine();
                                 break;
-                            case 2:
+                            case 3:
                                 productLineList.add("");
                                 productLineList.add("");
                                 Product product2 = createProduct(productLineList);
                                 model.ProductDAO.addProduct(product2);
                                 line = reader.readLine();
                                 break;
-                            case 1:
+                            case 2:
                                 productLineList.add("");
                                 productLineList.add("");
                                 productLineList.add("");
                                 Product product3 = createProduct(productLineList);
                                 model.ProductDAO.addProduct(product3);
+                                line = reader.readLine();
+                                break;
+                            case 1:
+                                productLineList.add("");
+                                productLineList.add("");
+                                productLineList.add("");
+                                productLineList.add("");
+                                Product product4 = createProduct(productLineList);
+                                model.ProductDAO.addProduct(product4);
                                 line = reader.readLine();
                                 break;
                         }
@@ -213,16 +230,27 @@ public class MainController {
         }
     }
 
-    private static Product createProduct(List<String> productLineList) {
+    private static Product createProduct(List<String> productLineList) throws SQLException, ClassNotFoundException {
+        String mainCategory = "";
+        String subCategory = "";
         String productTitle = productLineList.get(0);
-        String subCategory = productLineList.get(1);
-        String mainCategory = productLineList.get(4);
-        String price = productLineList.get(2);
-        String productDescription = productLineList.get(3);
-
-
-        //hier de 0 nog vervangen door opgehaalde data uit database
-        return new Product(productTitle, subCategory, mainCategory, price, productDescription, null, 0);
+        if(DBUtil.checkForCategory("SELECT COUNT(*) AS total FROM category WHERE mainCategory = '"  + productLineList.get(1) + "'")) {
+            mainCategory = productLineList.get(1);
+        }
+        else{
+            //jonas gooi hier uw fout pop-up
+            System.out.println("error because mainCategory is not yet defined");
+        }
+        if(DBUtil.checkForCategory("SELECT COUNT(*) As total FROM category WHERE subCategory = '"  + productLineList.get(2) + "'")) {
+            subCategory = productLineList.get(2);
+        }
+        else{
+            //jonas gooi hier uw fout pop-up
+            System.out.println("error because subCategory is not yet defined");
+        }
+        String price = productLineList.get(3);
+        String productDescription = productLineList.get(4);
+        return new Product(productTitle, subCategory, mainCategory, price, productDescription,null,0);
 
     }
 
@@ -232,17 +260,12 @@ public class MainController {
 
 
     @FXML
-    public void saveProductCSV(ActionEvent actionEvent) throws SQLException {
+    public void saveProductCSV(ActionEvent actionEvent) {
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
         fileChooser.getExtensionFilters().add(extFilter);
         File file = fileChooser.showSaveDialog(pane.getScene().getWindow());
         if (file != null) {
-            try {
-                DBUtil.saveProductCSV(file);
-            } catch (ClassNotFoundException e) {
-                System.out.println("Something went wrong with saving the file");
-                e.printStackTrace();
-            }
+            DBUtil.saveProductCSV(file);
         }
     }
 

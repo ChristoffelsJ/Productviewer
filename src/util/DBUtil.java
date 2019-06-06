@@ -32,6 +32,19 @@ public class DBUtil {
         }
     }
 
+    private static int executeCountQuery(String query) throws SQLException, ClassNotFoundException {
+        try (Connection connection = getConnection(); Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery(query)) {
+            if (resultSet.next()) {
+                return resultSet.getInt("total");
+            } else {
+                return 0;
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error when executing the count querry");
+            throw ex;
+        }
+    }
+
     //voert een update uit die meegegeven wordt
     public static void updateQuery(String query) throws SQLException, ClassNotFoundException {
         try (Connection connection = getConnection(); Statement statement = connection.createStatement()) {
@@ -48,17 +61,17 @@ public class DBUtil {
             while (resultSet.next()) {
                 /* Binarystream terug omzetten naar een foto */
                 ImageView imageView = new ImageView();
-                try( InputStream is= resultSet.getBinaryStream("image");OutputStream os = new FileOutputStream(new File("photo.jpg"));){
+                try (InputStream is = resultSet.getBinaryStream("image"); OutputStream os = new FileOutputStream(new File("photo.jpg"));) {
 
                     byte[] contents = new byte[1024];
                     int size;
-                    while ((size = is.read(contents)) != -1){
-                        os.write(contents,0,size);
+                    while ((size = is.read(contents)) != -1) {
+                        os.write(contents, 0, size);
                     }
-                    Image image = new Image("file:photo.jpg",100,80,true,true);
+                    Image image = new Image("file:photo.jpg", 100, 80, true, true);
                     imageView.setImage(image);
                     Product product = new Product(resultSet.getString("productTitle"), resultSet.getString("subCategory"), resultSet.getString("mainCategory")
-                            ,resultSet.getString("price"), resultSet.getString("productDescription"), imageView, resultSet.getInt("productId"));
+                            , resultSet.getString("price"), resultSet.getString("productDescription"), imageView, resultSet.getInt("productId"));
 
                     productlist.add(product);
                 }
@@ -99,75 +112,74 @@ public class DBUtil {
         return subCategoryList;
     }
 
-    public static void saveProductCSV(File file) throws SQLException, ClassNotFoundException {
+    public static void saveProductCSV(File file){
         StringBuilder sb = new StringBuilder();
         String query = "select * from products";
         try (Connection connection = getConnection(); Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery(query)) {
-            int count = 0;
+            sb.append("productTitle");
+            sb.append(";");
+            sb.append("subCategory");
+            sb.append(";");
+            sb.append("mainCategory");
+            sb.append(";");
+            sb.append("price");
+            sb.append(";");
+            sb.append("productDescription");
+            sb.append("\r\n");
             while (resultSet.next()) {
-                if (count == 0) {
-                    sb.append("productTitle");
-                    sb.append(";");
-                    sb.append("subCategory");
-                    sb.append(";");
-                    sb.append("price");
-                    sb.append(";");
-                    sb.append("productDescription");
-                    sb.append("\r\n");
-                    count++;
-                } else {
-                    sb.append(resultSet.getString("productTitle"));
-                    sb.append(";");
-                    sb.append(resultSet.getString("subCategory"));
-                    sb.append(";");
-                    sb.append(resultSet.getString("price"));
-                    sb.append(";");
-                    sb.append(resultSet.getString("productDescription"));
-                    sb.append("\r\n");
-                    count++;
-                }
+                sb.append(resultSet.getString("productTitle"));
+                sb.append(";");
+                sb.append(resultSet.getString("subCategory"));
+                sb.append(";");
+                sb.append(resultSet.getString("mainCategory"));
+                sb.append(";");
+                sb.append(resultSet.getString("price"));
+                sb.append(";");
+                sb.append(resultSet.getString("productDescription"));
+                sb.append("\r\n");
+
             }
             FileWriter fileWriter = new FileWriter(file);
             fileWriter.write(sb.toString());
             fileWriter.close();
             System.out.println("CSV created");
 
-        } catch (Exception e) {
-            System.out.println("error when saving the database to CSV file");
+        } catch (
+                Exception e) {
+            System.out.println("Error when saving the database to CSV file");
             e.printStackTrace();
         }
+
     }
 
     public static void saveCategoryCSV(File file) throws SQLException, ClassNotFoundException {
         StringBuilder sb = new StringBuilder();
         String query = "select * from category";
         try (Connection connection = getConnection(); Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery(query)) {
-            int count = 0;
+            sb.append("subCategory");
+            sb.append(";");
+            sb.append("mainCategory");
+            sb.append(";");
+            sb.append("\r\n");
             while (resultSet.next()) {
-                if (count == 0) {
-                    sb.append("subCategory");
-                    sb.append(";");
-                    sb.append("mainCategory");
-                    sb.append(";");
-                    sb.append("\r\n");
-                    count++;
-                } else {
-                    sb.append(resultSet.getString("subCategory"));
-                    sb.append(";");
-                    sb.append(resultSet.getString("mainCategory"));
-                    sb.append(";");
-                    sb.append("\r\n");
-                    count++;
-                }
+                sb.append(resultSet.getString("subCategory"));
+                sb.append(";");
+                sb.append(resultSet.getString("mainCategory"));
+                sb.append(";");
+                sb.append("\r\n");
             }
             FileWriter fileWriter = new FileWriter(file);
             fileWriter.write(sb.toString());
             fileWriter.close();
             System.out.println("CSV created");
-
         } catch (Exception e) {
             System.out.println("error when saving the database to CSV file");
             e.printStackTrace();
         }
     }
+
+    public static boolean checkForCategory(String query) throws SQLException, ClassNotFoundException {
+        return executeCountQuery(query) > 0;
+    }
+
 }
