@@ -29,7 +29,7 @@ public class PopupAddProductController {
 
 
     @FXML
-    public void initialize() throws SQLException, ClassNotFoundException {
+    public void initialize(){
         mainCategory.setItems(generateInitialMainCategory());
         subCategory.setItems(generateInitialSubCategory());
     }

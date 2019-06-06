@@ -12,9 +12,10 @@ public class Product {
     private int productId;
     private InputStream iS;
     private ImageView image;
+    private String imagePath;
 
 
-    public Product(String title, String subCategory, String mainCategory, String price, String description, ImageView image, int productId) {
+    public Product(String title, String subCategory, String mainCategory, String price, String description, ImageView image, int productId, String imagePath) {
         this.title = title;
         this.subCategory = subCategory;
         this.mainCategory = mainCategory;
@@ -22,6 +23,7 @@ public class Product {
         this.description = description;
         this.image = image;
         this.productId = productId;
+        this.imagePath = imagePath;
     }
 
     public String getTitle() {
@@ -88,4 +90,11 @@ public class Product {
         this.image = image;
     }
 
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
 }

@@ -1,6 +1,5 @@
 package model;
 
-
 import util.DBUtil;
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,9 +14,9 @@ import java.util.List;
 public class ProductDAO {
 
     public static void addProduct(String productTitle, String subCategory, String mainCategory, String price, String description, Path imagePath, int productId) throws SQLException, ClassNotFoundException, IOException {
-        String update = "INSERT INTO products (productTitle, subCategory, mainCategory, price, productDescription, image)" +
-                " VALUES ('" + productTitle + "','" + subCategory + "', '" + mainCategory + "','" + price + "','" + description + "',?)";
-
+        String stringPath = imagePath.toString().replace("\\","/");
+        String update = "INSERT INTO products (productTitle, subCategory, mainCategory, price, productDescription, image, imagePath)" +
+                " VALUES ('" + productTitle + "','" + subCategory + "', '" + mainCategory + "','" + price + "','" + description + "',?, '" + stringPath + "')";
         try(InputStream inputStream = Files.newInputStream(imagePath);
             Connection con = DBUtil.getConnection();
             PreparedStatement pstmt = con.prepareStatement(update)){
@@ -33,20 +32,35 @@ public class ProductDAO {
 
     public static void addProduct(Product product) throws SQLException {
 
-        String update = "INSERT INTO products (productTitle, subCategory, mainCategory, price, productDescription, image) " +
-                "VALUES ('" + product.getTitle() + "','" + product.getSubCategory() + "','" + product.getMainCategory() + "','" + product.getPrice() + "','" + product.getDescription() + "',?)";
+        String update = "INSERT INTO products (productTitle, subCategory, mainCategory, price, productDescription, image, imagePath) " +
+                "VALUES ('" + product.getTitle() + "','" + product.getSubCategory() + "','" + product.getMainCategory() + "','" + product.getPrice() + "','" + product.getDescription() + "',?, '" + product.getImagePath() + "')";
+        if(!product.getImagePath().equals("null") || product.getImagePath() != null) {
+            try (InputStream inputStream = Files.newInputStream(Paths.get(product.getImagePath()));
+                 Connection con = DBUtil.getConnection();
+                 PreparedStatement pstmt = con.prepareStatement(update)) {
+                pstmt.setBinaryStream(1, inputStream);
+                pstmt.executeUpdate();
 
-        try(InputStream inputStream = Files.newInputStream(Paths.get("standardImage.jpg"));
-            Connection con = DBUtil.getConnection();
-            PreparedStatement pstmt = con.prepareStatement(update)){
-            pstmt.setBinaryStream(1, inputStream);
-            pstmt.executeUpdate();
+            } catch (SQLException ex) {
+                System.out.println("Error when implementing data in database");
+                throw ex;
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+        else{
+            try (InputStream inputStream = Files.newInputStream(Paths.get("standardImage.jpg"));
+                 Connection con = DBUtil.getConnection();
+                 PreparedStatement pstmt = con.prepareStatement(update)) {
+                pstmt.setBinaryStream(1, inputStream);
+                pstmt.executeUpdate();
 
-        } catch (SQLException ex) {
-            System.out.println("Error when implementing data in database");
-            throw ex;
-        } catch (IOException e) {
-            e.printStackTrace();
+            } catch (SQLException ex) {
+                System.out.println("Error when implementing data in database");
+                throw ex;
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
         }
     }
 

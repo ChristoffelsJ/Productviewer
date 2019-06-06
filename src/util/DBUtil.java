@@ -13,8 +13,6 @@ public class DBUtil {
     private static String url = "jdbc:mysql://localhost/productViewer?serverTimezone=UTC";
     private static String userName = "root";
     private static String password = "MySQLJava2019!";
-    private static String driverName = "com.mysql.cj.jdbc.Driver";
-    private static Connection connection = null;
 
     //connectie methode
     public static Connection getConnection() throws SQLException {
@@ -70,7 +68,7 @@ public class DBUtil {
                     Image image = new Image("file:photo.jpg", 100, 80, true, true);
                     imageView.setImage(image);
                     Product product = new Product(resultSet.getString("productTitle"), resultSet.getString("subCategory"), resultSet.getString("mainCategory")
-                            ,resultSet.getString("price"), resultSet.getString("productDescription"), imageView, resultSet.getInt("productId"));
+                            ,resultSet.getString("price"), resultSet.getString("productDescription"), imageView, resultSet.getInt("productId"),resultSet.getString("imagePath"));
 
                     productlist.add(product);
                 }
@@ -123,6 +121,8 @@ public class DBUtil {
             sb.append("price");
             sb.append(";");
             sb.append("productDescription");
+            sb.append(";");
+            sb.append("imagePath");
             sb.append("\r\n");
             while (resultSet.next()) {
                 sb.append(resultSet.getString("productTitle"));
@@ -134,8 +134,9 @@ public class DBUtil {
                 sb.append(resultSet.getString("price"));
                 sb.append(";");
                 sb.append(resultSet.getString("productDescription"));
+                sb.append(";");
+                sb.append(resultSet.getString("imagePath"));
                 sb.append("\r\n");
-
             }
             FileWriter fileWriter = new FileWriter(file);
             fileWriter.write(sb.toString());

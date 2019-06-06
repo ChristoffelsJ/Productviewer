@@ -158,30 +158,30 @@ public class MainController {
                     } else {
                         String[] productLine = line.split(";");
                         List<String> productLineList = new LinkedList<>(Arrays.asList(productLine));
-                        if (productLineList.size() > 5) { // maak hier pop-up van! + zet default value van switch op dit ipv de if else
+                        if (productLineList.size() > 6) { // maak hier pop-up van! + zet default value van switch op dit ipv de if else
                             System.out.println("Error in the CSV file!");
                             break;
                         }
                         switch (productLineList.size()) {
-                            case 5:
+                            case 6:
                                 Product product = createProduct(productLineList);
                                 model.ProductDAO.addProduct(product);
                                 line = reader.readLine();
                                 break;
-                            case 4:
+                            case 5:
                                 productLineList.add("");
                                 Product product1 = createProduct(productLineList);
                                 model.ProductDAO.addProduct(product1);
                                 line = reader.readLine();
                                 break;
-                            case 3:
+                            case 4:
                                 productLineList.add("");
                                 productLineList.add("");
                                 Product product2 = createProduct(productLineList);
                                 model.ProductDAO.addProduct(product2);
                                 line = reader.readLine();
                                 break;
-                            case 2:
+                            case 3:
                                 productLineList.add("");
                                 productLineList.add("");
                                 productLineList.add("");
@@ -189,13 +189,23 @@ public class MainController {
                                 model.ProductDAO.addProduct(product3);
                                 line = reader.readLine();
                                 break;
-                            case 1:
+                            case 2:
                                 productLineList.add("");
                                 productLineList.add("");
                                 productLineList.add("");
                                 productLineList.add("");
                                 Product product4 = createProduct(productLineList);
                                 model.ProductDAO.addProduct(product4);
+                                line = reader.readLine();
+                                break;
+                            case 1:
+                                productLineList.add("");
+                                productLineList.add("");
+                                productLineList.add("");
+                                productLineList.add("");
+                                productLineList.add("");
+                                Product product5 = createProduct(productLineList);
+                                model.ProductDAO.addProduct(product5);
                                 line = reader.readLine();
                                 break;
                         }
@@ -229,7 +239,9 @@ public class MainController {
             mainCategory = productLineList.get(2);
             String price = productLineList.get(3);
             String productDescription = productLineList.get(4);
-            return new Product(productTitle, subCategory, mainCategory, price, productDescription, null, 0);
+            String imagePath = productLineList.get(5);
+
+            return new Product(productTitle, subCategory, mainCategory, price, productDescription, null, 0,imagePath);
         }
 
     @FXML
