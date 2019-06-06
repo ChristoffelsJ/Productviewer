@@ -8,6 +8,7 @@
 <?import javafx.scene.image.ImageView?>
 
 
+<?import javafx.scene.text.Text?>
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="main.PopupAddProductController"
@@ -15,10 +16,21 @@
  <BorderPane >
      <left>
          <FlowPane hgap="20">
-             <TextField fx:id="productTitle" promptText="Product to add" />
+<HBox>
+    <VBox  prefWidth="160" alignment="CENTER">
+        <Label text="Add product"  />
+        <TextField fx:id="productTitle" promptText="Product to add" />
+    </VBox>
+    <VBox prefWidth="160" alignment="CENTER" >
+<Label text="Add price"/>
+        <TextField fx:id="price" promptText="Product price" />
+    </VBox>
+    <TextField fx:id="description" promptText="Product description"/>
+
+</HBox>
              <ComboBox prefHeight="20" prefWidth="165" promptText="Select main category" fx:id="mainCategory">
                  <items>
-                    <FXCollections fx:factory = "observableArrayList"/>
+                     <FXCollections fx:factory = "observableArrayList"/>
                  </items>
              </ComboBox>
              <ComboBox prefHeight="20" prefWidth="165" promptText="Select sub category" fx:id="subCategory">
@@ -26,14 +38,13 @@
                      <FXCollections fx:factory = "observableArrayList"/>
                  </items>
              </ComboBox>
-             <TextField fx:id="price" promptText="Product price" />
-             <TextField fx:id="description" promptText="Product description"/>
              <Button fx:id="addProductButton" onAction="#addProduct" text="Add Product" />
-             <Button fx:id="addPictureButton" onAction="#PictureButtonAction" text="Add Picture" />
+
          </FlowPane>
      </left>
      <center>
          <ListView prefWidth="100" prefHeight="150">
+             <Button fx:id="addPictureButton" onAction="#PictureButtonAction" text="Add Picture" />
              <ImageView fx:id="imageView"/>
          </ListView>
      </center>

@@ -27,7 +27,7 @@ public class ProductDAO {
         }
     }
 
-    public static void addProduct(String productTitle, int subCategory, int mainCategory, String price, String description, Path imagePath, int productId) throws SQLException, ClassNotFoundException, IOException {
+    public static void addProduct(String productTitle, String subCategory, String mainCategory, String price, String description, Path imagePath, int productId) throws SQLException, ClassNotFoundException, IOException {
         String update = "INSERT INTO products (productTitle, subCategory, mainCategory, price, productDescription, image) VALUES ('" + productTitle + "','" + subCategory + "', '" + mainCategory + "','" + price + "','" + description + "',?)";
 
 

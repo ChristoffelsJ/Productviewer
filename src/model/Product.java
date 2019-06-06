@@ -91,20 +91,4 @@ public class Product {
         this.image = image;
     }
 
-    public ImageView changeToImage () throws IOException {
-       OutputStream oS = new FileOutputStream(new File("photo.jpg"));
-       byte [] content= new byte [1024];
-       int size = 0;
-       while ((size = getiS().read(content)) != -1){
-    oS.write(content,0,size);
-       }
-       oS.close();
-       iS.close();
-       Image image = new Image("file:photo.jpg",100,150,true,true);
-       ImageView imageView = new ImageView(image);
-       imageView.setFitWidth(100);
-       imageView.setFitHeight(150);
-       imageView.setPreserveRatio(true);
-       return imageView;
-   }
 }

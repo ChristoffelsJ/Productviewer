@@ -26,8 +26,8 @@ public class PopupAddProductController {
     @FXML private TextField price;
     @FXML private TextField description;
     @FXML private ImageView imageView;
-
     private Path imagePath;
+
 
     @FXML
     public void initialize() throws SQLException, ClassNotFoundException {
@@ -46,6 +46,10 @@ public class PopupAddProductController {
     @FXML
     public void PictureButtonAction(ActionEvent actionEvent) throws MalformedURLException {
         FileChooser chooser = new FileChooser();
+        FileChooser.ExtensionFilter extFilterJpg = new FileChooser.ExtensionFilter("JPG files (*.jpg)", "*.jpg");
+        FileChooser.ExtensionFilter extFilterGif = new FileChooser.ExtensionFilter("GIF files (*.gif)", "*.gif");
+        chooser.getExtensionFilters().add(extFilterJpg);
+        chooser.getExtensionFilters().add(extFilterGif);
         chooser.setTitle("Open File");
         File selectedFile = chooser.showOpenDialog(new Stage());
         if (selectedFile != null) {
@@ -67,8 +71,7 @@ public class PopupAddProductController {
         if (imagePath == null){
             imagePath = Paths.get("standardImage.jpg");
         }
-        model.ProductDAO.addProduct(productTitle.getText(), category.getValue(), price.getText(), description.getText(), imagePath,0);
-        model.ProductDAO.addProduct(productTitle.getText(),Integer.parseInt(subCategory.getValue()), Integer.parseInt(mainCategory.getValue()), price.getText(), description.getText(), imagePath,0);
+        model.ProductDAO.addProduct(productTitle.getText(),subCategory.getValue(), mainCategory.getValue(), price.getText(), description.getText(), imagePath,0);
         Stage stage = (Stage) addProductButton.getScene().getWindow();
         stage.close();
 
