@@ -15,6 +15,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import model.CategoryDAO;
 import model.Product;
 import model.ProductDAO;
 import util.DBUtil;
@@ -234,25 +235,17 @@ public class MainController {
         String mainCategory = "";
         String subCategory = "";
         String productTitle = productLineList.get(0);
-        if(DBUtil.checkForCategory("SELECT COUNT(*) AS total FROM category WHERE mainCategory = '"  + productLineList.get(1) + "'")) {
-            mainCategory = productLineList.get(1);
+        if(DBUtil.checkForCategory("SELECT COUNT(*) AS total FROM category WHERE subCategory = '"  + productLineList.get(1) + "'")) {
+            subCategory = productLineList.get(1);
         }
         else{
-            //jonas gooi hier uw fout pop-up
-            System.out.println("error because mainCategory is not yet defined");
+            CategoryDAO.addCategory(productLineList.get(2), productLineList.get(1));
         }
-        if(DBUtil.checkForCategory("SELECT COUNT(*) As total FROM category WHERE subCategory = '"  + productLineList.get(2) + "'")) {
-            subCategory = productLineList.get(2);
+            mainCategory = productLineList.get(2);
+            String price = productLineList.get(3);
+            String productDescription = productLineList.get(4);
+            return new Product(productTitle, subCategory, mainCategory, price, productDescription, null, 0);
         }
-        else{
-            //jonas gooi hier uw fout pop-up
-            System.out.println("error because subCategory is not yet defined");
-        }
-        String price = productLineList.get(3);
-        String productDescription = productLineList.get(4);
-        return new Product(productTitle, subCategory, mainCategory, price, productDescription,null,0);
-
-    }
 
     @FXML
     public void OpenCategoryCSV(ActionEvent actionEvent) throws SQLException {

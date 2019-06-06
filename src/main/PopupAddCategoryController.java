@@ -21,21 +21,22 @@ public class PopupAddCategoryController {
 
     public void addCategory(ActionEvent actionEvent) {
 
-       Category category= new Category();
-       category.setMainCategory(mainCategory.getText());
-       category.setSubCategory(subCategory.getText());
+        Category category = new Category();
+        category.setMainCategory(mainCategory.getText());
+        category.setSubCategory(subCategory.getText());
         Stage stage = (Stage) categoryAddButton.getScene().getWindow();
-       stage.close();
-       if (category.getMainCategory().equals("")){
-           category.setMainCategory("No main category");
-       }
+        stage.close();
+        if (category.getMainCategory().equals("")) {
+            category.setMainCategory("No main category");
+        }
         try {
-            model.CategoryDAO.addCategory(category.getMainCategory(),category.getSubCategory());
-       } catch (SQLException e) {
-            System.out.println("This sub category is all ready entered");
+            model.CategoryDAO.addCategory(category.getMainCategory(), category.getSubCategory());
+        } catch (SQLException e) {
+            System.out.println("This sub category is already entered");
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-    }}
+    }
+}
 
