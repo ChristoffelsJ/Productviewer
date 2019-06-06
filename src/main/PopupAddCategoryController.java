@@ -13,28 +13,29 @@ import java.sql.SQLException;
 
 public class PopupAddCategoryController {
     @FXML
-    private TextField category;
+    private TextField mainCategory;
+    @FXML
+    private TextField subCategory;
     @FXML
     private Button categoryAddButton;
 
     public void addCategory(ActionEvent actionEvent) {
-///*        Category categoryke=new Category(category.getText());*/
-//        Stage stage = (Stage) categoryAddButton.getScene().getWindow();
-//        stage.close();
-//        try {
-//            model.ProductDAO.addCategory(category.getText());
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//       Product product=new Product("null",category.getText(),"null","null");
-//        Stage stage = (Stage) categoryAddButton.getScene().getWindow();
-//        stage.close();
-//        try {
-//      model.ProductDAO.addProduct("null",category.getText(),"null","null",null);
-//       } catch (SQLException e) {
-//           e.printStackTrace();
-//        } catch (ClassNotFoundException e) {
-//            e.printStackTrace();
-//        }
-    }
-}
+
+       Category category= new Category();
+       category.setMainCategory(mainCategory.getText());
+       category.setSubCategory(subCategory.getText());
+        Stage stage = (Stage) categoryAddButton.getScene().getWindow();
+       stage.close();
+       if (category.getMainCategory().equals("")){
+           category.setMainCategory("No main category");
+       }
+        try {
+            model.CategoryDAO.addCategory(category.getMainCategory(),category.getSubCategory());
+       } catch (SQLException e) {
+            System.out.println("This sub category is all ready entered");
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }}
 

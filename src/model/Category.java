@@ -4,6 +4,9 @@ public class Category {
     private String subCategory;
     private String mainCategory;
 
+    public Category() {
+    }
+
     public Category(String subCategory, String mainCategory) {
         this.subCategory = subCategory;
         this.mainCategory = mainCategory;

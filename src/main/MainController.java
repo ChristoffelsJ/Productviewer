@@ -291,7 +291,7 @@ public class MainController {
             Parent root1 = fxmlLoader.load();
             Stage stage = new Stage();
             stage.setTitle("Add product");
-            stage.setScene(new Scene(root1, 520, 120));
+            stage.setScene(new Scene(root1, 510, 250));
             stage.show();
         } catch (Exception e) {
             System.out.println("Something went wrong when opening the add product pop-up");
@@ -306,7 +306,7 @@ public class MainController {
             Parent root1 = fxmlLoader.load();
             Stage stage = new Stage();
             stage.setTitle("Add category");
-            stage.setScene(new Scene(root1, 300, 80));
+            stage.setScene(new Scene(root1, 400, 80));
             stage.show();
         } catch (Exception e) {
             System.out.println("Something went wrong when openening the add category popup");

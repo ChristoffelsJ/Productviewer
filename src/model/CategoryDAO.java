@@ -5,6 +5,8 @@ import java.util.List;
 
 public class CategoryDAO {
 
+
+
     public static List<String> getInitialMainCategory() throws SQLException, ClassNotFoundException {
         String query = "select distinct mainCategory FROM category";
         try {
@@ -20,6 +22,17 @@ public class CategoryDAO {
             return util.DBUtil.fillListWithSubCategory(query);
         } catch (SQLException ex) {
             System.out.println("Error while getting initial subCategories");
+            throw ex;
+        }
+    }
+
+    public static void addCategory(String mainCategory, String subCategory) throws SQLException, ClassNotFoundException {
+
+        String update = "INSERT INTO category VALUES  ('"+subCategory+"','" + mainCategory + "')";
+        try {
+            util.DBUtil.updateQuery(update);
+        } catch (SQLException ex) {
+            System.out.println("Error when implementing categories in database");
             throw ex;
         }
     }

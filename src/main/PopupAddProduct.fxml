@@ -12,11 +12,11 @@
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="main.PopupAddProductController"
-            prefHeight="400.0" prefWidth="1000">
+            prefHeight="250.0" prefWidth="520" >
  <BorderPane >
-     <left>
-         <FlowPane hgap="20">
-<HBox>
+     <center>
+         <FlowPane hgap="20" vgap="5" >
+<FlowPane prefWidth="500" hgap="5">
     <VBox  prefWidth="160" alignment="CENTER">
         <Label text="Add product"  />
         <TextField fx:id="productTitle" promptText="Product to add" />
@@ -25,28 +25,43 @@
 <Label text="Add price"/>
         <TextField fx:id="price" promptText="Product price" />
     </VBox>
-    <TextField fx:id="description" promptText="Product description"/>
+    <VBox prefWidth="160" alignment="CENTER">
+<Label text="Add description"/>
+        <TextField fx:id="description" promptText="Product description"/>
+    </VBox>
+</FlowPane>
+             <FlowPane prefWidth="500" alignment="CENTER" hgap="5">
+                 <ComboBox prefHeight="20" prefWidth="180" promptText="Select main category" fx:id="mainCategory">
+                     <items>
+                         <FXCollections fx:factory = "observableArrayList"/>
+                     </items>
+                 </ComboBox>
+                 <ComboBox prefHeight="20" prefWidth="180" promptText="Select sub category"  fx:id="subCategory">
+                     <items>
+                         <FXCollections fx:factory = "observableArrayList"/>
+                     </items>
+                 </ComboBox>
+             </FlowPane >
+             <FlowPane prefWidth="500" alignment="CENTER">
+                 <Button fx:id="addPictureButton" onAction="#PictureButtonAction" text="Add Picture"  />
+             </FlowPane>
+             <BorderPane prefWidth="500">
+                 <left>
+                     <ListView  prefWidth="110" prefHeight="130">
+                     <ImageView fx:id="imageView" />
+                     </ListView>
+                 </left>
+                 <center>
+                     <Button fx:id="addProductButton"  prefHeight="70" prefWidth="200"  onAction="#addProduct" text="Add Product" textAlignment="CENTER" style="-fx-font-size:20" />
+                 </center>
 
-</HBox>
-             <ComboBox prefHeight="20" prefWidth="165" promptText="Select main category" fx:id="mainCategory">
-                 <items>
-                     <FXCollections fx:factory = "observableArrayList"/>
-                 </items>
-             </ComboBox>
-             <ComboBox prefHeight="20" prefWidth="165" promptText="Select sub category" fx:id="subCategory">
-                 <items>
-                     <FXCollections fx:factory = "observableArrayList"/>
-                 </items>
-             </ComboBox>
-             <Button fx:id="addProductButton" onAction="#addProduct" text="Add Product" />
+
+
+
+             </BorderPane>
 
          </FlowPane>
-     </left>
-     <center>
-         <ListView prefWidth="100" prefHeight="150">
-             <Button fx:id="addPictureButton" onAction="#PictureButtonAction" text="Add Picture" />
-             <ImageView fx:id="imageView"/>
-         </ListView>
      </center>
+
  </BorderPane>
 </AnchorPane>

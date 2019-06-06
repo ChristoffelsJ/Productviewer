@@ -58,7 +58,7 @@ public class PopupAddProductController {
                 Image imageFile = new Image(is);
                 imageView.setImage(imageFile);
                 imageView.setFitWidth(100);
-                imageView.setFitHeight(150);
+                imageView.setFitHeight(120);
                 imageView.setPreserveRatio(true);
             } catch (IOException e) {
                 e.printStackTrace();
