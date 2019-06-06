@@ -3,7 +3,6 @@ package util;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import model.Product;
-import model.ProductDAO;
 
 import java.io.*;
 import java.sql.*;

@@ -15,6 +15,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import model.Category;
 import model.CategoryDAO;
 import model.Product;
 import model.ProductDAO;
@@ -159,7 +160,6 @@ public class MainController {
 
     @FXML
     private void openProductCSV(ActionEvent actionEvent) throws ClassNotFoundException, SQLException {
-
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
         fileChooser.getExtensionFilters().add(extFilter);
         File file = fileChooser.showOpenDialog(pane.getScene().getWindow());
@@ -232,7 +232,7 @@ public class MainController {
     }
 
     private static Product createProduct(List<String> productLineList) throws SQLException, ClassNotFoundException {
-        String mainCategory = "";
+        String mainCategory ="";
         String subCategory = "";
         String productTitle = productLineList.get(0);
         if(DBUtil.checkForCategory("SELECT COUNT(*) AS total FROM category WHERE subCategory = '"  + productLineList.get(1) + "'")) {
@@ -240,6 +240,7 @@ public class MainController {
         }
         else{
             CategoryDAO.addCategory(productLineList.get(2), productLineList.get(1));
+            subCategory = productLineList.get(1);
         }
             mainCategory = productLineList.get(2);
             String price = productLineList.get(3);
@@ -249,6 +250,59 @@ public class MainController {
 
     @FXML
     public void OpenCategoryCSV(ActionEvent actionEvent) throws SQLException {
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
+        fileChooser.getExtensionFilters().add(extFilter);
+        File file = fileChooser.showOpenDialog(pane.getScene().getWindow());
+
+        if (file != null && file.isFile()) {
+            try (BufferedReader reader = Files.newBufferedReader(file.toPath())) {
+                String line = reader.readLine();
+                int lineCounter = 0;
+                while (line != null) {
+                    if (lineCounter == 0) {
+                        line = reader.readLine();
+                    } else {
+                        String[] productLine = line.split(";");
+                        List<String> productLineList = new LinkedList<>(Arrays.asList(productLine));
+                        if (productLineList.size() > 2) { // maak hier pop-up van! + zet default value van switch op dit ipv de if else
+                            System.out.println("Error in the CSV file!");
+                            break;
+                        }
+                        switch (productLineList.size()) {
+                            case 2:
+                                Category category = createCategory(productLineList);
+                                if(category != null)
+                                model.CategoryDAO.addCategory(category);
+                                line = reader.readLine();
+                                break;
+                            case 1:
+                                line = reader.readLine();
+                                break;
+                        }
+                    }
+                    lineCounter++;
+                }
+                initialize();
+            } catch (IOException e) {
+                System.out.println("Something went wrong when reading the file");
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private Category createCategory(List<String> categoryLineList) throws SQLException, ClassNotFoundException {
+        String mainCategory;
+        String subCategory = "";
+        if (!DBUtil.checkForCategory("SELECT COUNT(*) AS total FROM category WHERE subCategory = '" + categoryLineList.get(0) + "'")) {
+            subCategory = categoryLineList.get(0);
+            mainCategory = categoryLineList.get(1);
+            return new Category(subCategory, mainCategory);
+        }
+        else{
+            return null;
+        }
     }
 
 
@@ -322,16 +376,18 @@ public class MainController {
         }
     }
 //werkt
-    public void deleteRow(ActionEvent actionEvent) throws SQLException, ClassNotFoundException {
+    public void deleteRow(ActionEvent actionEvent) throws ClassNotFoundException {
         Product selectedItem = productTable.getSelectionModel().getSelectedItem();
-        int productId = selectedItem.getProductId();
-        String query = "delete from products WHERE productId = " + productId;
-        try{
-        DBUtil.executeQuery(query);
-        } catch (SQLException ex) {
-            System.err.println("Error in deleting product from DB");
-            ex.printStackTrace(System.err);
+        if (selectedItem != null) {
+            int productId = selectedItem.getProductId();
+            String query = "delete from products WHERE productId = " + productId;
+            try {
+                DBUtil.executeQuery(query);
+            } catch (SQLException ex) {
+                System.err.println("Error in deleting product from DB");
+                ex.printStackTrace(System.err);
+            }
+            productTable.getItems().remove(selectedItem);
         }
-        productTable.getItems().remove(selectedItem);
     }
 }

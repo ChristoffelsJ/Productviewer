@@ -86,7 +86,9 @@ public class ProductDAO {
 
     public static List<Product> search(String search) throws SQLException, ClassNotFoundException {
         String query = "SELECT * FROM products WHERE productTitle LIKE '" + "%" + search + "%" + "' " +
-                "OR subCategory LIKE '" + "%" + search + "%" + "'";
+                "OR subCategory LIKE '" + "%" + search + "%" + "'" +
+                "OR mainCategory LIKE '" + "%" + search + "%" + "'" +
+                "OR productID LIKE '" + "%" + search + "%" + "'";;
         try {
             return util.DBUtil.fillListWithProducts(query);
         } catch (SQLException ex) {

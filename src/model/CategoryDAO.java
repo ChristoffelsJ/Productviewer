@@ -36,4 +36,14 @@ public class CategoryDAO {
             throw ex;
         }
     }
+    public static void addCategory(Category category) throws SQLException, ClassNotFoundException {
+
+        String update = "INSERT INTO category (subCategory, mainCategory) VALUES  ('"+category.getSubCategory()+"','" + category.getMainCategory() + "')";
+        try {
+            util.DBUtil.updateQuery(update);
+        } catch (SQLException ex) {
+            System.out.println("Error when implementing categories in database");
+            throw ex;
+        }
+    }
 }
