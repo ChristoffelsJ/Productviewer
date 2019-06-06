@@ -10,10 +10,17 @@
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="main.PopupAddCategoryController"
             prefHeight="400.0" prefWidth="600.0">
-    <BorderPane AnchorPane.bottomAnchor="20" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20" AnchorPane.topAnchor="20">
+    <BorderPane >
         <center>
-            <FlowPane hgap="20">
-                <TextField fx:id="category" text="Category to add" />
+            <FlowPane hgap="20" alignment="CENTER">
+                <VBox>
+                <Label text="Add main category" alignment="CENTER"/>
+                    <TextField fx:id="mainCategory" promptText="Add main category"  />
+                </VBox>
+                <VBox>
+                    <Label text="Add sub category" alignment="CENTER"/>
+                    <TextField fx:id="subCategory" promptText="Add sub category"  />
+                </VBox>
                 <Button fx:id="categoryAddButton" onAction="#addCategory" text="Add Category"/>
             </FlowPane>
         </center>

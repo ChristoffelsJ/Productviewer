@@ -99,14 +99,5 @@ public class ProductDAO {
         }
     }
 
-    public static void addCategory(String category) throws SQLException, ClassNotFoundException {
 
-        String update = "INSERT INTO category VALUES  (0,'" + category + "')";
-        try {
-            util.DBUtil.updateQuery(update);
-        } catch (SQLException ex) {
-            System.out.println("Error when implementing categories in database");
-            throw ex;
-        }
-    }
 }
