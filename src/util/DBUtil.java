@@ -13,7 +13,7 @@ import java.util.*;
 public class DBUtil {
     private static String url = "jdbc:mysql://localhost/productViewer?serverTimezone=UTC";
     private static String userName = "root";
-    private static String password = "MySQLJava2019!";
+    private static String password = "Xqv513jc13";
     private static String driverName = "com.mysql.cj.jdbc.Driver";
     private static Connection connection = null;
 
