@@ -46,25 +46,22 @@ public class DBUtil {
         List<Product> productlist = new ArrayList<>();
         try (Connection connection = getConnection(); Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery(query)) {
             while (resultSet.next()) {
-
-
-                InputStream is = resultSet.getBinaryStream("image");
-                OutputStream os = new FileOutputStream(new File("photo.jpg"));
-                byte[] contents = new byte[1024];
-                int size;
-                while ((size = is.read(contents)) != -1) {
-                    os.write(contents, 0, size);
-                }
-                Image image = new Image("file:photo.jpg", 100, 80, true, true);
+                /* Binarystream terug omzetten naar een foto */
                 ImageView imageView = new ImageView();
-                imageView.setImage(image);
+                try( InputStream is= resultSet.getBinaryStream("image");OutputStream os = new FileOutputStream(new File("photo.jpg"));){
 
+                    byte[] contents = new byte[1024];
+                    int size;
+                    while ((size = is.read(contents)) != -1){
+                        os.write(contents,0,size);
+                    }
+                    Image image = new Image("file:photo.jpg",100,80,true,true);
+                    imageView.setImage(image);
+                    Product product = new Product(resultSet.getString("productTitle"), resultSet.getString("subCategory"), resultSet.getString("mainCategory")
+                            ,resultSet.getString("price"), resultSet.getString("productDescription"), imageView, resultSet.getInt("productId"));
 
-                Product product = new Product(resultSet.getString("productTitle"), resultSet.getString("subCategory"), resultSet.getString("mainCategory")
-                        , resultSet.getString("price"), resultSet.getString("productDescription"), imageView, resultSet.getInt("productId"));
-
-                /* product.setProductId(ProductDAO.getProductId(product));*/
-                productlist.add(product);
+                    productlist.add(product);
+                }
             }
         } catch (SQLException ex) {
             System.out.println("Error while filling the productsList");

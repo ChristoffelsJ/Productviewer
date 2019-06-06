@@ -48,8 +48,8 @@
                     <TableView fx:id="productTable" AnchorPane.bottomAnchor="5" AnchorPane.leftAnchor="5"
                                AnchorPane.rightAnchor="5" AnchorPane.topAnchor="5">
                         <columns>
-                            <TableColumn fx:id="columnPicture" prefWidth="60"  text="Picture"/>
-                            <TableColumn fx:id="columnProductTitle" prefWidth="185" text="Product title"/>
+                            <TableColumn fx:id="columnPicture" prefWidth="105"  text="Picture"/>
+                            <TableColumn fx:id="columnProductTitle" prefWidth="185"  text="Product title"/>
                             <TableColumn fx:id="columnSubCategory" prefWidth="185" text="Subcategory"/>
                             <TableColumn fx:id="columnMainCategory" prefWidth="185" text="Maincategory"/>
                             <TableColumn fx:id="columnPrice" prefWidth="185" text="Price"/>
