@@ -14,16 +14,68 @@ public class Product {
     private ImageView image;
     private String imagePath;
 
+    public Product(String title, String subCategory, String mainCategory, String price, String description, ImageView image, int productId, String imagePath){
+        this.title=title;
+        this.subCategory=subCategory;
+        this.mainCategory=mainCategory;
+        this.price=price;
+        this.description=description;
+        this.image=image;
+        this.productId=productId;
+        this.imagePath=imagePath;
+    }
 
-    public Product(String title, String subCategory, String mainCategory, String price, String description, ImageView image, int productId, String imagePath) {
-        this.title = title;
-        this.subCategory = subCategory;
-        this.mainCategory = mainCategory;
-        this.price = price;
-        this.description = description;
-        this.image = image;
-        this.productId = productId;
-        this.imagePath = imagePath;
+    public static class Builder {
+        private String title;
+        private String subCategory;
+        private String mainCategory;
+        private String price;
+        private String description;
+        private int productId;
+        private InputStream iS;
+        private ImageView image;
+        private String imagePath;
+
+        public Builder(){}
+
+        public Builder withTitle(String title){
+            this.title = title;
+            return this;
+        }
+
+        public Builder withSubCat(String subCategory){
+            this.subCategory = subCategory;
+            return this;
+        }
+        public Builder withMainCat(String mainCategory){
+            this.mainCategory = mainCategory;
+            return this;
+        }
+        public Builder withPrice(String price){
+            this.price = price;
+            return this;
+        }
+        public Builder withDescription(String description){
+            this.description = description;
+            return this;
+        }
+        public Builder withImageView(ImageView image){
+            this.image = image;
+            return this;
+        }
+        public Builder withId(int productId){
+            this.productId = productId;
+            return this;
+        }
+
+        public Builder withPath(String imagePath){
+            this.imagePath = imagePath;
+            return this;
+        }
+
+        public Product build(){
+            return new Product(title,subCategory,mainCategory,price,description,image,productId,imagePath);
+        }
     }
 
     public String getTitle() {
