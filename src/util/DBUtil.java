@@ -2,11 +2,8 @@ package util;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import main.MainController;
 import model.Product;
 
-import javax.swing.*;
-import java.awt.event.ActionEvent;
 import java.io.*;
 import java.sql.*;
 import java.util.*;
@@ -21,7 +18,12 @@ public class DBUtil {
     private static String password = "blablabla";
 
     //connectie methode
-    public static Connection getConnection() throws SQLException {
+    public static Connection getConnection() throws SQLException, IOException {
+        Properties properties = new Properties();
+        properties.load(new FileInputStream("Productviewer/MYSQLconnection.properties"));
+        String userName = properties.getProperty("userName");
+        String password = properties.getProperty("password");
+        String url = properties.getProperty("url");
         return DriverManager.getConnection(url, userName, password);
     }
 
@@ -33,11 +35,12 @@ public class DBUtil {
             System.out.println("Error when executing the querry");
             throwErrorStatic("Error when executing the querry");
             ex.printStackTrace();
-
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
-    private static int executeCountQuery(String query) throws SQLException {
+    private static int executeCountQuery(String query) throws SQLException, IOException {
         try (Connection connection = getConnection(); Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery(query)) {
             if (resultSet.next()) {
                 return resultSet.getInt("total");
@@ -48,6 +51,9 @@ public class DBUtil {
             System.out.println("Error when executing the count querry");
             throwErrorStatic("Error when executing the querry");
             throw ex;
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw e;
         }
     }
 
@@ -59,6 +65,8 @@ public class DBUtil {
             System.out.println("Error when updating the query");
             throwErrorStatic("Error when updating the query");
             ex.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -95,6 +103,7 @@ public class DBUtil {
         } catch (Exception ex) {
             System.out.println("Error while filling the productsList");
             throwErrorStatic("Error while filling the productsList");
+            ex.printStackTrace();
         }
         return productlist;
     }
@@ -107,7 +116,7 @@ public class DBUtil {
                 String category = resultSet.getString("mainCategory");
                 mainCategoryList.add(category);
             }
-        } catch (SQLException ex) {
+        } catch (SQLException | IOException ex) {
             System.out.println("Error while filling the mainCategory List");
             throwErrorStatic("Error while filling the mainCategory List");
         }
@@ -122,7 +131,7 @@ public class DBUtil {
                 String category = resultSet.getString("subCategory");
                 subCategoryList.add(category);
             }
-        } catch (SQLException ex) {
+        } catch (SQLException | IOException ex) {
             System.out.println("Error while filling the subCategory List");
             throwErrorStatic("Error while filling the subCategory List");
 
@@ -204,7 +213,7 @@ public class DBUtil {
         }
     }
 
-    public static boolean checkForCategory(String query) throws SQLException, ClassNotFoundException {
+    public static boolean checkForCategory(String query) throws SQLException, ClassNotFoundException, IOException {
         return executeCountQuery(query) > 0;
     }
 

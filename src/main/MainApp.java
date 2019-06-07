@@ -14,7 +14,7 @@ public class MainApp extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("Viewer.fxml"));
-        Scene scene = new Scene(root, 990, 560);
+        Scene scene = new Scene(root, 1010, 500);
         stage.setTitle("ProductViewer");
         stage.setScene(scene);
         stage.show();
