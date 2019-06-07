@@ -14,9 +14,7 @@
     <BorderPane AnchorPane.bottomAnchor="20" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20"
                 AnchorPane.topAnchor="20">
         <center>
-            <TextField>
-                <FXCollections fx:factory="observableArrayList"/>
-            </TextField>
+            <Label fx:id="errorMessage"/>
         </center>
     </BorderPane>
 </AnchorPane>

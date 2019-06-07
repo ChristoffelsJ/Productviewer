@@ -1,20 +1,17 @@
 package main;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
+import javafx.scene.control.Label;
+import model.ErrorClass;
 
 public class PopupError {
+    @FXML
+    private Label errorMessage;
 
 
-    public void addCategory(ActionEvent actionEvent) {
-
-
+    @FXML
+    public void initialize() {
+        errorMessage.setText(ErrorClass.getErrormessage());
     }
 
-    public void throwError(ActionEvent actionEvent) {
-
-    }
 }
-
