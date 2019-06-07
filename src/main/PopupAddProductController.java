@@ -9,6 +9,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import model.ProductDAO;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -47,10 +48,10 @@ public class PopupAddProductController {
     }
 
     @FXML
-    public void PictureButtonAction(ActionEvent actionEvent){
+    private void PictureButtonAction(ActionEvent actionEvent){
         FileChooser chooser = new FileChooser();
         FileChooser.ExtensionFilter extFilterJpg = new FileChooser.ExtensionFilter("JPG files (*.jpg)", "*.jpg");
-        FileChooser.ExtensionFilter extFilterGif = new FileChooser.ExtensionFilter("GIF files (*.gif)", "*.gif");
+        FileChooser.ExtensionFilter extFilterGif = new FileChooser.ExtensionFilter("PNG files (*.png)", "*.png");
         chooser.getExtensionFilters().add(extFilterJpg);
         chooser.getExtensionFilters().add(extFilterGif);
         chooser.setTitle("Open File");

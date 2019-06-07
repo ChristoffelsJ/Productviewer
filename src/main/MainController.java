@@ -65,7 +65,7 @@ public class MainController {
         loadDate();
         }
 
-    private void loadDate(){
+   private void loadDate(){
         ObservableList<Product> productObservableList = FXCollections.observableArrayList();
         productObservableList.addAll(ProductDAO.getProduct());
         productTable.setItems(productObservableList);
@@ -132,7 +132,7 @@ public class MainController {
     }
 
     @FXML
-    private void refresh(ActionEvent actionEvent) throws ClassNotFoundException, SQLException {
+    private void refresh(ActionEvent actionEvent)  {
         initialize();
     }
 
