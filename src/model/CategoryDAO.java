@@ -1,5 +1,6 @@
 package model;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public class CategoryDAO {
@@ -11,12 +12,7 @@ public class CategoryDAO {
     public static List<String> getInitialSubCategory(String mainCategory) throws SQLException, ClassNotFoundException {
 //        String query = "select subCategory FROM category";
         String query = "select subCategory FROM category WHERE mainCategory = '"+mainCategory+"'";
-        try {
-            return util.DBUtil.fillListWithSubCategory(query);
-        } catch (SQLException ex) {
-            System.out.println("Error while getting initial subCategories");
-            throw ex;
-        }
+        return util.DBUtil.fillListWithSubCategory(query);
     }
 
     public static void addCategory(String mainCategory, String subCategory){

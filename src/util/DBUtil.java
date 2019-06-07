@@ -12,7 +12,7 @@ import java.util.*;
 public class DBUtil {
     private static String url = "jdbc:mysql://localhost/productViewer?serverTimezone=UTC";
     private static String userName = "root";
-    private static String password = "MySQLJava2019!";
+    private static String password = "blablabla";
 
     //connectie methode
     public static Connection getConnection() throws SQLException {

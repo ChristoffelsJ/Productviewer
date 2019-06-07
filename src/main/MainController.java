@@ -97,7 +97,7 @@ public class MainController {
             product.setMainCategory((event.getNewValue()));
             updateData("mainCategory", event.getNewValue(), product.getProductId());
         });
-        //deze werkt, afblijven
+
         columnPrice.setCellFactory(TextFieldTableCell.forTableColumn());
         columnPrice.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setPrice(e.getNewValue()));
         columnPrice.setOnEditCommit(event -> {
@@ -105,7 +105,7 @@ public class MainController {
             product.setPrice(event.getNewValue());
             updateData("price", event.getNewValue(), product.getProductId());
         });
-        //deze werkt, afblijven
+
         columnProductDescription.setCellFactory(TextFieldTableCell.forTableColumn());
         columnProductDescription.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setDescription(e.getNewValue()));
         columnProductDescription.setOnEditCommit(event -> {
