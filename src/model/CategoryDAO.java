@@ -11,10 +11,8 @@ public class CategoryDAO {
         String query = "select distinct mainCategory FROM category";
         return util.DBUtil.fillListWithMainCategory(query);
     }
-
-    public static List<String> getInitialSubCategory(String mainCategory) {
-//        String query = "select subCategory FROM category";
-        String query = "select subCategory FROM category WHERE mainCategory = '" + mainCategory + "'";
+    public static List<String> getInitialSubCategory(String mainCategory) throws SQLException, ClassNotFoundException {
+        String query = "select subCategory FROM category WHERE mainCategory = '"+mainCategory+"'";
         return util.DBUtil.fillListWithSubCategory(query);
     }
 
