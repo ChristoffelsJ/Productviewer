@@ -32,7 +32,7 @@ public class PopupAddProductController {
     @FXML
     public void initialize() throws SQLException, ClassNotFoundException {
         mainCategory.setItems(generateInitialMainCategory());
-        subCategory.setItems(generateInitialSubCategory());
+//     subCategory.setItems(generateInitialSubCategory());
     }
 
     private ObservableList<String> generateInitialMainCategory() throws SQLException, ClassNotFoundException {
@@ -40,7 +40,11 @@ public class PopupAddProductController {
     }
 
     private ObservableList<String> generateInitialSubCategory() throws SQLException, ClassNotFoundException {
-        return FXCollections.observableArrayList(model.CategoryDAO.getInitialSubCategory());
+        return FXCollections.observableArrayList(model.CategoryDAO.getInitialSubCategory(mainCategory.getValue()));
+    }
+@FXML
+    private void refreshSubList (ActionEvent actionEvent) throws SQLException, ClassNotFoundException {
+       subCategory.setItems(generateInitialSubCategory());
     }
 
     @FXML

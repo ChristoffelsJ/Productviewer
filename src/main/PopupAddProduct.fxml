@@ -31,7 +31,7 @@
     </VBox>
 </FlowPane>
              <FlowPane prefWidth="500" alignment="CENTER" hgap="5">
-                 <ComboBox prefHeight="20" prefWidth="180" promptText="Select main category" fx:id="mainCategory">
+                 <ComboBox prefHeight="20" prefWidth="180" promptText="Select main category" fx:id="mainCategory" onAction="#refreshSubList">
                      <items>
                          <FXCollections fx:factory = "observableArrayList"/>
                      </items>

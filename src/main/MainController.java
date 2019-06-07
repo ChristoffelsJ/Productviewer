@@ -74,7 +74,7 @@ public class MainController {
         editableColumn();
         loadDate();
         }
-
+        
     private void loadDate() throws SQLException, ClassNotFoundException {
         ObservableList<Product> productObservableList = FXCollections.observableArrayList();
         productObservableList.addAll(ProductDAO.getProduct());
