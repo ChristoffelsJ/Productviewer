@@ -17,11 +17,12 @@
                 AnchorPane.topAnchor="20">
         <center>
             <FlowPane>
-            <Label fx:id="errorMessage"/>
+                <Label fx:id="errorMessage"/>
                 <ImageView>
-                    <Image url="@error.jpg" />
+                    <Image url="@succes.jpg" />
                 </ImageView>
-        </FlowPane>
+            </FlowPane>
+
         </center>
     </BorderPane>
 </AnchorPane>

@@ -2,16 +2,16 @@ package main;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import model.ErrorClass;
+import model.PopupMessageClass;
 
-public class PopupError {
+public class Popup {
     @FXML
     private Label errorMessage;
 
 
     @FXML
     public void initialize() {
-        errorMessage.setText(ErrorClass.getErrormessage());
+        errorMessage.setText(PopupMessageClass.getErrormessage());
     }
 
 }

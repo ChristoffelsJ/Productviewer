@@ -1,6 +1,9 @@
 package model;
 
-public class ErrorClass {
+import javafx.event.ActionEvent;
+import main.MainController;
+
+public class PopupMessageClass {
     private static String Errormessage;
 
     public static String getErrormessage() {
@@ -10,4 +13,6 @@ public class ErrorClass {
     public static void setErrormessage(String errormessage) {
         Errormessage = errormessage;
     }
+
+
 }

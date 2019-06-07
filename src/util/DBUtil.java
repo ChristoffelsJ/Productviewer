@@ -2,11 +2,17 @@ package util;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import main.MainController;
 import model.Product;
 
+import javax.swing.*;
+import java.awt.event.ActionEvent;
 import java.io.*;
 import java.sql.*;
 import java.util.*;
+
+import static main.MainController.throwErrorStatic;
+import static main.MainController.throwPositiveStatic;
 
 
 public class DBUtil {
@@ -25,7 +31,9 @@ public class DBUtil {
             statement.execute(query);
         } catch (SQLException ex) {
             System.out.println("Error when executing the querry");
+            throwErrorStatic("Error when executing the querry");
             ex.printStackTrace();
+
         }
     }
 
@@ -38,6 +46,7 @@ public class DBUtil {
             }
         } catch (SQLException ex) {
             System.out.println("Error when executing the count querry");
+            throwErrorStatic("Error when executing the querry");
             throw ex;
         }
     }
@@ -48,6 +57,7 @@ public class DBUtil {
             statement.executeUpdate(query);
         } catch (SQLException ex) {
             System.out.println("Error when updating the query");
+            throwErrorStatic("Error when updating the query");
             ex.printStackTrace();
         }
     }
@@ -82,10 +92,9 @@ public class DBUtil {
                     productlist.add(product);
                 }
             }
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             System.out.println("Error while filling the productsList");
-        } catch (IOException e) {
-            e.printStackTrace();
+            throwErrorStatic("Error while filling the productsList");
         }
         return productlist;
     }
@@ -100,6 +109,7 @@ public class DBUtil {
             }
         } catch (SQLException ex) {
             System.out.println("Error while filling the mainCategory List");
+            throwErrorStatic("Error while filling the mainCategory List");
         }
         return mainCategoryList;
     }
@@ -114,6 +124,8 @@ public class DBUtil {
             }
         } catch (SQLException ex) {
             System.out.println("Error while filling the subCategory List");
+            throwErrorStatic("Error while filling the subCategory List");
+
         }
         return subCategoryList;
     }
@@ -151,10 +163,14 @@ public class DBUtil {
             fileWriter.write(sb.toString());
             fileWriter.close();
             System.out.println("CSV created");
+            throwPositiveStatic("Great success");
+
 
         } catch (
                 Exception e) {
             System.out.println("Error when saving the database to CSV file");
+            throwErrorStatic("Error when saving the database to CSV file");
+
             e.printStackTrace();
         }
 
@@ -179,8 +195,11 @@ public class DBUtil {
             fileWriter.write(sb.toString());
             fileWriter.close();
             System.out.println("CSV created");
+            throwPositiveStatic("Great success");
+
         } catch (Exception e) {
             System.out.println("error when saving the database to CSV file");
+            throwErrorStatic("error when saving the database to CSV file");
             e.printStackTrace();
         }
     }

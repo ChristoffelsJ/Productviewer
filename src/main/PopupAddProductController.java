@@ -16,38 +16,49 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
 
+import static main.MainController.throwErrorStatic;
+import static main.MainController.throwPositiveStatic;
+
 public class PopupAddProductController {
 
-    @FXML private Button addProductButton;
-    @FXML private TextField productTitle;
-    @FXML private ComboBox <String> mainCategory;
-    @FXML private ComboBox<String> subCategory;
-    @FXML private TextField price;
-    @FXML private TextField description;
-    @FXML private ImageView imageView;
+    @FXML
+    private Button addProductButton;
+    @FXML
+    private TextField productTitle;
+    @FXML
+    private ComboBox<String> mainCategory;
+    @FXML
+    private ComboBox<String> subCategory;
+    @FXML
+    private TextField price;
+    @FXML
+    private TextField description;
+    @FXML
+    private ImageView imageView;
     private Path imagePath;
 
 
     @FXML
-    public void initialize(){
+    public void initialize() {
         mainCategory.setItems(generateInitialMainCategory());
 //     subCategory.setItems(generateInitialSubCategory());
     }
 
-    private ObservableList<String> generateInitialMainCategory(){
+    private ObservableList<String> generateInitialMainCategory() {
         return FXCollections.observableArrayList(model.CategoryDAO.getInitialMainCategory());
     }
 
     private ObservableList<String> generateInitialSubCategory() throws SQLException, ClassNotFoundException {
         return FXCollections.observableArrayList(model.CategoryDAO.getInitialSubCategory(mainCategory.getValue()));
     }
-@FXML
-    private void refreshSubList (ActionEvent actionEvent) throws SQLException, ClassNotFoundException {
-       subCategory.setItems(generateInitialSubCategory());
+
+    @FXML
+    private void refreshSubList(ActionEvent actionEvent) throws SQLException, ClassNotFoundException {
+        subCategory.setItems(generateInitialSubCategory());
     }
 
     @FXML
-    public void PictureButtonAction(ActionEvent actionEvent){
+    public void PictureButtonAction(ActionEvent actionEvent) {
         FileChooser chooser = new FileChooser();
         FileChooser.ExtensionFilter extFilterJpg = new FileChooser.ExtensionFilter("JPG files (*.jpg)", "*.jpg");
         FileChooser.ExtensionFilter extFilterGif = new FileChooser.ExtensionFilter("GIF files (*.gif)", "*.gif");
@@ -57,7 +68,7 @@ public class PopupAddProductController {
         File selectedFile = chooser.showOpenDialog(new Stage());
         if (selectedFile != null) {
             imagePath = selectedFile.toPath();
-            try(InputStream is = Files.newInputStream(imagePath)){
+            try (InputStream is = Files.newInputStream(imagePath)) {
                 Image imageFile = new Image(is);
                 imageView.setImage(imageFile);
                 imageView.setFitWidth(100);
@@ -65,18 +76,26 @@ public class PopupAddProductController {
                 imageView.setPreserveRatio(true);
             } catch (IOException e) {
                 e.printStackTrace();
+                throwErrorStatic(actionEvent, "You must import a JPG or GIF file!");
+
             }
         }
     }
 
     @FXML
     private void addProduct(ActionEvent actionEvent) throws ClassNotFoundException, SQLException, IOException {
-        if (imagePath == null){
+        if (imagePath == null) {
             imagePath = Paths.get("standardImage.jpg");
         }
-        model.ProductDAO.addProduct(productTitle.getText(),subCategory.getValue(), mainCategory.getValue(), price.getText(), description.getText(), imagePath,0);
-        Stage stage = (Stage) addProductButton.getScene().getWindow();
-        stage.close();
+        try {
+            model.ProductDAO.addProduct(productTitle.getText(), subCategory.getValue(), mainCategory.getValue(), price.getText(), description.getText(), imagePath, 0);
+            Stage stage = (Stage) addProductButton.getScene().getWindow();
+            stage.close();
+            throwPositiveStatic("Great success");
+
+        } catch (Exception ce) {
+        throwErrorStatic(actionEvent, "You must fill in all the fields");
     }
+}
 }
 

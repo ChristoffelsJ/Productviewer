@@ -12,6 +12,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.*;
 import model.*;
 import util.DBUtil;
+
 import java.io.*;
 import java.nio.file.Files;
 import java.sql.SQLException;
@@ -43,7 +44,7 @@ public class MainController {
     private Pane pane;
 
     @FXML
-    public void initialize(){
+    public void initialize() {
         columnProductTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
         columnSubCategory.setCellValueFactory(new PropertyValueFactory<>("subCategory"));
         columnMainCategory.setCellValueFactory(new PropertyValueFactory<>("mainCategory"));
@@ -53,9 +54,9 @@ public class MainController {
         productTable.getItems().setAll(generateInitialProducts());
         editableColumn();
         loadDate();
-        }
+    }
 
-    private void loadDate(){
+    private void loadDate() {
         ObservableList<Product> productObservableList = FXCollections.observableArrayList();
         productObservableList.addAll(ProductDAO.getProduct());
         productTable.setItems(productObservableList);
@@ -108,21 +109,21 @@ public class MainController {
 
 
     private void updateData(String column, String newValue, int id) {
-        String query = "UPDATE products SET " + column + " = '" + newValue +  "' WHERE productId = " + id +"";
+        String query = "UPDATE products SET " + column + " = '" + newValue + "' WHERE productId = " + id + "";
         DBUtil.updateQuery(query);
     }
 
-    private List<Product> generateInitialProducts(){
+    private List<Product> generateInitialProducts() {
         return model.ProductDAO.getInitialProducts();
     }
 
     @FXML
-    private void search(ActionEvent actionEvent){
+    private void search(ActionEvent actionEvent) {
         productTable.getItems().setAll(model.ProductDAO.search(search.getText()));
     }
 
     @FXML
-    private void refresh(ActionEvent actionEvent){
+    private void refresh(ActionEvent actionEvent) {
         initialize();
     }
 
@@ -150,6 +151,7 @@ public class MainController {
                         List<String> productLineList = new LinkedList<>(Arrays.asList(productLine));
                         if (productLineList.size() > 6) { // maak hier pop-up van! + zet default value van switch op dit ipv de if else
                             System.out.println("Error in the CSV file!");
+                            throwErrorStatic(actionEvent, "Error in the CSV file!");
                             break;
                         }
                         switch (productLineList.size()) {
@@ -203,15 +205,22 @@ public class MainController {
                     lineCounter++;
                 }
                 initialize();
+                throwPositiveStatic("Great success");
+
+
             } catch (IOException e) {
                 System.out.println("Something went wrong when reading the file");
                 e.printStackTrace();
+                throwErrorStatic(actionEvent, "Something went wrong when reading the file");
+
             }
         }
 
-        //pop up met error maken
+        //pop up met error maken    (lijkt me overbodig, mogelijke popup staat in comment, jonas)
+
         else {
             System.out.println("you have to load a file with the CSV extension");
+            //throwErrorStatic(actionEvent,"you have to load a file with the CSV extension");
         }
     }
 
@@ -219,29 +228,28 @@ public class MainController {
         String mainCategory;
         String subCategory;
         String productTitle = productLineList.get(0);
-        if(DBUtil.checkForCategory("SELECT COUNT(*) AS total FROM category WHERE subCategory = '"  + productLineList.get(1) + "'")) {
+        if (DBUtil.checkForCategory("SELECT COUNT(*) AS total FROM category WHERE subCategory = '" + productLineList.get(1) + "'")) {
             subCategory = productLineList.get(1);
-        }
-        else{
+        } else {
             CategoryDAO.addCategory(productLineList.get(2), productLineList.get(1));
             subCategory = productLineList.get(1);
         }
-            mainCategory = productLineList.get(2);
-            String price = productLineList.get(3);
-            String productDescription = productLineList.get(4);
-            String imagePath = productLineList.get(5);
+        mainCategory = productLineList.get(2);
+        String price = productLineList.get(3);
+        String productDescription = productLineList.get(4);
+        String imagePath = productLineList.get(5);
 
-            return new Product.Builder()
-                    .withTitle(productTitle)
-                    .withSubCat(subCategory)
-                    .withMainCat(mainCategory)
-                    .withPrice(price)
-                    .withDescription(productDescription)
-                    .withImageView(null)
-                    .withId(0)
-                    .withPath(imagePath)
-                    .build();
-        }
+        return new Product.Builder()
+                .withTitle(productTitle)
+                .withSubCat(subCategory)
+                .withMainCat(mainCategory)
+                .withPrice(price)
+                .withDescription(productDescription)
+                .withImageView(null)
+                .withId(0)
+                .withPath(imagePath)
+                .build();
+    }
 
     @FXML
     public void OpenCategoryCSV(ActionEvent actionEvent) throws SQLException {
@@ -261,13 +269,14 @@ public class MainController {
                         List<String> productLineList = new LinkedList<>(Arrays.asList(productLine));
                         if (productLineList.size() > 2) { // maak hier pop-up van! + zet default value van switch op dit ipv de if else
                             System.out.println("Error in the CSV file!");
+                            throwErrorStatic("Error in the CSV file!");
                             break;
                         }
                         switch (productLineList.size()) {
                             case 2:
                                 Category category = createCategory(productLineList);
-                                if(category != null)
-                                model.CategoryDAO.addCategory(category);
+                                if (category != null)
+                                    model.CategoryDAO.addCategory(category);
                                 line = reader.readLine();
                                 break;
                             case 1:
@@ -278,11 +287,15 @@ public class MainController {
                     lineCounter++;
                 }
                 initialize();
+                throwPositiveStatic("Great success");
             } catch (IOException e) {
                 System.out.println("Something went wrong when reading the file");
                 e.printStackTrace();
+                throwErrorStatic(actionEvent, "Something went wrong when reading the file");
+
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
+                throwErrorStatic(actionEvent, "Something went wrong when reading the file");
             }
         }
     }
@@ -294,8 +307,7 @@ public class MainController {
             subCategory = categoryLineList.get(0);
             mainCategory = categoryLineList.get(1);
             return new Category(subCategory, mainCategory);
-        }
-        else{
+        } else {
             return null;
         }
     }
@@ -308,16 +320,21 @@ public class MainController {
         File file = fileChooser.showSaveDialog(pane.getScene().getWindow());
         if (file != null) {
             DBUtil.saveProductCSV(file, "select * from products");
+            throwPositiveStatic("Great success");
+
+
         }
     }
 
     @FXML
-    public void saveCategoryCSV(ActionEvent actionEvent){
+    public void saveCategoryCSV(ActionEvent actionEvent) {
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
         fileChooser.getExtensionFilters().add(extFilter);
         File file = fileChooser.showSaveDialog(pane.getScene().getWindow());
         if (file != null) {
             DBUtil.saveCategoryCSV(file, "select * from category");
+            throwPositiveStatic("Great success");
+
         }
     }
 
@@ -333,8 +350,10 @@ public class MainController {
         } catch (Exception e) {
             System.out.println("Something went wrong when opening the add product pop-up");
             e.printStackTrace();
+            throwErrorStatic(actionEvent, "Something went wrong when opening the add product pop-up");
         }
     }
+
 
     @FXML
     private void openAddCategoryPopup(ActionEvent actionEvent) {
@@ -348,26 +367,115 @@ public class MainController {
         } catch (Exception e) {
             System.out.println("Something went wrong when openening the add category popup");
             e.printStackTrace();
+            throwErrorStatic(actionEvent, "Something went wrong when openening the add category popup");
         }
     }
 
 
-
     public void openHelpPopup(ActionEvent actionEvent) {
+
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("PopupHelp.fxml"));
             Parent root1 = fxmlLoader.load();
             Stage stage = new Stage();
-            stage.setScene(new Scene(root1, 600, 400));
+            stage.setScene(new Scene(root1, 330, 255));
             stage.setTitle("Help");
             stage.show();
         } catch (Exception e) {
-            System.out.println("Something went wrong when openening the help popup");
+            System.out.println("Something went wrong when opening the help popup");
+            e.printStackTrace();
+            throwErrorStatic(actionEvent, "Something went wrong when openening the help popup");
+        }
+    }
+
+
+    @FXML
+    public void openPopupError(ActionEvent actionEvent) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("PopupError.fxml"));
+            Parent root1 = fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.setTitle("ERROR!!!");
+            stage.setScene(new Scene(root1, 800, 520));
+            stage.show();
+        } catch (Exception e) {
+            System.out.println("Something went wrong when opening the Error pop-up");
             e.printStackTrace();
         }
     }
 
-    public void deleteRow(ActionEvent actionEvent){
+    @FXML
+    public void openPopupError() {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("PopupError.fxml"));
+            Parent root1 = fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.setTitle("ERROR!!!");
+            stage.setScene(new Scene(root1, 800, 520));
+            stage.show();
+        } catch (Exception e) {
+            System.out.println("Something went wrong when opening the Error pop-up");
+            e.printStackTrace();
+
+        }
+    }
+
+    @FXML
+    public void openPopupPositive() {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("PopupPositive.fxml"));
+            Parent root1 = fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.setTitle("Success...");
+            stage.setScene(new Scene(root1, 800, 520));
+            stage.show();
+        } catch (Exception e) {
+            System.out.println("Something went wrong when opening the positive pop-up");
+            e.printStackTrace();
+
+        }
+    }
+
+
+    public void throwPositive(String positiveMessage) {
+
+        PopupMessageClass.setErrormessage(positiveMessage);
+        openPopupPositive();
+    }
+
+    public void throwError(ActionEvent actionEvent, String errorMessage) {
+
+        PopupMessageClass.setErrormessage(errorMessage);
+        openPopupError(actionEvent);
+    }
+
+    public void throwError(String errorMessage) {
+
+        PopupMessageClass.setErrormessage(errorMessage);
+        openPopupError();
+    }
+
+
+    public static void throwErrorStatic(ActionEvent actionEvent, String errorMessage) {
+
+        MainController mainController = new MainController();
+        mainController.throwError(actionEvent, errorMessage);
+    }
+
+    public static void throwErrorStatic(String errorMessage) {
+
+        MainController mainController = new MainController();
+        mainController.throwError(errorMessage);
+    }
+
+    public static void throwPositiveStatic(String positiveMessage) {
+
+        MainController mainController = new MainController();
+        mainController.throwPositive(positiveMessage);
+    }
+
+
+    public void deleteRow(ActionEvent actionEvent) {
         Product selectedItem = productTable.getSelectionModel().getSelectedItem();
         if (selectedItem != null) {
             int productId = selectedItem.getProductId();

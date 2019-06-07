@@ -1,5 +1,7 @@
 package model;
 
+import main.MainController;
+
 import java.sql.SQLException;
 import java.util.List;
 
@@ -20,6 +22,7 @@ public class CategoryDAO {
 
         String update = "INSERT INTO category VALUES  ('" + subCategory + "','" + mainCategory + "')";
         util.DBUtil.updateQuery(update);
+
     }
 
     public static void addCategory(Category category) {
