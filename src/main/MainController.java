@@ -10,6 +10,7 @@ import javafx.scene.control.cell.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.*;
+import javafx.util.converter.DefaultStringConverter;
 import model.*;
 import util.DBUtil;
 import java.io.*;
@@ -43,7 +44,7 @@ public class MainController {
     private Pane pane;
 
     @FXML
-    public void initialize(){
+    public void initialize() throws SQLException, ClassNotFoundException {
         columnProductTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
         columnSubCategory.setCellValueFactory(new PropertyValueFactory<>("subCategory"));
         columnMainCategory.setCellValueFactory(new PropertyValueFactory<>("mainCategory"));
@@ -62,7 +63,7 @@ public class MainController {
     }
 
     //tableview editable maken en er voor zorgen dat deze zijn gegevens opslaat in de database
-    private void editableColumn() {
+    private void editableColumn() throws SQLException, ClassNotFoundException {
         //deze werkt, afblijven
         columnProductTitle.setCellFactory(TextFieldTableCell.forTableColumn());
         columnProductTitle.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setTitle(e.getNewValue()));
@@ -72,7 +73,9 @@ public class MainController {
             updateData("productTitle", event.getNewValue(), product.getProductId());
         });
         //met de category moeten we andere dingen gaan doen, moet gelinkt zijn aan de category db
-        columnSubCategory.setCellFactory(TextFieldTableCell.forTableColumn());
+        ObservableList <String> dataSub  = FXCollections.observableArrayList();
+        dataSub.addAll(CategoryDAO.getInitialSubCategory(columnMainCategory.getText()));
+        columnSubCategory.setCellFactory(ComboBoxTableCell.forTableColumn(new DefaultStringConverter(),dataSub));
         columnSubCategory.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setSubCategory((e.getNewValue())));
         columnSubCategory.setOnEditCommit(event -> {
             Product product = event.getRowValue();
@@ -80,7 +83,9 @@ public class MainController {
             updateData("subCategory", event.getNewValue(), product.getProductId());
         });
         //met de category moeten we andere dingen gaan doen, moet gelinkt zijn aan de category db
-        columnMainCategory.setCellFactory(TextFieldTableCell.forTableColumn());
+        ObservableList <String> dataMain  = FXCollections.observableArrayList();
+        dataMain.addAll(CategoryDAO.getInitialMainCategory());
+        columnMainCategory.setCellFactory(ComboBoxTableCell.forTableColumn(new DefaultStringConverter(),dataMain));
         columnMainCategory.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setSubCategory((e.getNewValue())));
         columnMainCategory.setOnEditCommit(event -> {
             Product product = event.getRowValue();
@@ -122,7 +127,7 @@ public class MainController {
     }
 
     @FXML
-    private void refresh(ActionEvent actionEvent){
+    private void refresh(ActionEvent actionEvent) throws SQLException, ClassNotFoundException {
         initialize();
     }
 
