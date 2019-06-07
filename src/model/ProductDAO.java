@@ -1,41 +1,26 @@
 package model;
 
-
-import javafx.scene.image.ImageView;
 import util.DBUtil;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Optional;
-import java.util.OptionalInt;
 
 public class ProductDAO {
 
-    public static void addProduct(String productTitle, String category, String price, String description) throws SQLException, ClassNotFoundException {
-        String update = "INSERT INTO products VALUES ('" + productTitle + "','" + category + "','" + price + "','" + description + "')";
-        try {
-            util.DBUtil.updateQuery(update);
-        } catch (SQLException ex) {
-            System.out.println("Error when implementing data in database");
-            throw ex;
-        }
-    }
-
-    public static void addProduct(String productTitle, String category, String price, String description, Path imagePath, int productId) throws SQLException, ClassNotFoundException, IOException {
-        String update = "INSERT INTO products VALUES ('" + 0 +"','" + productTitle + "','" + category + "','" + price + "','" + description + "',?)";
-
-
+    public static void addProduct(String productTitle, String subCategory, String mainCategory, String price, String description, Path imagePath, int productId) throws SQLException, ClassNotFoundException, IOException {
+        String stringPath = imagePath.toString().replace("\\","/");
+        String update = "INSERT INTO products (productTitle, subCategory, mainCategory, price, productDescription, image, imagePath)" +
+                " VALUES ('" + productTitle + "','" + subCategory + "', '" + mainCategory + "','" + price + "','" + description + "',?, '" + stringPath + "')";
         try(InputStream inputStream = Files.newInputStream(imagePath);
             Connection con = DBUtil.getConnection();
             PreparedStatement pstmt = con.prepareStatement(update)){
             pstmt.setBinaryStream(1, inputStream);
-
             pstmt.executeUpdate();
 
         } catch (SQLException ex) {
@@ -44,86 +29,64 @@ public class ProductDAO {
         }
 
     }
-/*
-    public static int getProductId(Product product){
-        String getIdQuerry= "select productId from products as p where p.productTitle = '"+product.getTitle()+
-                "' and p.subCategory='"+product.getCategory()+"' and p.price='"+product.getPrice()+
-                "' and p.productDescription='"+product.getDescription()+"')";
-        try {
-            Optional firstInput= util.DBUtil.fillListWithProducts(getIdQuerry).stream().findFirst();
-            return firstInput;
 
+    public static void addProduct(Product product) throws SQLException {
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            System.out.println("Error in getProductId");
-            e.printStackTrace();
+        String update = "INSERT INTO products (productTitle, subCategory, mainCategory, price, productDescription, image, imagePath) " +
+                "VALUES ('" + product.getTitle() + "','" + product.getSubCategory() + "','" + product.getMainCategory() + "','" + product.getPrice() + "','" + product.getDescription() + "',?, '" + product.getImagePath() + "')";
+        if(!product.getImagePath().equals("null") || product.getImagePath() != null) {
+            try (InputStream inputStream = Files.newInputStream(Paths.get(product.getImagePath()));
+                 Connection con = DBUtil.getConnection();
+                 PreparedStatement pstmt = con.prepareStatement(update)) {
+                pstmt.setBinaryStream(1, inputStream);
+                pstmt.executeUpdate();
+
+            } catch (SQLException ex) {
+                System.out.println("Error when implementing data in database");
+                throw ex;
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+        else{
+            try (InputStream inputStream = Files.newInputStream(Paths.get("standardImage.jpg"));
+                 Connection con = DBUtil.getConnection();
+                 PreparedStatement pstmt = con.prepareStatement(update)) {
+                pstmt.setBinaryStream(1, inputStream);
+                pstmt.executeUpdate();
+
+            } catch (SQLException ex) {
+                System.out.println("Error when implementing data in database");
+                throw ex;
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
         }
     }
-*/
 
-    public static void addProduct(Product product) throws SQLException, ClassNotFoundException {
-
-        String update = "INSERT INTO products (productTitle, subCategory, price, productDescription, image) VALUES ('" + product.getTitle() + "','" + product.getCategory() + "','" + product.getPrice() + "','" + product.getDescription() + "','" + null + "' )";
-        try {
-            util.DBUtil.updateQuery(update);
-        } catch (SQLException ex) {
-            System.out.println("Error when implementing data in database");
-            throw ex;
-        }
-    }
-
-    public static void changeProducts(String productTitle, String category, String price, String description, int productID) throws SQLException, ClassNotFoundException {
+    public static void changeProducts(String productTitle, String category, String price, String description, int productID){
 
         String update = "UPDATE products SET productTitle = '" + productTitle + "', price= '" + price + "',productDescription='" + description + "', subCategory=" + category + " where productId=" + productID;
-        try {
-            util.DBUtil.updateQuery(update);
-        } catch (SQLException ex) {
-            System.out.println("Error when changing data in database");
-            throw ex;
-        }
+        DBUtil.updateQuery(update);
     }
 
-    public static List<Product> getInitialProducts() throws SQLException, ClassNotFoundException {
+    public static List<Product> getInitialProducts(){
         String query = "select *  from products";
-        try {
-            return util.DBUtil.fillListWithProducts(query);
-        } catch (SQLException ex) {
-            System.out.println("Error while getting initial products");
-            throw ex;
-        }
+        return DBUtil.fillListWithProducts(query);
     }
 
-    public static List<Product> search(String search) throws SQLException, ClassNotFoundException {
+    public static List<Product> search(String search){
         String query = "SELECT * FROM products WHERE productTitle LIKE '" + "%" + search + "%" + "' " +
-                "OR subCategory LIKE '" + "%" + search + "%" + "'";
-        try {
-            return util.DBUtil.fillListWithProducts(query);
-        } catch (SQLException ex) {
-            System.out.println("Error when searching data in database");
-            throw ex;
-        }
+                "OR subCategory LIKE '" + "%" + search + "%" + "'" +
+                "OR mainCategory LIKE '" + "%" + search + "%" + "'" +
+                "OR productID LIKE '" + "%" + search + "%" + "'";;
+        return DBUtil.fillListWithProducts(query);
     }
 
-    public static List<Product> getProduct() throws SQLException, ClassNotFoundException {
+    public static List<Product> getProduct(){
         String query = "select * FROM products";
-        try {
-            return util.DBUtil.fillListWithProducts(query);
-        } catch (SQLException ex) {
-            System.out.println("Error while getting products");
-            throw ex;
-        }
+        return DBUtil.fillListWithProducts(query);
     }
 
-    public static void addCategory(String category) throws SQLException, ClassNotFoundException {
 
-        String update = "INSERT INTO category VALUES  (0,'" + category + "')";
-        try {
-            util.DBUtil.updateQuery(update);
-        } catch (SQLException ex) {
-            System.out.println("Error when implementing categories in database");
-            throw ex;
-        }
-    }
 }

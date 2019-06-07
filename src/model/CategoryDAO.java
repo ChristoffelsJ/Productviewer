@@ -1,19 +1,33 @@
 package model;
 
-import javafx.collections.ObservableList;
-
-import java.sql.SQLException;
 import java.util.List;
 
 public class CategoryDAO {
 
-    public static List<String> getInitialCategory() throws SQLException, ClassNotFoundException {
-        String query = "select subCategory FROM category";
+    public static List<String> getInitialMainCategory(){
+        String query = "select distinct mainCategory FROM category";
+        return util.DBUtil.fillListWithMainCategory(query);
+    }
+    public static List<String> getInitialSubCategory(String mainCategory) throws SQLException, ClassNotFoundException {
+//        String query = "select subCategory FROM category";
+        String query = "select subCategory FROM category WHERE mainCategory = '"+mainCategory+"'";
         try {
-            return util.DBUtil.fillListWithCategory(query);
+            return util.DBUtil.fillListWithSubCategory(query);
         } catch (SQLException ex) {
-            System.out.println("Error while getting initial products");
+            System.out.println("Error while getting initial subCategories");
             throw ex;
         }
+    }
+
+    public static void addCategory(String mainCategory, String subCategory){
+
+        String update = "INSERT INTO category VALUES  ('"+subCategory+"','" + mainCategory + "')";
+        util.DBUtil.updateQuery(update);
+    }
+    public static void addCategory(Category category){
+
+        String update = "INSERT INTO category (subCategory, mainCategory) VALUES " +
+                "('"+category.getSubCategory()+"','" + category.getMainCategory() + "')";
+        util.DBUtil.updateQuery(update);
     }
 }
