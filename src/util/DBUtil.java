@@ -67,8 +67,17 @@ public class DBUtil {
                     }
                     Image image = new Image("file:photo.jpg", 100, 80, true, true);
                     imageView.setImage(image);
-                    Product product = new Product(resultSet.getString("productTitle"), resultSet.getString("subCategory"), resultSet.getString("mainCategory")
-                            ,resultSet.getString("price"), resultSet.getString("productDescription"), imageView, resultSet.getInt("productId"),resultSet.getString("imagePath"));
+
+                    Product product = new Product.Builder()
+                            .withTitle(resultSet.getString("productTitle"))
+                            .withSubCat(resultSet.getString("subCategory"))
+                            .withMainCat(resultSet.getString("mainCategory"))
+                            .withPrice(resultSet.getString("price"))
+                            .withDescription(resultSet.getString("productDescription"))
+                            .withImageView(imageView)
+                            .withId(resultSet.getInt("productId"))
+                            .withPath(resultSet.getString("imagePath"))
+                            .build();
 
                     productlist.add(product);
                 }
