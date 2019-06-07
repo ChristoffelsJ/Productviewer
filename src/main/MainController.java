@@ -215,7 +215,7 @@ public class MainController {
         }
     }
 
-    private static Product createProduct(List<String> productLineList) throws SQLException, ClassNotFoundException {
+    private static Product createProduct(List<String> productLineList) throws SQLException, ClassNotFoundException, IOException {
         String mainCategory;
         String subCategory;
         String productTitle = productLineList.get(0);
@@ -287,7 +287,7 @@ public class MainController {
         }
     }
 
-    private Category createCategory(List<String> categoryLineList) throws SQLException, ClassNotFoundException {
+    private Category createCategory(List<String> categoryLineList) throws SQLException, ClassNotFoundException, IOException {
         String mainCategory;
         String subCategory;
         if (!DBUtil.checkForCategory("SELECT COUNT(*) AS total FROM category WHERE subCategory = '" + categoryLineList.get(0) + "'")) {
