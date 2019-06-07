@@ -15,6 +15,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import model.Category;
 import model.CategoryDAO;
 import model.Product;
 import model.ProductDAO;
@@ -31,12 +32,6 @@ public class MainController {
     @FXML
     private TableColumn<Product, String> columnMainCategory;
     @FXML
-    private MenuItem saveCategoryCSV;
-    @FXML
-    private MenuItem saveProductCSV;
-    @FXML
-    private MenuItem openCategoryCSV;
-    @FXML
     private TableView<Product> productTable;
     @FXML
     private TableColumn<Product, String> columnProductTitle;
@@ -49,9 +44,6 @@ public class MainController {
     @FXML
     private TableColumn<Product, ImageView> columnPicture;
     @FXML
-    private TableColumn<Product, Integer> columnProductId;
-
-    @FXML
     private TextField search;
     @FXML
     public MenuItem openProductCSV;
@@ -61,7 +53,7 @@ public class MainController {
     private Pane pane;
 
     @FXML
-    public void initialize() throws SQLException, ClassNotFoundException {
+    public void initialize(){
         columnProductTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
         columnSubCategory.setCellValueFactory(new PropertyValueFactory<>("subCategory"));
         columnMainCategory.setCellValueFactory(new PropertyValueFactory<>("mainCategory"));
@@ -69,13 +61,11 @@ public class MainController {
         columnProductDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
         columnPicture.setCellValueFactory(new PropertyValueFactory<>("image"));
         productTable.getItems().setAll(generateInitialProducts());
-
-
         editableColumn();
         loadDate();
         }
-        
-    private void loadDate() throws SQLException, ClassNotFoundException {
+
+    private void loadDate(){
         ObservableList<Product> productObservableList = FXCollections.observableArrayList();
         productObservableList.addAll(ProductDAO.getProduct());
         productTable.setItems(productObservableList);
@@ -129,20 +119,15 @@ public class MainController {
 
     private void updateData(String column, String newValue, int id) {
         String query = "UPDATE products SET " + column + " = '" + newValue +  "' WHERE productId = " + id +"";
-        try {
-            DBUtil.updateQuery(query);
-        } catch (ClassNotFoundException | SQLException e) {
-            System.err.println("Error in updating the data in database");
-            e.printStackTrace(System.err);
-        }
+        DBUtil.updateQuery(query);
     }
 
-    private List<Product> generateInitialProducts() throws SQLException, ClassNotFoundException {
+    private List<Product> generateInitialProducts(){
         return model.ProductDAO.getInitialProducts();
     }
 
     @FXML
-    private void search(ActionEvent actionEvent) throws ClassNotFoundException, SQLException {
+    private void search(ActionEvent actionEvent){
         productTable.getItems().setAll(model.ProductDAO.search(search.getText()));
     }
 
@@ -159,7 +144,6 @@ public class MainController {
 
     @FXML
     private void openProductCSV(ActionEvent actionEvent) throws ClassNotFoundException, SQLException {
-
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
         fileChooser.getExtensionFilters().add(extFilter);
         File file = fileChooser.showOpenDialog(pane.getScene().getWindow());
@@ -174,30 +158,30 @@ public class MainController {
                     } else {
                         String[] productLine = line.split(";");
                         List<String> productLineList = new LinkedList<>(Arrays.asList(productLine));
-                        if (productLineList.size() > 5) { // maak hier pop-up van! + zet default value van switch op dit ipv de if else
+                        if (productLineList.size() > 6) { // maak hier pop-up van! + zet default value van switch op dit ipv de if else
                             System.out.println("Error in the CSV file!");
                             break;
                         }
                         switch (productLineList.size()) {
-                            case 5:
+                            case 6:
                                 Product product = createProduct(productLineList);
                                 model.ProductDAO.addProduct(product);
                                 line = reader.readLine();
                                 break;
-                            case 4:
+                            case 5:
                                 productLineList.add("");
                                 Product product1 = createProduct(productLineList);
                                 model.ProductDAO.addProduct(product1);
                                 line = reader.readLine();
                                 break;
-                            case 3:
+                            case 4:
                                 productLineList.add("");
                                 productLineList.add("");
                                 Product product2 = createProduct(productLineList);
                                 model.ProductDAO.addProduct(product2);
                                 line = reader.readLine();
                                 break;
-                            case 2:
+                            case 3:
                                 productLineList.add("");
                                 productLineList.add("");
                                 productLineList.add("");
@@ -205,13 +189,23 @@ public class MainController {
                                 model.ProductDAO.addProduct(product3);
                                 line = reader.readLine();
                                 break;
-                            case 1:
+                            case 2:
                                 productLineList.add("");
                                 productLineList.add("");
                                 productLineList.add("");
                                 productLineList.add("");
                                 Product product4 = createProduct(productLineList);
                                 model.ProductDAO.addProduct(product4);
+                                line = reader.readLine();
+                                break;
+                            case 1:
+                                productLineList.add("");
+                                productLineList.add("");
+                                productLineList.add("");
+                                productLineList.add("");
+                                productLineList.add("");
+                                Product product5 = createProduct(productLineList);
+                                model.ProductDAO.addProduct(product5);
                                 line = reader.readLine();
                                 break;
                         }
@@ -232,23 +226,79 @@ public class MainController {
     }
 
     private static Product createProduct(List<String> productLineList) throws SQLException, ClassNotFoundException {
-        String mainCategory = "";
-        String subCategory = "";
+        String mainCategory;
+        String subCategory;
         String productTitle = productLineList.get(0);
         if(DBUtil.checkForCategory("SELECT COUNT(*) AS total FROM category WHERE subCategory = '"  + productLineList.get(1) + "'")) {
             subCategory = productLineList.get(1);
         }
         else{
             CategoryDAO.addCategory(productLineList.get(2), productLineList.get(1));
+            subCategory = productLineList.get(1);
         }
             mainCategory = productLineList.get(2);
             String price = productLineList.get(3);
             String productDescription = productLineList.get(4);
-            return new Product(productTitle, subCategory, mainCategory, price, productDescription, null, 0);
+            String imagePath = productLineList.get(5);
+
+            return new Product(productTitle, subCategory, mainCategory, price, productDescription, null, 0,imagePath);
         }
 
     @FXML
     public void OpenCategoryCSV(ActionEvent actionEvent) throws SQLException {
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
+        fileChooser.getExtensionFilters().add(extFilter);
+        File file = fileChooser.showOpenDialog(pane.getScene().getWindow());
+
+        if (file != null && file.isFile()) {
+            try (BufferedReader reader = Files.newBufferedReader(file.toPath())) {
+                String line = reader.readLine();
+                int lineCounter = 0;
+                while (line != null) {
+                    if (lineCounter == 0) {
+                        line = reader.readLine();
+                    } else {
+                        String[] productLine = line.split(";");
+                        List<String> productLineList = new LinkedList<>(Arrays.asList(productLine));
+                        if (productLineList.size() > 2) { // maak hier pop-up van! + zet default value van switch op dit ipv de if else
+                            System.out.println("Error in the CSV file!");
+                            break;
+                        }
+                        switch (productLineList.size()) {
+                            case 2:
+                                Category category = createCategory(productLineList);
+                                if(category != null)
+                                model.CategoryDAO.addCategory(category);
+                                line = reader.readLine();
+                                break;
+                            case 1:
+                                line = reader.readLine();
+                                break;
+                        }
+                    }
+                    lineCounter++;
+                }
+                initialize();
+            } catch (IOException e) {
+                System.out.println("Something went wrong when reading the file");
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private Category createCategory(List<String> categoryLineList) throws SQLException, ClassNotFoundException {
+        String mainCategory;
+        String subCategory;
+        if (!DBUtil.checkForCategory("SELECT COUNT(*) AS total FROM category WHERE subCategory = '" + categoryLineList.get(0) + "'")) {
+            subCategory = categoryLineList.get(0);
+            mainCategory = categoryLineList.get(1);
+            return new Category(subCategory, mainCategory);
+        }
+        else{
+            return null;
+        }
     }
 
 
@@ -258,22 +308,17 @@ public class MainController {
         fileChooser.getExtensionFilters().add(extFilter);
         File file = fileChooser.showSaveDialog(pane.getScene().getWindow());
         if (file != null) {
-            DBUtil.saveProductCSV(file);
+            DBUtil.saveProductCSV(file, "select * from products");
         }
     }
 
     @FXML
-    public void saveCategoryCSV(ActionEvent actionEvent) throws SQLException {
+    public void saveCategoryCSV(ActionEvent actionEvent){
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
         fileChooser.getExtensionFilters().add(extFilter);
         File file = fileChooser.showSaveDialog(pane.getScene().getWindow());
         if (file != null) {
-            try {
-                DBUtil.saveCategoryCSV(file);
-            } catch (ClassNotFoundException e) {
-                System.out.println("Something went wrong with saving the file");
-                e.printStackTrace();
-            }
+            DBUtil.saveCategoryCSV(file, "select * from category");
         }
     }
 
@@ -321,17 +366,14 @@ public class MainController {
             e.printStackTrace();
         }
     }
-//werkt
-    public void deleteRow(ActionEvent actionEvent) throws SQLException, ClassNotFoundException {
+
+    public void deleteRow(ActionEvent actionEvent){
         Product selectedItem = productTable.getSelectionModel().getSelectedItem();
-        int productId = selectedItem.getProductId();
-        String query = "delete from products WHERE productId = " + productId;
-        try{
-        DBUtil.executeQuery(query);
-        } catch (SQLException ex) {
-            System.err.println("Error in deleting product from DB");
-            ex.printStackTrace(System.err);
+        if (selectedItem != null) {
+            int productId = selectedItem.getProductId();
+            String query = "delete from products WHERE productId = " + productId;
+            DBUtil.executeQuery(query);
+            productTable.getItems().remove(selectedItem);
         }
-        productTable.getItems().remove(selectedItem);
     }
 }

@@ -4,8 +4,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="292.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.172-ea"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.PopupHelp">
+<AnchorPane prefHeight="292.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.172-ea">
     <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="400.0"
            prefWidth="600.0" text="NOBODY CAN HELP YOU" textAlignment="CENTER" textOverrun="CENTER_WORD_ELLIPSIS">
       <font>

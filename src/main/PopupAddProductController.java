@@ -11,7 +11,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.*;
-import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -30,12 +29,12 @@ public class PopupAddProductController {
 
 
     @FXML
-    public void initialize() throws SQLException, ClassNotFoundException {
+    public void initialize(){
         mainCategory.setItems(generateInitialMainCategory());
 //     subCategory.setItems(generateInitialSubCategory());
     }
 
-    private ObservableList<String> generateInitialMainCategory() throws SQLException, ClassNotFoundException {
+    private ObservableList<String> generateInitialMainCategory(){
         return FXCollections.observableArrayList(model.CategoryDAO.getInitialMainCategory());
     }
 
@@ -48,7 +47,7 @@ public class PopupAddProductController {
     }
 
     @FXML
-    public void PictureButtonAction(ActionEvent actionEvent) throws MalformedURLException {
+    public void PictureButtonAction(ActionEvent actionEvent){
         FileChooser chooser = new FileChooser();
         FileChooser.ExtensionFilter extFilterJpg = new FileChooser.ExtensionFilter("JPG files (*.jpg)", "*.jpg");
         FileChooser.ExtensionFilter extFilterGif = new FileChooser.ExtensionFilter("GIF files (*.gif)", "*.gif");
@@ -78,7 +77,6 @@ public class PopupAddProductController {
         model.ProductDAO.addProduct(productTitle.getText(),subCategory.getValue(), mainCategory.getValue(), price.getText(), description.getText(), imagePath,0);
         Stage stage = (Stage) addProductButton.getScene().getWindow();
         stage.close();
-
     }
 }
 
