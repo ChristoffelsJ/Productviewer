@@ -49,7 +49,7 @@ public class ProductDAO {
                  PreparedStatement pstmt = con.prepareStatement(update)) {
                 pstmt.setBinaryStream(1, inputStream);
                 pstmt.executeUpdate();
-                throwPositiveStatic("Great success");
+                //throwPositiveStatic("Great success");
 
 
             } catch (SQLException ex) {

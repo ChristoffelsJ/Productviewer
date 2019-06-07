@@ -84,17 +84,17 @@ public class PopupAddProductController {
 
     @FXML
     private void addProduct(ActionEvent actionEvent) throws ClassNotFoundException, SQLException, IOException {
-        if (imagePath == null) {
-            imagePath = Paths.get("standardImage.jpg");
-        }
         try {
+            if (imagePath == null) {
+                imagePath = Paths.get("standardImage.jpg");
+            }
             model.ProductDAO.addProduct(productTitle.getText(), subCategory.getValue(), mainCategory.getValue(), price.getText(), description.getText(), imagePath, 0);
             Stage stage = (Stage) addProductButton.getScene().getWindow();
             stage.close();
-            throwPositiveStatic("Great success");
+
 
         } catch (Exception ce) {
-        throwErrorStatic(actionEvent, "You must fill in all the fields");
+       throwErrorStatic(actionEvent, "You must fill in all the fields");
     }
 }
 }

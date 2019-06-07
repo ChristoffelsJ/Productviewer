@@ -295,7 +295,7 @@ public class MainController {
 
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
-                throwErrorStatic(actionEvent, "Something went wrong when reading the file");
+              //  throwErrorStatic(actionEvent, "Something went wrong when reading the file");
             }
         }
     }
@@ -320,7 +320,7 @@ public class MainController {
         File file = fileChooser.showSaveDialog(pane.getScene().getWindow());
         if (file != null) {
             DBUtil.saveProductCSV(file, "select * from products");
-            throwPositiveStatic("Great success");
+          //  throwPositiveStatic("Great success");
 
 
         }
@@ -333,7 +333,7 @@ public class MainController {
         File file = fileChooser.showSaveDialog(pane.getScene().getWindow());
         if (file != null) {
             DBUtil.saveCategoryCSV(file, "select * from category");
-            throwPositiveStatic("Great success");
+         throwPositiveStatic("Great success");
 
         }
     }

@@ -204,7 +204,7 @@ public class DBUtil {
             fileWriter.write(sb.toString());
             fileWriter.close();
             System.out.println("CSV created");
-            throwPositiveStatic("Great success");
+          //  throwPositiveStatic("Great success");
 
         } catch (Exception e) {
             System.out.println("error when saving the database to CSV file");
