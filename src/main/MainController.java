@@ -1,32 +1,22 @@
 package main;
 
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.collections.*;
 import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.fxml.*;
+import javafx.scene.*;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.control.cell.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
-import model.Category;
-import model.CategoryDAO;
-import model.Product;
-import model.ProductDAO;
+import javafx.stage.*;
+import model.*;
 import util.DBUtil;
-
 import java.io.*;
 import java.nio.file.Files;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
+
 
 public class MainController {
     @FXML
@@ -132,7 +122,7 @@ public class MainController {
     }
 
     @FXML
-    private void refresh(ActionEvent actionEvent) throws ClassNotFoundException, SQLException {
+    private void refresh(ActionEvent actionEvent){
         initialize();
     }
 
@@ -241,7 +231,16 @@ public class MainController {
             String productDescription = productLineList.get(4);
             String imagePath = productLineList.get(5);
 
-            return new Product(productTitle, subCategory, mainCategory, price, productDescription, null, 0,imagePath);
+            return new Product.Builder()
+                    .withTitle(productTitle)
+                    .withSubCat(subCategory)
+                    .withMainCat(mainCategory)
+                    .withPrice(price)
+                    .withDescription(productDescription)
+                    .withImageView(null)
+                    .withId(0)
+                    .withPath(imagePath)
+                    .build();
         }
 
     @FXML
