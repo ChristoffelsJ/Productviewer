@@ -10,12 +10,14 @@ import java.util.*;
 
 
 public class DBUtil {
-    private static String url = "jdbc:mysql://localhost/productViewer?serverTimezone=UTC";
-    private static String userName = "root";
-    private static String password = "Xqv513jc13";
 
     //connectie methode
-    public static Connection getConnection() throws SQLException {
+    public static Connection getConnection() throws SQLException, IOException {
+        Properties properties = new Properties();
+        properties.load(new FileInputStream("MYSQLconnection.properties"));
+        String userName = properties.getProperty("userName");
+        String password = properties.getProperty("password");
+        String url = properties.getProperty("url");
         return DriverManager.getConnection(url, userName, password);
     }
 
@@ -26,10 +28,12 @@ public class DBUtil {
         } catch (SQLException ex) {
             System.out.println("Error when executing the querry");
             ex.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
-    private static int executeCountQuery(String query) throws SQLException {
+    private static int executeCountQuery(String query) throws SQLException, IOException {
         try (Connection connection = getConnection(); Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery(query)) {
             if (resultSet.next()) {
                 return resultSet.getInt("total");
@@ -39,6 +43,9 @@ public class DBUtil {
         } catch (SQLException ex) {
             System.out.println("Error when executing the count querry");
             throw ex;
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw e;
         }
     }
 
@@ -49,6 +56,8 @@ public class DBUtil {
         } catch (SQLException ex) {
             System.out.println("Error when updating the query");
             ex.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -100,6 +109,8 @@ public class DBUtil {
             }
         } catch (SQLException ex) {
             System.out.println("Error while filling the mainCategory List");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return mainCategoryList;
     }
@@ -114,6 +125,8 @@ public class DBUtil {
             }
         } catch (SQLException ex) {
             System.out.println("Error while filling the subCategory List");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return subCategoryList;
     }
@@ -185,7 +198,7 @@ public class DBUtil {
         }
     }
 
-    public static boolean checkForCategory(String query) throws SQLException, ClassNotFoundException {
+    public static boolean checkForCategory(String query) throws SQLException, ClassNotFoundException, IOException {
         return executeCountQuery(query) > 0;
     }
 
