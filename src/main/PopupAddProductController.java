@@ -72,10 +72,10 @@ public class PopupAddProductController {
     @FXML
     private void addProduct(ActionEvent actionEvent) throws ClassNotFoundException, SQLException, IOException {
         if (imagePath == null){
-            imagePath = Paths.get("C:\\Users\\jonas\\IdeaProjects\\JonasVoldersProductViewer\\Productviewer\\standardImage.jpg");
+            imagePath = Paths.get("standardImage.jpg");
         }
         model.ProductDAO.addProduct(productTitle.getText(),subCategory.getValue(), mainCategory.getValue(), price.getText(), description.getText(), imagePath,0);
-        Stage stage = (Stage) addProductButton.getScene().getWindow();
+       Stage stage = (Stage) addProductButton.getScene().getWindow();
         stage.close();
     }
 }
