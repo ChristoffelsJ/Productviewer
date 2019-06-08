@@ -4,11 +4,15 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.layout.BorderPane?>
 <AnchorPane prefHeight="292.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.172-ea">
-    <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="400.0"
-           prefWidth="600.0" text="NOBODY CAN HELP YOU" textAlignment="CENTER" textOverrun="CENTER_WORD_ELLIPSIS">
-      <font>
-         <Font size="53.0" />
-      </font></Label>
-
+   <BorderPane>
+       <center>
+    <ImageView>
+        <Image url="@help.jpg" />
+    </ImageView>
+       </center>
+</BorderPane>
 </AnchorPane>

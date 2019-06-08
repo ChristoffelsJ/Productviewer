@@ -8,13 +8,19 @@ import java.io.*;
 import java.sql.*;
 import java.util.*;
 
+import static main.MainController.throwErrorStatic;
+import static main.MainController.throwPositiveStatic;
+
 
 public class DBUtil {
+    private static String url = "jdbc:mysql://localhost/productViewer?serverTimezone=UTC";
+    private static String userName = "root";
+    private static String password = "blablabla";
 
     //connectie methode
     public static Connection getConnection() throws SQLException, IOException {
         Properties properties = new Properties();
-        properties.load(new FileInputStream("MYSQLconnection.properties"));
+        properties.load(new FileInputStream("Productviewer/MYSQLconnection.properties"));
         String userName = properties.getProperty("userName");
         String password = properties.getProperty("password");
         String url = properties.getProperty("url");
@@ -27,6 +33,7 @@ public class DBUtil {
             statement.execute(query);
         } catch (SQLException ex) {
             System.out.println("Error when executing the querry");
+            throwErrorStatic("Error when executing the querry");
             ex.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
@@ -42,6 +49,7 @@ public class DBUtil {
             }
         } catch (SQLException ex) {
             System.out.println("Error when executing the count querry");
+            throwErrorStatic("Error when executing the querry");
             throw ex;
         } catch (IOException e) {
             e.printStackTrace();
@@ -55,6 +63,7 @@ public class DBUtil {
             statement.executeUpdate(query);
         } catch (SQLException ex) {
             System.out.println("Error when updating the query");
+            throwErrorStatic("Error when updating the query");
             ex.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
@@ -91,10 +100,10 @@ public class DBUtil {
                     productlist.add(product);
                 }
             }
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             System.out.println("Error while filling the productsList");
-        } catch (IOException e) {
-            e.printStackTrace();
+            throwErrorStatic("Error while filling the productsList");
+            ex.printStackTrace();
         }
         return productlist;
     }
@@ -107,10 +116,9 @@ public class DBUtil {
                 String category = resultSet.getString("mainCategory");
                 mainCategoryList.add(category);
             }
-        } catch (SQLException ex) {
+        } catch (SQLException | IOException ex) {
             System.out.println("Error while filling the mainCategory List");
-        } catch (IOException e) {
-            e.printStackTrace();
+            throwErrorStatic("Error while filling the mainCategory List");
         }
         return mainCategoryList;
     }
@@ -123,10 +131,10 @@ public class DBUtil {
                 String category = resultSet.getString("subCategory");
                 subCategoryList.add(category);
             }
-        } catch (SQLException ex) {
+        } catch (SQLException | IOException ex) {
             System.out.println("Error while filling the subCategory List");
-        } catch (IOException e) {
-            e.printStackTrace();
+            throwErrorStatic("Error while filling the subCategory List");
+
         }
         return subCategoryList;
     }
@@ -164,10 +172,14 @@ public class DBUtil {
             fileWriter.write(sb.toString());
             fileWriter.close();
             System.out.println("CSV created");
+            throwPositiveStatic("Great success");
+
 
         } catch (
                 Exception e) {
             System.out.println("Error when saving the database to CSV file");
+            throwErrorStatic("Error when saving the database to CSV file");
+
             e.printStackTrace();
         }
 
@@ -192,8 +204,11 @@ public class DBUtil {
             fileWriter.write(sb.toString());
             fileWriter.close();
             System.out.println("CSV created");
+          //  throwPositiveStatic("Great success");
+
         } catch (Exception e) {
             System.out.println("error when saving the database to CSV file");
+            throwErrorStatic("error when saving the database to CSV file");
             e.printStackTrace();
         }
     }

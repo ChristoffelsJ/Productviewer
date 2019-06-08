@@ -7,6 +7,9 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import model.Category;
 
+import static main.MainController.throwErrorStatic;
+import static main.MainController.throwPositiveStatic;
+
 public class PopupAddCategoryController {
     @FXML
     private TextField mainCategory;
@@ -15,17 +18,25 @@ public class PopupAddCategoryController {
     @FXML
     private Button categoryAddButton;
 
-    public void addCategory(ActionEvent actionEvent) {
+    public void addCategory(ActionEvent actionEvent) throws Exception {
 
         Category category = new Category();
         category.setMainCategory(mainCategory.getText());
         category.setSubCategory(subCategory.getText());
         Stage stage = (Stage) categoryAddButton.getScene().getWindow();
-        stage.close();
+
         if (category.getMainCategory().equals("")) {
-            category.setMainCategory("No main category");
+            category.setMainCategory("Other...");
         }
-        model.CategoryDAO.addCategory(category.getMainCategory(), category.getSubCategory());
+        if (category.getSubCategory().equals("")) {
+            throwErrorStatic(actionEvent, "You must fill in a subcategory");
+        } else {
+            model.CategoryDAO.addCategory(category.getMainCategory(), category.getSubCategory());
+            stage.close();
+            throwPositiveStatic("Great success");
+
+
+        }
     }
 }
 

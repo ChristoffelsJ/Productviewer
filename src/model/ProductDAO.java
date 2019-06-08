@@ -1,5 +1,6 @@
 package model;
 
+import main.MainController;
 import util.DBUtil;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,6 +11,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
+
+import static main.MainController.throwErrorStatic;
+import static main.MainController.throwPositiveStatic;
 
 public class ProductDAO {
 
@@ -22,10 +26,15 @@ public class ProductDAO {
             PreparedStatement pstmt = con.prepareStatement(update)){
             pstmt.setBinaryStream(1, inputStream);
             pstmt.executeUpdate();
+            throwPositiveStatic("Great success");
+
 
         } catch (SQLException ex) {
             System.out.println("Error when implementing data in database");
+            throwErrorStatic("Error when implementing data in database");
             throw ex;
+
+
         }
 
     }
@@ -40,9 +49,13 @@ public class ProductDAO {
                  PreparedStatement pstmt = con.prepareStatement(update)) {
                 pstmt.setBinaryStream(1, inputStream);
                 pstmt.executeUpdate();
+                //throwPositiveStatic("Great success");
+
 
             } catch (SQLException ex) {
                 System.out.println("Error when implementing data in database");
+                throwErrorStatic("Error when implementing data in database");
+
                 throw ex;
             } catch (IOException ex) {
                 ex.printStackTrace();
@@ -54,9 +67,13 @@ public class ProductDAO {
                  PreparedStatement pstmt = con.prepareStatement(update)) {
                 pstmt.setBinaryStream(1, inputStream);
                 pstmt.executeUpdate();
+                throwPositiveStatic("Great success");
+
 
             } catch (SQLException ex) {
                 System.out.println("Error when implementing data in database");
+                throwErrorStatic("Error when implementing data in database");
+
                 throw ex;
             } catch (IOException ex) {
                 ex.printStackTrace();
