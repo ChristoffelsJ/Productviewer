@@ -7,6 +7,7 @@ import javafx.fxml.*;
 import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.*;
@@ -15,6 +16,7 @@ import model.*;
 import util.DBUtil;
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -64,6 +66,7 @@ public class MainController {
 
     //tableview editable maken en er voor zorgen dat deze zijn gegevens opslaat in de database
     private void editableColumn() throws SQLException, ClassNotFoundException {
+
         //deze werkt, afblijven
         columnProductTitle.setCellFactory(TextFieldTableCell.forTableColumn());
         columnProductTitle.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setTitle(e.getNewValue()));
@@ -72,17 +75,27 @@ public class MainController {
             product.setTitle(event.getNewValue());
             updateData("productTitle", event.getNewValue(), product.getProductId());
         });
-        //met de category moeten we andere dingen gaan doen, moet gelinkt zijn aan de category db
+
+        //subCategory met de juiste main uit de db halen met een combobox
         ObservableList <String> dataSub  = FXCollections.observableArrayList();
-        dataSub.addAll(CategoryDAO.getInitialSubCategory(columnMainCategory.getText()));
+        columnSubCategory.setOnEditStart(event -> {Product product = event.getRowValue();
+            try {
+                dataSub.clear();
+                 dataSub.addAll(CategoryDAO.getInitialSubCategory(product.getMainCategory()));
+            } catch (SQLException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        });
         columnSubCategory.setCellFactory(ComboBoxTableCell.forTableColumn(new DefaultStringConverter(),dataSub));
-        columnSubCategory.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setSubCategory((e.getNewValue())));
+       columnSubCategory.setOnEditCommit(e ->
+                e.getTableView().getItems().get(e.getTablePosition().getRow()).setSubCategory((e.getNewValue())));
         columnSubCategory.setOnEditCommit(event -> {
             Product product = event.getRowValue();
             product.setSubCategory((event.getNewValue()));
             updateData("subCategory", event.getNewValue(), product.getProductId());
         });
-        //met de category moeten we andere dingen gaan doen, moet gelinkt zijn aan de category db
+
+        //main category uit de db halen voor met een combobox
         ObservableList <String> dataMain  = FXCollections.observableArrayList();
         dataMain.addAll(CategoryDAO.getInitialMainCategory());
         columnMainCategory.setCellFactory(ComboBoxTableCell.forTableColumn(new DefaultStringConverter(),dataMain));
@@ -92,6 +105,7 @@ public class MainController {
             product.setMainCategory((event.getNewValue()));
             updateData("mainCategory", event.getNewValue(), product.getProductId());
         });
+
         //deze werkt, afblijven
         columnPrice.setCellFactory(TextFieldTableCell.forTableColumn());
         columnPrice.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setPrice(e.getNewValue()));
