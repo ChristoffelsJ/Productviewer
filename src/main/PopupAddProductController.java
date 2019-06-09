@@ -72,6 +72,7 @@ public class PopupAddProductController {
 
     @FXML
     private void addProduct(ActionEvent actionEvent) throws ClassNotFoundException, SQLException, IOException {
+
         if (imagePath == null){
             imagePath = Paths.get("C:\\Users\\jonas\\IdeaProjects\\JonasVoldersProductViewer\\Productviewer\\standardImage.jpg");
         }

@@ -73,9 +73,9 @@ public class MainController {
             product.setTitle(event.getNewValue());
             updateData("productTitle", event.getNewValue(), product.getProductId());
         });
-        //met de category moeten we andere dingen gaan doen, moet gelinkt zijn aan de category db
+        //met de category moeten we andere dingen gaan doen, moet gelinkt zijn aan de category
         ObservableList <String> dataSub  = FXCollections.observableArrayList();
-        dataSub.addAll(CategoryDAO.getInitialSubCategory(columnMainCategory.getText()));
+              dataSub.addAll(CategoryDAO.getInitialSubCategory(CategoryDAO.getInitialMainCategory().get(1)));
         columnSubCategory.setCellFactory(ComboBoxTableCell.forTableColumn(new DefaultStringConverter(),dataSub));
         columnSubCategory.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setSubCategory((e.getNewValue())));
         columnSubCategory.setOnEditCommit(event -> {
@@ -154,7 +154,7 @@ public class MainController {
                     } else {
                         String[] productLine = line.split(";");
                         List<String> productLineList = new LinkedList<>(Arrays.asList(productLine));
-                        if (productLineList.size() > 6) { // maak hier pop-up van! + zet default value van switch op dit ipv de if else
+                        if (productLineList.size() >6) { // maak hier pop-up van! + zet default value van switch op dit ipv de if else
                             System.out.println("Error in the CSV file!");
                             throwErrorStatic(actionEvent, "Error in the CSV file!");
                             break;
