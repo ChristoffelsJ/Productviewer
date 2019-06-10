@@ -45,8 +45,6 @@ public class MainController {
     private FileChooser fileChooser;
     @FXML
     private Pane pane;
-    private Path imagePath;
-    private ImageView imageView1;
 
     /** initialize method
      *
@@ -63,7 +61,7 @@ public class MainController {
         columnPicture.setCellValueFactory(new PropertyValueFactory<>("image"));
         productTable.getItems().setAll(generateInitialProducts());
         editableColumn();
-        loadData();
+       loadDate();
     }
 
     /** this method loads the data off the list off products
@@ -367,7 +365,7 @@ public class MainController {
         }
     }
 
-    private Category createCategory(List<String> categoryLineList) throws SQLException, IOException {
+    private Category createCategory(List<String> categoryLineList) throws SQLException, IOException, ClassNotFoundException {
         String mainCategory;
         String subCategory;
         if (!DBUtil.checkForCategory("SELECT COUNT(*) AS total FROM category WHERE subCategory = '" + categoryLineList.get(0) + "'")) {
