@@ -11,10 +11,16 @@ import java.util.*;
 import static main.MainController.throwErrorStatic;
 import static main.MainController.throwPositiveStatic;
 
-
+/** database utility class
+ *
+ */
 public class DBUtil {
-
-    //connectie methode
+    /** connection method
+     *
+     * @return a connection
+     * @throws SQLException
+     * @throws IOException
+     */
     public static Connection getConnection() throws SQLException, IOException {
         Properties properties = new Properties();
         properties.load(new FileInputStream("MYSQLconnection.properties"));
@@ -24,6 +30,10 @@ public class DBUtil {
         return DriverManager.getConnection(url, userName, password);
     }
 
+    /** execute a query
+     *
+     * @param query query
+     */
     //voert een query uit die meegegeven wordt
     public static void executeQuery(String query){
         try (Connection connection = getConnection(); Statement statement = connection.createStatement()) {
@@ -37,6 +47,13 @@ public class DBUtil {
         }
     }
 
+    /**
+     *
+     * @param query query
+     * @return int
+     * @throws SQLException
+     * @throws IOException
+     */
     private static int executeCountQuery(String query) throws SQLException, IOException {
         try (Connection connection = getConnection(); Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery(query)) {
             if (resultSet.next()) {
@@ -54,6 +71,10 @@ public class DBUtil {
         }
     }
 
+    /** execute a query for update database
+     *
+     * @param query query
+     */
     //voert een update uit die meegegeven wordt
     public static void updateQuery(String query){
         try (Connection connection = getConnection(); Statement statement = connection.createStatement()) {
@@ -67,6 +88,11 @@ public class DBUtil {
         }
     }
 
+    /** get a list back of products
+     *
+     * @param query query
+     * @return list of products
+     */
     public static List<Product> fillListWithProducts(String query) {
         List<Product> productlist = new ArrayList<>();
         try (Connection connection = getConnection(); Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery(query)) {
@@ -105,6 +131,11 @@ public class DBUtil {
         return productlist;
     }
 
+    /** get a list off main category from database
+     *
+     * @param query query
+     * @return lsit of main category
+     */
     // main category uit database halen en in een List zetten
     public static List<String> fillListWithMainCategory(String query){
         List<String> mainCategoryList = new ArrayList<>();
@@ -120,6 +151,11 @@ public class DBUtil {
         return mainCategoryList;
     }
 
+    /** get a list off sub category from database
+     *
+     * @param query query
+     * @return list of sub category
+     */
     // sub category uit database halen en in een List zetten
     public static List<String> fillListWithSubCategory(String query) {
         List<String> subCategoryList = new ArrayList<>();
@@ -136,6 +172,11 @@ public class DBUtil {
         return subCategoryList;
     }
 
+    /** save product to CSV from database
+     *
+     * @param file file
+     * @param query query
+     */
     public static void saveProductCSV(File file, String query){
         StringBuilder sb = new StringBuilder();
         try (Connection connection = getConnection(); Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery(query)) {
@@ -182,6 +223,11 @@ public class DBUtil {
 
     }
 
+    /** save category to CSV from database
+     *
+     * @param file
+     * @param query
+     */
     public static void saveCategoryCSV(File file,String query){
         StringBuilder sb = new StringBuilder();
         try (Connection connection = getConnection(); Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery(query)) {
@@ -210,6 +256,14 @@ public class DBUtil {
         }
     }
 
+    /** Check if there is category
+     *
+     * @param query query
+     * @return boolean
+     * @throws SQLException
+     * @throws ClassNotFoundException
+     * @throws IOException
+     */
     public static boolean checkForCategory(String query) throws SQLException, ClassNotFoundException, IOException {
         return executeCountQuery(query) > 0;
     }

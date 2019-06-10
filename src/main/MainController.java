@@ -21,7 +21,9 @@ import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.*;
 
-
+/**
+ * This class is the conroller of viewer.fxml
+ */
 public class MainController {
     @FXML
     private TableColumn<Product, String> columnMainCategory;
@@ -45,7 +47,14 @@ public class MainController {
     private FileChooser fileChooser;
     @FXML
     private Pane pane;
+    private Path imagePath;
+    private ImageView imageView1;
 
+    /** initialize method
+     *
+     * @throws SQLException
+     * @throws ClassNotFoundException
+     */
     @FXML
     public void initialize() throws SQLException, ClassNotFoundException {
         columnProductTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
@@ -59,12 +68,20 @@ public class MainController {
         loadDate();
     }
 
+    /** this method loads the data off the list off products
+     *
+     */
    private void loadDate(){
         ObservableList<Product> productObservableList = FXCollections.observableArrayList();
         productObservableList.addAll(ProductDAO.getProduct());
         productTable.setItems(productObservableList);
     }
 
+    /** This is for making the tableview editable.
+     *
+     * @throws SQLException
+     * @throws ClassNotFoundException
+     */
     //tableview editable maken en er voor zorgen dat deze zijn gegevens opslaat in de database
     private void editableColumn() throws SQLException, ClassNotFoundException {
 
@@ -125,32 +142,62 @@ public class MainController {
         productTable.setEditable(true);
     }
 
-
+    /** this is the query for updating the database
+     *
+     * @param column Enter te column name of the Database
+     * @param newValue Give the new value
+     * @param id Give the product id
+     */
     private void updateData(String column, String newValue, int id) {
         String query = "UPDATE products SET " + column + " = '" + newValue + "' WHERE productId = " + id + "";
         DBUtil.updateQuery(query);
     }
 
+
+    /** gets a list of the products in the database
+     *
+     * @return A list of products
+     */
     private List<Product> generateInitialProducts() {
         return model.ProductDAO.getInitialProducts();
     }
 
+    /** sets the products table with all search results
+     *
+     * @param actionEvent Button press search
+     */
     @FXML
     private void search(ActionEvent actionEvent) {
         productTable.getItems().setAll(model.ProductDAO.search(search.getText()));
     }
 
+    /** calls the method initialize
+     *
+     * @param actionEvent Button press refresh
+     * @throws SQLException
+     * @throws ClassNotFoundException
+     */
     @FXML
     private void refresh(ActionEvent actionEvent) throws SQLException, ClassNotFoundException {
         initialize();
     }
 
+    /** close viewer
+     *
+     * @param actionEvent when press exit.
+     */
     @FXML
     private void Exit(ActionEvent actionEvent) {
         Platform.exit();
 
     }
 
+    /** opening a CSV file of products.
+     *
+     * @param actionEvent press openProductsCSV
+     * @throws ClassNotFoundException
+     * @throws SQLException
+     */
     @FXML
     private void openProductCSV(ActionEvent actionEvent) throws ClassNotFoundException, SQLException {
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
@@ -223,7 +270,7 @@ public class MainController {
                     lineCounter++;
                 }
                 initialize();
-                throwPositiveStatic("Great success");
+//                throwPositiveStatic("Great success");
 
 
             } catch (IOException e) {
@@ -242,6 +289,14 @@ public class MainController {
         }
     }
 
+    /** create a product
+     *
+     * @param productLineList give a list of products
+     * @return a new products
+     * @throws SQLException
+     * @throws ClassNotFoundException
+     * @throws IOException
+     */
     private static Product createProduct(List<String> productLineList) throws SQLException, ClassNotFoundException, IOException {
         String mainCategory;
         String subCategory;
@@ -269,6 +324,11 @@ public class MainController {
                 .build();
     }
 
+    /** opening a CSV file of Category.
+     *
+     * @param actionEvent when press openCaegoryCSV
+     * @throws SQLException
+     */
     @FXML
     public void OpenCategoryCSV(ActionEvent actionEvent) throws SQLException {
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
@@ -305,7 +365,7 @@ public class MainController {
                     lineCounter++;
                 }
                 initialize();
-                throwPositiveStatic("Great success");
+//                throwPositiveStatic("Great success");
             } catch (IOException e) {
                 System.out.println("Something went wrong when reading the file");
                 e.printStackTrace();
@@ -318,6 +378,14 @@ public class MainController {
         }
     }
 
+    /** create a new category
+     *
+     * @param categoryLineList give a list op category
+     * @return new Category
+     * @throws SQLException
+     * @throws ClassNotFoundException
+     * @throws IOException
+     */
     private Category createCategory(List<String> categoryLineList) throws SQLException, ClassNotFoundException, IOException {
         String mainCategory;
         String subCategory;
@@ -330,7 +398,10 @@ public class MainController {
         }
     }
 
-
+    /** Saving the list op products in to CSV file.
+     *
+     * @param actionEvent press saveProductCSV
+     */
     @FXML
     public void saveProductCSV(ActionEvent actionEvent) {
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
@@ -344,6 +415,10 @@ public class MainController {
         }
     }
 
+    /** Save the list of category to a CSV file.
+     *
+     * @param actionEvent press saveCategoryCSV
+     */
     @FXML
     public void saveCategoryCSV(ActionEvent actionEvent) {
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
@@ -351,11 +426,15 @@ public class MainController {
         File file = fileChooser.showSaveDialog(pane.getScene().getWindow());
         if (file != null) {
             DBUtil.saveCategoryCSV(file, "select * from category");
-         throwPositiveStatic("Great success");
+//         throwPositiveStatic("Great success");
 
         }
     }
 
+    /** loads PopupAddProduct.fxml
+     *
+     * @param actionEvent when press add product
+     */
     @FXML
     private void openAddProductPopup(ActionEvent actionEvent) {
         try {
@@ -372,7 +451,10 @@ public class MainController {
         }
     }
 
-
+    /** loads PopupAddCategory.fxml
+     *
+     * @param actionEvent press add category
+     */
     @FXML
     private void openAddCategoryPopup(ActionEvent actionEvent) {
         try {
@@ -389,7 +471,10 @@ public class MainController {
         }
     }
 
-
+    /** loads PopupHelp.fxml
+     *
+     * @param actionEvent press Help
+     */
     public void openHelpPopup(ActionEvent actionEvent) {
 
         try {
@@ -406,7 +491,10 @@ public class MainController {
         }
     }
 
-
+    /** Loads PopupError.fxml
+     *
+     * @param actionEvent When a exception is throw
+     */
     @FXML
     public void openPopupError(ActionEvent actionEvent) {
         try {
@@ -422,6 +510,9 @@ public class MainController {
         }
     }
 
+    /**
+     *
+     */
     @FXML
     public void openPopupError() {
         try {
@@ -438,6 +529,9 @@ public class MainController {
         }
     }
 
+    /**
+     *
+     */
     @FXML
     public void openPopupPositive() {
         try {
@@ -454,45 +548,72 @@ public class MainController {
         }
     }
 
-
+    /**
+     *
+     * @param positiveMessage
+     */
     public void throwPositive(String positiveMessage) {
 
         PopupMessageClass.setErrormessage(positiveMessage);
         openPopupPositive();
     }
 
+    /**
+     *
+     * @param actionEvent
+     * @param errorMessage
+     */
     public void throwError(ActionEvent actionEvent, String errorMessage) {
 
         PopupMessageClass.setErrormessage(errorMessage);
         openPopupError(actionEvent);
     }
 
+    /**
+     *
+     * @param errorMessage
+     */
     public void throwError(String errorMessage) {
 
         PopupMessageClass.setErrormessage(errorMessage);
         openPopupError();
     }
 
-
+    /**
+     *
+     * @param actionEvent
+     * @param errorMessage
+     */
     public static void throwErrorStatic(ActionEvent actionEvent, String errorMessage) {
 
         MainController mainController = new MainController();
         mainController.throwError(actionEvent, errorMessage);
     }
 
+    /**
+     *
+     * @param errorMessage
+     */
     public static void throwErrorStatic(String errorMessage) {
 
         MainController mainController = new MainController();
         mainController.throwError(errorMessage);
     }
 
+    /**
+     *
+     * @param positiveMessage
+     */
     public static void throwPositiveStatic(String positiveMessage) {
 
         MainController mainController = new MainController();
         mainController.throwPositive(positiveMessage);
     }
 
-
+    /** for deleting a row in the viewer and database.
+     *
+     * @param actionEvent press button delete row
+     */
     public void deleteRow(ActionEvent actionEvent) {
         Product selectedItem = productTable.getSelectionModel().getSelectedItem();
         if (selectedItem != null) {

@@ -14,9 +14,23 @@ import java.util.List;
 
 import static main.MainController.throwErrorStatic;
 import static main.MainController.throwPositiveStatic;
-
+/** Data Access Object for product
+ *
+ */
 public class ProductDAO {
-
+    /** query for adding a product to database
+     *
+     * @param productTitle title
+     * @param subCategory sub category
+     * @param mainCategory main category
+     * @param price price
+     * @param description description
+     * @param imagePath image path
+     * @param productId id
+     * @throws SQLException
+     * @throws ClassNotFoundException
+     * @throws IOException
+     */
     public static void addProduct(String productTitle, String subCategory, String mainCategory, String price, String description, Path imagePath, int productId) throws SQLException, ClassNotFoundException, IOException {
         String stringPath = imagePath.toString().replace("\\","/");
         String update = "INSERT INTO products (productTitle, subCategory, mainCategory, price, productDescription, image, imagePath)" +
@@ -26,7 +40,7 @@ public class ProductDAO {
             PreparedStatement pstmt = con.prepareStatement(update)){
             pstmt.setBinaryStream(1, inputStream);
             pstmt.executeUpdate();
-            throwPositiveStatic("Great success");
+//            throwPositiveStatic("Great success");
 
 
         } catch (SQLException ex) {
@@ -39,6 +53,11 @@ public class ProductDAO {
 
     }
 
+    /** query for adding a product
+     *
+     * @param product product
+     * @throws SQLException
+     */
     public static void addProduct(Product product) throws SQLException {
 
         String update = "INSERT INTO products (productTitle, subCategory, mainCategory, price, productDescription, image, imagePath) " +
@@ -81,17 +100,34 @@ public class ProductDAO {
         }
     }
 
+    /** query for changing a product
+     *
+     * @param productTitle title
+     * @param category category
+     * @param price  price
+     * @param description description
+     * @param productID id
+     */
     public static void changeProducts(String productTitle, String category, String price, String description, int productID){
 
         String update = "UPDATE products SET productTitle = '" + productTitle + "', price= '" + price + "',productDescription='" + description + "', subCategory=" + category + " where productId=" + productID;
         DBUtil.updateQuery(update);
     }
 
+    /** query for getting a list of all products
+     *
+     * @return list of products
+     */
     public static List<Product> getInitialProducts(){
         String query = "select *  from products";
         return DBUtil.fillListWithProducts(query);
     }
 
+    /** query for getting a list of products with search
+     *
+     * @param search search word
+     * @return list of products
+     */
     public static List<Product> search(String search){
         String query = "SELECT * FROM products WHERE productTitle LIKE '" + "%" + search + "%" + "' " +
                 "OR subCategory LIKE '" + "%" + search + "%" + "'" +
@@ -100,6 +136,10 @@ public class ProductDAO {
         return DBUtil.fillListWithProducts(query);
     }
 
+    /** query for getting a list of products
+     *
+     * @return list of product
+     */
     public static List<Product> getProduct(){
         String query = "select * FROM products";
         return DBUtil.fillListWithProducts(query);
