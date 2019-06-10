@@ -395,7 +395,7 @@ public class MainController {
 
 
     @FXML
-    public void openPopupError(ActionEvent actionEvent) {
+    private void openPopupError(ActionEvent actionEvent) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("PopupError.fxml"));
             Parent root1 = fxmlLoader.load();
@@ -410,7 +410,7 @@ public class MainController {
     }
 
     @FXML
-    public void openPopupError() {
+    private void openPopupError() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("PopupError.fxml"));
             Parent root1 = fxmlLoader.load();
@@ -426,7 +426,7 @@ public class MainController {
     }
 
     @FXML
-    public void openPopupPositive() {
+    private void openPopupPositive() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("PopupPositive.fxml"));
             Parent root1 = fxmlLoader.load();
@@ -442,19 +442,19 @@ public class MainController {
     }
 
 
-    public void throwPositive(String positiveMessage) {
+    private void throwPositive(String positiveMessage) {
 
         PopupMessageClass.setErrormessage(positiveMessage);
         openPopupPositive();
     }
 
-    public void throwError(ActionEvent actionEvent, String errorMessage) {
+    private void throwError(ActionEvent actionEvent, String errorMessage) {
 
         PopupMessageClass.setErrormessage(errorMessage);
         openPopupError(actionEvent);
     }
 
-    public void throwError(String errorMessage) {
+    private void throwError(String errorMessage) {
 
         PopupMessageClass.setErrormessage(errorMessage);
         openPopupError();

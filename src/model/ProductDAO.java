@@ -1,6 +1,5 @@
 package model;
 
-import main.MainController;
 import util.DBUtil;
 import java.io.IOException;
 import java.io.InputStream;
