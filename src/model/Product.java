@@ -286,5 +286,4 @@ public class Product {
         this.imagePath = imagePath;
     }
 
-
 }
