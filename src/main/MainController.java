@@ -83,7 +83,6 @@ public class MainController {
      * @throws SQLException
      * @throws ClassNotFoundException
      */
-    //tableview editable maken en er voor zorgen dat deze zijn gegevens opslaat in de database
     private void editableColumn() throws SQLException, ClassNotFoundException {
 
         columnProductTitle.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -145,13 +144,17 @@ public class MainController {
 
             if (selectedFile != null) {
                 imagePath = selectedFile.toPath();
+                try {
                     updateDataImage(product.getProductId(), imagePath);
+                } catch (SQLException | ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
             }
         });
             productTable.setEditable(true);
     }
 
-    private void updateDataImage(int id, Path imagePath) {
+    private void updateDataImage(int id, Path imagePath) throws SQLException, ClassNotFoundException {
         String stringPath = imagePath.toString().replace("\\","/");
         String update = "UPDATE products SET image = ? WHERE productId = " + id + "";
         String update1 = "UPDATE products SET imagePath = '" + stringPath + "' WHERE productId = " + id + "";
@@ -166,6 +169,7 @@ public class MainController {
             e.printStackTrace();
         }
         DBUtil.updateQuery(update1);
+        initialize();
     }
 
     /** this is the query for updating the database
