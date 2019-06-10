@@ -31,7 +31,6 @@ public class PopupAddProductController {
     @FXML
     public void initialize(){
         mainCategory.setItems(generateInitialMainCategory());
-//     subCategory.setItems(generateInitialSubCategory());
     }
 
     private ObservableList<String> generateInitialMainCategory(){
@@ -50,9 +49,9 @@ public class PopupAddProductController {
     private void PictureButtonAction(ActionEvent actionEvent){
         FileChooser chooser = new FileChooser();
         FileChooser.ExtensionFilter extFilterJpg = new FileChooser.ExtensionFilter("JPG files (*.jpg)", "*.jpg");
-        FileChooser.ExtensionFilter extFilterGif = new FileChooser.ExtensionFilter("PNG files (*.png)", "*.png");
+        FileChooser.ExtensionFilter extFilterPng = new FileChooser.ExtensionFilter("PNG files (*.png)", "*.png");
         chooser.getExtensionFilters().add(extFilterJpg);
-        chooser.getExtensionFilters().add(extFilterGif);
+        chooser.getExtensionFilters().add(extFilterPng);
         chooser.setTitle("Open File");
         File selectedFile = chooser.showOpenDialog(new Stage());
         if (selectedFile != null) {
@@ -75,7 +74,7 @@ public class PopupAddProductController {
             imagePath = Paths.get("standardImage.jpg");
         }
         model.ProductDAO.addProduct(productTitle.getText(),subCategory.getValue(), mainCategory.getValue(), price.getText(), description.getText(), imagePath,0);
-        Stage stage = (Stage) addProductButton.getScene().getWindow();
+       Stage stage = (Stage) addProductButton.getScene().getWindow();
         stage.close();
     }
 }
