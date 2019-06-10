@@ -70,7 +70,7 @@ public class MainController {
 
         //deze werkt, afblijven
         columnProductTitle.setCellFactory(TextFieldTableCell.forTableColumn());
-        columnProductTitle.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setTitle(e.getNewValue()));
+//       columnProductTitle.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setTitle(e.getNewValue()));
         columnProductTitle.setOnEditCommit(event -> {
             Product product = event.getRowValue();
             product.setTitle(event.getNewValue());
@@ -88,8 +88,7 @@ public class MainController {
             }
         });
         columnSubCategory.setCellFactory(ComboBoxTableCell.forTableColumn(new DefaultStringConverter(),dataSub));
-       columnSubCategory.setOnEditCommit(e ->
-                e.getTableView().getItems().get(e.getTablePosition().getRow()).setSubCategory((e.getNewValue())));
+//      columnSubCategory.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setSubCategory((e.getNewValue())));
         columnSubCategory.setOnEditCommit(event -> {
             Product product = event.getRowValue();
             product.setSubCategory((event.getNewValue()));
@@ -100,7 +99,7 @@ public class MainController {
         ObservableList <String> dataMain  = FXCollections.observableArrayList();
         dataMain.addAll(CategoryDAO.getInitialMainCategory());
         columnMainCategory.setCellFactory(ComboBoxTableCell.forTableColumn(new DefaultStringConverter(),dataMain));
-        columnMainCategory.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setSubCategory((e.getNewValue())));
+//        columnMainCategory.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setSubCategory((e.getNewValue())));
         columnMainCategory.setOnEditCommit(event -> {
             Product product = event.getRowValue();
             product.setMainCategory((event.getNewValue()));
@@ -109,7 +108,7 @@ public class MainController {
 
         //deze werkt, afblijven
         columnPrice.setCellFactory(TextFieldTableCell.forTableColumn());
-        columnPrice.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setPrice(e.getNewValue()));
+//        columnPrice.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setPrice(e.getNewValue()));
         columnPrice.setOnEditCommit(event -> {
             Product product = event.getRowValue();
             product.setPrice(event.getNewValue());
@@ -117,7 +116,7 @@ public class MainController {
         });
 
         columnProductDescription.setCellFactory(TextFieldTableCell.forTableColumn());
-        columnProductDescription.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setDescription(e.getNewValue()));
+//        columnProductDescription.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setDescription(e.getNewValue()));
         columnProductDescription.setOnEditCommit(event -> {
             Product product = event.getRowValue();
             product.setDescription(event.getNewValue());
