@@ -1,8 +1,5 @@
 package model;
 
-import javafx.event.ActionEvent;
-import main.MainController;
-
 public class PopupMessageClass {
     /**
      *

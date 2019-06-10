@@ -210,7 +210,7 @@ public class DBUtil {
             fileWriter.write(sb.toString());
             fileWriter.close();
             System.out.println("CSV created");
-            throwPositiveStatic("Great success");
+//            throwPositiveStatic("Great success");
 
 
         } catch (
