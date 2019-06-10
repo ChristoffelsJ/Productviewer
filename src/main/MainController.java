@@ -16,6 +16,9 @@ import util.DBUtil;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -69,7 +72,7 @@ public class MainController {
     /** this method loads the data off the list off products
      *
      */
-   private void loadDate(){
+   private void loadData(){
         ObservableList<Product> productObservableList = FXCollections.observableArrayList();
         productObservableList.addAll(ProductDAO.getProduct());
         productTable.setItems(productObservableList);
@@ -82,16 +85,14 @@ public class MainController {
      */
     //tableview editable maken en er voor zorgen dat deze zijn gegevens opslaat in de database
     private void editableColumn() throws SQLException, ClassNotFoundException {
-        //deze werkt, afblijven
+
         columnProductTitle.setCellFactory(TextFieldTableCell.forTableColumn());
-//       columnProductTitle.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setTitle(e.getNewValue()));
         columnProductTitle.setOnEditCommit(event -> {
             Product product = event.getRowValue();
             product.setTitle(event.getNewValue());
             updateData("productTitle", event.getNewValue(), product.getProductId());
         });
 
-        //subCategory met de juiste main uit de db halen met een combobox
         ObservableList <String> dataSub  = FXCollections.observableArrayList();
         columnSubCategory.setOnEditStart(event -> {Product product = event.getRowValue();
             try {
@@ -101,28 +102,24 @@ public class MainController {
                 e.printStackTrace();
             }
         });
+
         columnSubCategory.setCellFactory(ComboBoxTableCell.forTableColumn(new DefaultStringConverter(),dataSub));
-//      columnSubCategory.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setSubCategory((e.getNewValue())));
         columnSubCategory.setOnEditCommit(event -> {
             Product product = event.getRowValue();
             product.setSubCategory((event.getNewValue()));
             updateData("subCategory", event.getNewValue(), product.getProductId());
         });
 
-        //main category uit de db halen voor met een combobox
         ObservableList <String> dataMain  = FXCollections.observableArrayList();
         dataMain.addAll(CategoryDAO.getInitialMainCategory());
         columnMainCategory.setCellFactory(ComboBoxTableCell.forTableColumn(new DefaultStringConverter(),dataMain));
-//        columnMainCategory.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setSubCategory((e.getNewValue())));
         columnMainCategory.setOnEditCommit(event -> {
             Product product = event.getRowValue();
             product.setMainCategory((event.getNewValue()));
             updateData("mainCategory", event.getNewValue(), product.getProductId());
         });
 
-        //deze werkt, afblijven
         columnPrice.setCellFactory(TextFieldTableCell.forTableColumn());
-//        columnPrice.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setPrice(e.getNewValue()));
         columnPrice.setOnEditCommit(event -> {
             Product product = event.getRowValue();
             product.setPrice(event.getNewValue());
@@ -130,13 +127,45 @@ public class MainController {
         });
 
         columnProductDescription.setCellFactory(TextFieldTableCell.forTableColumn());
-//        columnProductDescription.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setDescription(e.getNewValue()));
         columnProductDescription.setOnEditCommit(event -> {
             Product product = event.getRowValue();
             product.setDescription(event.getNewValue());
             updateData("productDescription", event.getNewValue(), product.getProductId());
         });
-        productTable.setEditable(true);
+
+        FileChooser chooser = new FileChooser();
+        FileChooser.ExtensionFilter extFilterJpg = new FileChooser.ExtensionFilter("JPG files (*.jpg)", "*.jpg");
+        FileChooser.ExtensionFilter extFilterPng = new FileChooser.ExtensionFilter("PNG files (*.png)", "*.png");
+        chooser.getExtensionFilters().add(extFilterJpg);
+        chooser.getExtensionFilters().add(extFilterPng);
+        chooser.setTitle("Open File");
+
+        columnPicture.setOnEditStart(event -> {Product product = event.getRowValue();
+            File selectedFile = chooser.showOpenDialog(new Stage());
+
+            if (selectedFile != null) {
+                imagePath = selectedFile.toPath();
+                    updateDataImage(product.getProductId(), imagePath);
+            }
+        });
+            productTable.setEditable(true);
+    }
+
+    private void updateDataImage(int id, Path imagePath) {
+        String stringPath = imagePath.toString().replace("\\","/");
+        String update = "UPDATE products SET image = ? WHERE productId = " + id + "";
+        String update1 = "UPDATE products SET imagePath = '" + stringPath + "' WHERE productId = " + id + "";
+
+        try(InputStream inputStream = Files.newInputStream(imagePath);
+            Connection connection = DBUtil.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(update)) {
+            preparedStatement.setBinaryStream(1,inputStream);
+            preparedStatement.executeUpdate();
+
+        } catch (IOException | SQLException e) {
+            e.printStackTrace();
+        }
+        DBUtil.updateQuery(update1);
     }
 
     /** this is the query for updating the database
@@ -367,7 +396,7 @@ public class MainController {
         }
     }
 
-    private Category createCategory(List<String> categoryLineList) throws SQLException, IOException {
+    private Category createCategory(List<String> categoryLineList) throws SQLException, IOException, ClassNotFoundException {
         String mainCategory;
         String subCategory;
         if (!DBUtil.checkForCategory("SELECT COUNT(*) AS total FROM category WHERE subCategory = '" + categoryLineList.get(0) + "'")) {
