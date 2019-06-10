@@ -169,7 +169,7 @@ public class DBUtil {
             fileWriter.write(sb.toString());
             fileWriter.close();
             System.out.println("CSV created");
-            throwPositiveStatic("Great success");
+//            throwPositiveStatic("Great success");
 
 
         } catch (
@@ -210,7 +210,7 @@ public class DBUtil {
         }
     }
 
-    public static boolean checkForCategory(String query) throws SQLException, ClassNotFoundException, IOException {
+    public static boolean checkForCategory(String query) throws SQLException, IOException {
         return executeCountQuery(query) > 0;
     }
 

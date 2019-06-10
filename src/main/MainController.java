@@ -7,7 +7,6 @@ import javafx.fxml.*;
 import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.*;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.*;
@@ -17,7 +16,6 @@ import util.DBUtil;
 
 import java.io.*;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -56,10 +54,10 @@ public class MainController {
         columnPicture.setCellValueFactory(new PropertyValueFactory<>("image"));
         productTable.getItems().setAll(generateInitialProducts());
         editableColumn();
-        loadDate();
+        loadData();
     }
 
-   private void loadDate(){
+   private void loadData(){
         ObservableList<Product> productObservableList = FXCollections.observableArrayList();
         productObservableList.addAll(ProductDAO.getProduct());
         productTable.setItems(productObservableList);
@@ -67,7 +65,6 @@ public class MainController {
 
     //tableview editable maken en er voor zorgen dat deze zijn gegevens opslaat in de database
     private void editableColumn() throws SQLException, ClassNotFoundException {
-
         //deze werkt, afblijven
         columnProductTitle.setCellFactory(TextFieldTableCell.forTableColumn());
 //       columnProductTitle.setOnEditCommit(e -> e.getTableView().getItems().get(e.getTablePosition().getRow()).setTitle(e.getNewValue()));
@@ -224,21 +221,11 @@ public class MainController {
                 }
                 initialize();
                 throwPositiveStatic("Great success");
-
-
             } catch (IOException e) {
                 System.out.println("Something went wrong when reading the file");
                 e.printStackTrace();
                 throwErrorStatic(actionEvent, "Something went wrong when reading the file");
-
             }
-        }
-
-        //pop up met error maken    (lijkt me overbodig, mogelijke popup staat in comment, jonas)
-
-        else {
-            System.out.println("you have to load a file with the CSV extension");
-            //throwErrorStatic(actionEvent,"you have to load a file with the CSV extension");
         }
     }
 
@@ -318,7 +305,7 @@ public class MainController {
         }
     }
 
-    private Category createCategory(List<String> categoryLineList) throws SQLException, ClassNotFoundException, IOException {
+    private Category createCategory(List<String> categoryLineList) throws SQLException, IOException {
         String mainCategory;
         String subCategory;
         if (!DBUtil.checkForCategory("SELECT COUNT(*) AS total FROM category WHERE subCategory = '" + categoryLineList.get(0) + "'")) {
@@ -326,7 +313,7 @@ public class MainController {
             mainCategory = categoryLineList.get(1);
             return new Category(subCategory, mainCategory);
         } else {
-            return null;
+            return null; //is dit niet gevaarlijk ivm nullpointers?
         }
     }
 
@@ -339,8 +326,6 @@ public class MainController {
         if (file != null) {
             DBUtil.saveProductCSV(file, "select * from products");
           //  throwPositiveStatic("Great success");
-
-
         }
     }
 
@@ -351,7 +336,7 @@ public class MainController {
         File file = fileChooser.showSaveDialog(pane.getScene().getWindow());
         if (file != null) {
             DBUtil.saveCategoryCSV(file, "select * from category");
-         throwPositiveStatic("Great success");
+//         throwPositiveStatic("Great success");
 
         }
     }
@@ -391,7 +376,6 @@ public class MainController {
 
 
     public void openHelpPopup(ActionEvent actionEvent) {
-
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("PopupHelp.fxml"));
             Parent root1 = fxmlLoader.load();
@@ -456,41 +440,34 @@ public class MainController {
 
 
     private void throwPositive(String positiveMessage) {
-
         PopupMessageClass.setErrormessage(positiveMessage);
         openPopupPositive();
     }
+    public static void throwPositiveStatic(String positiveMessage) {
+        MainController mainController = new MainController();
+        mainController.throwPositive(positiveMessage);
+    }
 
     private void throwError(ActionEvent actionEvent, String errorMessage) {
-
         PopupMessageClass.setErrormessage(errorMessage);
         openPopupError(actionEvent);
     }
 
     private void throwError(String errorMessage) {
-
         PopupMessageClass.setErrormessage(errorMessage);
         openPopupError();
     }
 
-
     public static void throwErrorStatic(ActionEvent actionEvent, String errorMessage) {
-
         MainController mainController = new MainController();
         mainController.throwError(actionEvent, errorMessage);
     }
 
     public static void throwErrorStatic(String errorMessage) {
-
         MainController mainController = new MainController();
         mainController.throwError(errorMessage);
     }
 
-    public static void throwPositiveStatic(String positiveMessage) {
-
-        MainController mainController = new MainController();
-        mainController.throwPositive(positiveMessage);
-    }
 
 
     public void deleteRow(ActionEvent actionEvent) {

@@ -27,13 +27,10 @@ public class ProductDAO {
             pstmt.executeUpdate();
             throwPositiveStatic("Great success");
 
-
         } catch (SQLException ex) {
             System.out.println("Error when implementing data in database");
             throwErrorStatic("Error when implementing data in database");
             throw ex;
-
-
         }
 
     }
