@@ -15,9 +15,10 @@ public class MainApp extends Application {
     }
 
     /**
+     * opens the main program
      *
-     * @param stage
-     * @throws Exception
+     * @param stage the stage on which the fxml is opened
+     * @throws Exception exception when opening the stage
      */
     @Override
     public void start(Stage stage) throws Exception {

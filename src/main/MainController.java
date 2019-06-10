@@ -49,15 +49,12 @@ public class MainController {
     @FXML
     private Pane pane;
     private Path imagePath;
-    private ImageView imageView1;
 
     /** initialize method
      *
-     * @throws SQLException
-     * @throws ClassNotFoundException
      */
     @FXML
-    public void initialize() throws SQLException, ClassNotFoundException {
+    public void initialize() {
         columnProductTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
         columnSubCategory.setCellValueFactory(new PropertyValueFactory<>("subCategory"));
         columnMainCategory.setCellValueFactory(new PropertyValueFactory<>("mainCategory"));
@@ -80,10 +77,8 @@ public class MainController {
 
     /** This is for making the tableview editable.
      *
-     * @throws SQLException
-     * @throws ClassNotFoundException
      */
-    private void editableColumn() throws SQLException, ClassNotFoundException {
+    private void editableColumn() {
 
         columnProductTitle.setCellFactory(TextFieldTableCell.forTableColumn());
         columnProductTitle.setOnEditCommit(event -> {
@@ -94,12 +89,8 @@ public class MainController {
 
         ObservableList <String> dataSub  = FXCollections.observableArrayList();
         columnSubCategory.setOnEditStart(event -> {Product product = event.getRowValue();
-            try {
-                dataSub.clear();
-                 dataSub.addAll(CategoryDAO.getInitialSubCategory(product.getMainCategory()));
-            } catch (SQLException | ClassNotFoundException e) {
-                e.printStackTrace();
-            }
+            dataSub.clear();
+            dataSub.addAll(CategoryDAO.getInitialSubCategory(product.getMainCategory()));
         });
 
         columnSubCategory.setCellFactory(ComboBoxTableCell.forTableColumn(new DefaultStringConverter(),dataSub));
@@ -144,17 +135,13 @@ public class MainController {
 
             if (selectedFile != null) {
                 imagePath = selectedFile.toPath();
-                try {
-                    updateDataImage(product.getProductId(), imagePath);
-                } catch (SQLException | ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
+                updateDataImage(product.getProductId(), imagePath);
             }
         });
             productTable.setEditable(true);
     }
 
-    private void updateDataImage(int id, Path imagePath) throws SQLException, ClassNotFoundException {
+    private void updateDataImage(int id, Path imagePath) {
         String stringPath = imagePath.toString().replace("\\","/");
         String update = "UPDATE products SET image = ? WHERE productId = " + id + "";
         String update1 = "UPDATE products SET imagePath = '" + stringPath + "' WHERE productId = " + id + "";
@@ -204,11 +191,9 @@ public class MainController {
     /** calls the method initialize
      *
      * @param actionEvent Button press refresh
-     * @throws SQLException
-     * @throws ClassNotFoundException
      */
     @FXML
-    private void refresh(ActionEvent actionEvent) throws SQLException, ClassNotFoundException {
+    private void refresh(ActionEvent actionEvent){
         initialize();
     }
 
@@ -225,8 +210,8 @@ public class MainController {
     /** opening a CSV file of products.
      *
      * @param actionEvent press openProductsCSV
-     * @throws ClassNotFoundException
-     * @throws SQLException
+     * @throws ClassNotFoundException for refering to createProduct method
+     * @throws SQLException because it connects with the database
      */
     @FXML
     private void openProductCSV(ActionEvent actionEvent) throws ClassNotFoundException, SQLException {
@@ -315,9 +300,9 @@ public class MainController {
      *
      * @param productLineList give a list of products
      * @return a new products
-     * @throws SQLException
-     * @throws ClassNotFoundException
-     * @throws IOException
+     * @throws SQLException because of the connection to the database
+     * @throws ClassNotFoundException because of the checkForCategory method
+     * @throws IOException because of the checkForCategory method
      */
     private static Product createProduct(List<String> productLineList) throws SQLException, ClassNotFoundException, IOException {
         String mainCategory;
@@ -349,7 +334,7 @@ public class MainController {
     /** opening a CSV file of Category.
      *
      * @param actionEvent when press openCaegoryCSV
-     * @throws SQLException
+     * @throws SQLException because of the connection to the database
      */
     @FXML
     public void OpenCategoryCSV(ActionEvent actionEvent) throws SQLException {
@@ -400,6 +385,15 @@ public class MainController {
         }
     }
 
+    /**
+     *
+     * this method creates a category if necessary
+     * @param categoryLineList a list of categories
+     * @return a new sub and maincategory if needed, otherwise null
+     * @throws SQLException because of the connection to the database
+     * @throws IOException because of the checkForCategory method
+     * @throws ClassNotFoundException because of the checkForCategory method
+     */
     private Category createCategory(List<String> categoryLineList) throws SQLException, IOException, ClassNotFoundException {
         String mainCategory;
         String subCategory;
@@ -408,7 +402,7 @@ public class MainController {
             mainCategory = categoryLineList.get(1);
             return new Category(subCategory, mainCategory);
         } else {
-            return null; //is dit niet gevaarlijk ivm nullpointers?
+            return null;
         }
     }
 
