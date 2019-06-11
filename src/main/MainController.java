@@ -50,7 +50,7 @@ public class MainController {
     private Pane pane;
     private Path imagePath;
 
-    /** initialize method
+    /** initialize method, here the tableview is made
      *
      */
     @FXML
@@ -75,7 +75,7 @@ public class MainController {
         productTable.setItems(productObservableList);
     }
 
-    /** This is for making the tableview editable.
+    /** This is for making the tableview editable, also to save the edits to the database.
      *
      */
     private void editableColumn() {
@@ -141,6 +141,10 @@ public class MainController {
             productTable.setEditable(true);
     }
 
+    /**update the path from the image
+     * @param id give the product id
+     * @param imagePath give the path for the image
+     */
     private void updateDataImage(int id, Path imagePath) {
         String stringPath = imagePath.toString().replace("\\","/");
         String update = "UPDATE products SET image = ? WHERE productId = " + id + "";
@@ -285,7 +289,7 @@ public class MainController {
                     lineCounter++;
                 }
                 initialize();
-//                throwPositiveStatic("Great success");
+
 
 
             } catch (IOException e) {
@@ -507,7 +511,7 @@ public class MainController {
             Parent root1 = fxmlLoader.load();
             Stage stage = new Stage();
             stage.setTitle("ERROR!!!");
-            stage.setScene(new Scene(root1, 800, 520));
+            stage.setScene(new Scene(root1, 400, 80));
             stage.show();
         } catch (Exception e) {
             System.out.println("Something went wrong when opening the Error pop-up");
@@ -515,7 +519,8 @@ public class MainController {
         }
     }
 
-    /**
+
+    /**method for opening an error popup
      *
      */
     @FXML
@@ -525,7 +530,7 @@ public class MainController {
             Parent root1 = fxmlLoader.load();
             Stage stage = new Stage();
             stage.setTitle("ERROR!!!");
-            stage.setScene(new Scene(root1, 800, 520));
+            stage.setScene(new Scene(root1, 300, 60));
             stage.show();
         } catch (Exception e) {
             System.out.println("Something went wrong when opening the Error pop-up");
@@ -536,41 +541,8 @@ public class MainController {
 
     /**
      *
-     */
-    @FXML
-    private void openPopupPositive() {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("PopupPositive.fxml"));
-            Parent root1 = fxmlLoader.load();
-            Stage stage = new Stage();
-            stage.setTitle("Success...");
-            stage.setScene(new Scene(root1, 800, 520));
-            stage.show();
-        } catch (Exception e) {
-            System.out.println("Something went wrong when opening the positive pop-up");
-            e.printStackTrace();
-
-        }
-    }
-
-    /**
-     *
-     * @param positiveMessage
-     */
-    public void throwPositive(String positiveMessage) {
-
-        PopupMessageClass.setErrormessage(positiveMessage);
-        openPopupPositive();
-    }
-    public static void throwPositiveStatic(String positiveMessage) {
-        MainController mainController = new MainController();
-        mainController.throwPositive(positiveMessage);
-    }
-
-    /**
-     *
-     * @param actionEvent
-     * @param errorMessage
+     * @param actionEvent possible event we need to open the popup
+     * @param errorMessage message the popup needs to show
      */
     public void throwError(ActionEvent actionEvent, String errorMessage) {
 
@@ -580,7 +552,7 @@ public class MainController {
 
     /**
      *
-     * @param errorMessage
+     * @param errorMessage message the popup needs to show
      */
     public void throwError(String errorMessage) {
 
@@ -588,19 +560,19 @@ public class MainController {
         openPopupError();
     }
 
-    /**
+    /**this is the static method we can use in the entire project with an event and a message
      *
-     * @param actionEvent
-     * @param errorMessage
+     * @param actionEvent possible event we need to open the popup
+     * @param errorMessage message the popup needs to show
      */
     public static void throwErrorStatic(ActionEvent actionEvent, String errorMessage) {
         MainController mainController = new MainController();
         mainController.throwError(actionEvent, errorMessage);
     }
 
-    /**
+    /**this is the static method we can use in the entire project with only a message
      *
-     * @param errorMessage
+     * @param errorMessage message the popup needs to show
      */
     public static void throwErrorStatic(String errorMessage) {
         MainController mainController = new MainController();

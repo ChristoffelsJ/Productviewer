@@ -40,7 +40,7 @@ public class PopupAddCategoryController {
         } else {
             model.CategoryDAO.addCategory(category.getMainCategory(), category.getSubCategory());
             stage.close();
-//            throwPositiveStatic("Great success");
+
 
         }
     }

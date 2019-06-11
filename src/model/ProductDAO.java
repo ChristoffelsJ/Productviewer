@@ -12,7 +12,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import static main.MainController.throwErrorStatic;
-import static main.MainController.throwPositiveStatic;
+
 /** Data Access Object for product
  *
  */
@@ -37,11 +37,11 @@ public class ProductDAO {
             PreparedStatement pstmt = con.prepareStatement(update)){
             pstmt.setBinaryStream(1, inputStream);
             pstmt.executeUpdate();
-//            throwPositiveStatic("Great success");
+
 
         } catch (SQLException ex) {
             System.out.println("Error when implementing data in database");
-            throwErrorStatic("Error when implementing data in database");
+
             throw ex;
         }
 
@@ -62,7 +62,7 @@ public class ProductDAO {
                  PreparedStatement pstmt = con.prepareStatement(update)) {
                 pstmt.setBinaryStream(1, inputStream);
                 pstmt.executeUpdate();
-                //throwPositiveStatic("Great success");
+
 
 
             } catch (SQLException ex) {
@@ -80,7 +80,7 @@ public class ProductDAO {
                  PreparedStatement pstmt = con.prepareStatement(update)) {
                 pstmt.setBinaryStream(1, inputStream);
                 pstmt.executeUpdate();
-                throwPositiveStatic("Great success");
+
 
 
             } catch (SQLException ex) {

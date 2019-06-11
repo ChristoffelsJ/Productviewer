@@ -16,63 +16,76 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
 
-/** Controller class of PopupAddProduct.fxml
- *
+import static main.MainController.throwErrorStatic;
+
+/**
+ * Controller class of PopupAddProduct.fxml
  */
 public class PopupAddProductController {
 
-    @FXML private Button addProductButton;
-    @FXML private TextField productTitle;
-    @FXML private ComboBox <String> mainCategory;
-    @FXML private ComboBox<String> subCategory;
-    @FXML private TextField price;
-    @FXML private TextField description;
-    @FXML private ImageView imageView;
+    @FXML
+    private Button addProductButton;
+    @FXML
+    private TextField productTitle;
+    @FXML
+    private ComboBox<String> mainCategory;
+    @FXML
+    private ComboBox<String> subCategory;
+    @FXML
+    private TextField price;
+    @FXML
+    private TextField description;
+    @FXML
+    private ImageView imageView;
     private Path imagePath;
 
-    /** initialize the maincategory combobox
-     *
+    /**
+     * initialize the maincategory combobox
      */
     @FXML
-    public void initialize(){
+    public void initialize() {
         mainCategory.setItems(generateInitialMainCategory());
     }
 
-    /** gets all the main category's
+    /**
+     * gets all the main category's
      *
      * @return a list of all the Maincategory
      */
-    private ObservableList<String> generateInitialMainCategory(){
+    private ObservableList<String> generateInitialMainCategory() {
         return FXCollections.observableArrayList(model.CategoryDAO.getInitialMainCategory());
     }
 
-    /** gets all the sub category's
+    /**
+     * gets all the sub category's
      *
      * @return list of all the subCategory
-     * @throws SQLException because of the connection to the databse
+     * @throws SQLException           because of the connection to the databse
      * @throws ClassNotFoundException because of the getInitialSubCategory method
      */
     private ObservableList<String> generateInitialSubCategory() throws SQLException, ClassNotFoundException {
         return FXCollections.observableArrayList(model.CategoryDAO.getInitialSubCategory(mainCategory.getValue()));
     }
 
-    /** refresh the list off subs
+    /**
+     * refresh the list off subs
      *
      * @param actionEvent when men press the combox of subCathegory
-     * @throws SQLException because of the connection to the databse
+     * @throws SQLException           because of the connection to the databse
      * @throws ClassNotFoundException because of the setItems method
      */
     @FXML
-    private void refreshSubList (ActionEvent actionEvent) throws SQLException, ClassNotFoundException {
-       subCategory.setItems(generateInitialSubCategory());
+    private void refreshSubList(ActionEvent actionEvent) throws SQLException, ClassNotFoundException {
+        subCategory.setItems(generateInitialSubCategory());
     }
 
-    /** add a picture
+    /**
+     * add a picture
      *
      * @param actionEvent button press add picture
      */
     @FXML
-    private void PictureButtonAction(ActionEvent actionEvent){
+    private void PictureButtonAction(ActionEvent actionEvent) {
         FileChooser chooser = new FileChooser();
         FileChooser.ExtensionFilter extFilterJpg = new FileChooser.ExtensionFilter("JPG files (*.jpg)", "*.jpg");
         FileChooser.ExtensionFilter extFilterPng = new FileChooser.ExtensionFilter("PNG files (*.png)", "*.png");
@@ -82,7 +95,7 @@ public class PopupAddProductController {
         File selectedFile = chooser.showOpenDialog(new Stage());
         if (selectedFile != null) {
             imagePath = selectedFile.toPath();
-            try(InputStream is = Files.newInputStream(imagePath)){
+            try (InputStream is = Files.newInputStream(imagePath)) {
                 Image imageFile = new Image(is);
                 imageView.setImage(imageFile);
                 imageView.setFitWidth(100);
@@ -94,26 +107,35 @@ public class PopupAddProductController {
         }
     }
 
-    /** add a product to the viewlist
+    /**
+     * add a product to the viewlist
      *
      * @param actionEvent button add product pressed
      * @throws ClassNotFoundException because of the addProduct method
-     * @throws SQLException because of the connection to the databse
-     * @throws IOException because of the addProduct method
+     * @throws SQLException           because of the connection to the databse
+     * @throws IOException            because of the addProduct method
      */
     @FXML
     private void addProduct(ActionEvent actionEvent) throws ClassNotFoundException, SQLException, IOException {
 
-        if (imagePath == null){
+        if (imagePath == null) {
             imagePath = Paths.get("standardImage.jpg");
         }
-        if(!productTitle.getText().equals("null") && !price.getText().equals("null")&& !description.getText().equals("null")  ){
-        model.ProductDAO.addProduct(productTitle.getText(),subCategory.getValue(), mainCategory.getValue(), price.getText(), description.getText(), imagePath,0);
-       Stage stage = (Stage) addProductButton.getScene().getWindow();
-        stage.close();}
-        else{
 
+        try {
+            if (productTitle.getText().equals("") || price.getText().equals("") || description.getText().equals("")) {
+                throwErrorStatic("You need to fill in all the fields");
+            } else {
+                model.ProductDAO.addProduct(productTitle.getText(), subCategory.getValue(), mainCategory.getValue(), price.getText(), description.getText(), imagePath);
+                Stage stage = (Stage) addProductButton.getScene().getWindow();
+
+                stage.close();
+            }
+        } catch (SQLException ex) {
+            throwErrorStatic("You need to fill in a main/subcategory");
         }
     }
 }
+
+
 
