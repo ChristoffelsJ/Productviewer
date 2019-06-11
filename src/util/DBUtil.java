@@ -13,10 +13,11 @@ import static main.MainController.throwPositiveStatic;
 
 
 public class DBUtil {
+
     //connectie methode
     public static Connection getConnection() throws SQLException, IOException {
         Properties properties = new Properties();
-        properties.load(new FileInputStream("Productviewer/MYSQLconnection.properties"));
+        properties.load(new FileInputStream("MYSQLconnection.properties"));
         String userName = properties.getProperty("userName");
         String password = properties.getProperty("password");
         String url = properties.getProperty("url");
