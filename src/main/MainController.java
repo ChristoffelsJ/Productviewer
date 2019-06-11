@@ -79,6 +79,8 @@ public class MainController {
      *
      */
     private void editableColumn() {
+        ObservableList <String> dataSub  = FXCollections.observableArrayList();
+        ObservableList <String> dataMain  = FXCollections.observableArrayList();
 
         columnProductTitle.setCellFactory(TextFieldTableCell.forTableColumn());
         columnProductTitle.setOnEditCommit(event -> {
@@ -87,8 +89,7 @@ public class MainController {
             updateData("productTitle", event.getNewValue(), product.getProductId());
         });
 
-        ObservableList <String> dataSub  = FXCollections.observableArrayList();
-        columnSubCategory.setOnEditStart(event -> {Product product = event.getRowValue();
+            columnSubCategory.setOnEditStart(event -> {Product product = event.getRowValue();
             dataSub.clear();
             dataSub.addAll(CategoryDAO.getInitialSubCategory(product.getMainCategory()));
         });
@@ -100,13 +101,14 @@ public class MainController {
             updateData("subCategory", event.getNewValue(), product.getProductId());
         });
 
-        ObservableList <String> dataMain  = FXCollections.observableArrayList();
         dataMain.addAll(CategoryDAO.getInitialMainCategory());
         columnMainCategory.setCellFactory(ComboBoxTableCell.forTableColumn(new DefaultStringConverter(),dataMain));
         columnMainCategory.setOnEditCommit(event -> {
             Product product = event.getRowValue();
             product.setMainCategory((event.getNewValue()));
             updateData("mainCategory", event.getNewValue(), product.getProductId());
+            updateData("subCategory", CategoryDAO.getInitialSubCategory(product.getMainCategory()).get(0),product.getProductId());
+            loadData();
         });
 
         columnPrice.setCellFactory(TextFieldTableCell.forTableColumn());

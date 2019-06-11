@@ -60,10 +60,8 @@ public class PopupAddProductController {
      * gets all the sub category's
      *
      * @return list of all the subCategory
-     * @throws SQLException           because of the connection to the databse
-     * @throws ClassNotFoundException because of the getInitialSubCategory method
      */
-    private ObservableList<String> generateInitialSubCategory() throws SQLException, ClassNotFoundException {
+    private ObservableList<String> generateInitialSubCategory(){
         return FXCollections.observableArrayList(model.CategoryDAO.getInitialSubCategory(mainCategory.getValue()));
     }
 
@@ -71,11 +69,9 @@ public class PopupAddProductController {
      * refresh the list off subs
      *
      * @param actionEvent when men press the combox of subCathegory
-     * @throws SQLException           because of the connection to the databse
-     * @throws ClassNotFoundException because of the setItems method
      */
     @FXML
-    private void refreshSubList(ActionEvent actionEvent) throws SQLException, ClassNotFoundException {
+    private void refreshSubList(ActionEvent actionEvent) {
         subCategory.setItems(generateInitialSubCategory());
     }
 
@@ -110,13 +106,11 @@ public class PopupAddProductController {
     /**
      * add a product to the viewlist
      *
-     * @param actionEvent button add product pressed
-     * @throws ClassNotFoundException because of the addProduct method
-     * @throws SQLException           because of the connection to the databse
+     * @param actionEvent             button add product pressed
      * @throws IOException            because of the addProduct method
      */
     @FXML
-    private void addProduct(ActionEvent actionEvent) throws ClassNotFoundException, SQLException, IOException {
+    private void addProduct(ActionEvent actionEvent) throws IOException {
 
         if (imagePath == null) {
             imagePath = Paths.get("standardImage.jpg");
@@ -128,7 +122,6 @@ public class PopupAddProductController {
             } else {
                 model.ProductDAO.addProduct(productTitle.getText(), subCategory.getValue(), mainCategory.getValue(), price.getText(), description.getText(), imagePath);
                 Stage stage = (Stage) addProductButton.getScene().getWindow();
-
                 stage.close();
             }
         } catch (SQLException ex) {
