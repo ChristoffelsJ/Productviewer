@@ -48,6 +48,7 @@ public class MainController {
     private FileChooser fileChooser;
     @FXML
     private Pane pane;
+    private Path imagePath;
 
     /** initialize method
      *
@@ -64,7 +65,7 @@ public class MainController {
         columnPicture.setCellValueFactory(new PropertyValueFactory<>("image"));
         productTable.getItems().setAll(generateInitialProducts());
         editableColumn();
-       loadDate();
+       loadData();
     }
 
     /** this method loads the data off the list off products
@@ -142,7 +143,7 @@ public class MainController {
             File selectedFile = chooser.showOpenDialog(new Stage());
 
             if (selectedFile != null) {
-                imagePath = selectedFile.toPath();
+                 imagePath = selectedFile.toPath();
                     updateDataImage(product.getProductId(), imagePath);
             }
         });
