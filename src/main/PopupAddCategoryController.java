@@ -8,8 +8,11 @@ import javafx.stage.Stage;
 import model.Category;
 
 import static main.MainController.throwErrorStatic;
-import static main.MainController.throwPositiveStatic;
+//import static main.MainController.throwPositiveStatic;
 
+/** The controller class of PopupAddCategory.fxml
+ *
+ */
 public class PopupAddCategoryController {
     @FXML
     private TextField mainCategory;
@@ -18,7 +21,11 @@ public class PopupAddCategoryController {
     @FXML
     private Button categoryAddButton;
 
-    public void addCategory(ActionEvent actionEvent) throws Exception {
+    /** adding a main category and a sub category
+     *
+     * @param actionEvent add category button
+     */
+    public void addCategory(ActionEvent actionEvent){
 
         Category category = new Category();
         category.setMainCategory(mainCategory.getText());
@@ -33,8 +40,7 @@ public class PopupAddCategoryController {
         } else {
             model.CategoryDAO.addCategory(category.getMainCategory(), category.getSubCategory());
             stage.close();
-            throwPositiveStatic("Great success");
-
+//            throwPositiveStatic("Great success");
 
         }
     }

@@ -9,7 +9,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import model.ProductDAO;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -17,6 +16,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
 
+/** Controller class of PopupAddProduct.fxml
+ *
+ */
 public class PopupAddProductController {
 
     @FXML private Button addProductButton;
@@ -28,24 +30,47 @@ public class PopupAddProductController {
     @FXML private ImageView imageView;
     private Path imagePath;
 
-
+    /** initialize the maincategory combobox
+     *
+     */
     @FXML
     public void initialize(){
         mainCategory.setItems(generateInitialMainCategory());
     }
 
+    /** gets all the main category's
+     *
+     * @return a list of all the Maincategory
+     */
     private ObservableList<String> generateInitialMainCategory(){
         return FXCollections.observableArrayList(model.CategoryDAO.getInitialMainCategory());
     }
 
+    /** gets all the sub category's
+     *
+     * @return list of all the subCategory
+     * @throws SQLException because of the connection to the databse
+     * @throws ClassNotFoundException because of the getInitialSubCategory method
+     */
     private ObservableList<String> generateInitialSubCategory() throws SQLException, ClassNotFoundException {
         return FXCollections.observableArrayList(model.CategoryDAO.getInitialSubCategory(mainCategory.getValue()));
     }
-@FXML
+
+    /** refresh the list off subs
+     *
+     * @param actionEvent when men press the combox of subCathegory
+     * @throws SQLException because of the connection to the databse
+     * @throws ClassNotFoundException because of the setItems method
+     */
+    @FXML
     private void refreshSubList (ActionEvent actionEvent) throws SQLException, ClassNotFoundException {
        subCategory.setItems(generateInitialSubCategory());
     }
 
+    /** add a picture
+     *
+     * @param actionEvent button press add picture
+     */
     @FXML
     private void PictureButtonAction(ActionEvent actionEvent){
         FileChooser chooser = new FileChooser();
@@ -69,6 +94,13 @@ public class PopupAddProductController {
         }
     }
 
+    /** add a product to the viewlist
+     *
+     * @param actionEvent button add product pressed
+     * @throws ClassNotFoundException because of the addProduct method
+     * @throws SQLException because of the connection to the databse
+     * @throws IOException because of the addProduct method
+     */
     @FXML
     private void addProduct(ActionEvent actionEvent) throws ClassNotFoundException, SQLException, IOException {
 
