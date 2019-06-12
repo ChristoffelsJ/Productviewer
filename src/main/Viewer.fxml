@@ -3,6 +3,8 @@
 <?import javafx.scene.layout.*?>
 
 <?import javafx.stage.FileChooser?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <VBox xmlns:fx="http://javafx.com/fxml"
       fx:controller="main.MainController"
       fx:id="pane">
@@ -29,10 +31,13 @@
         </MenuBar>
     </VBox>
 
-    <BorderPane VBox.vgrow="ALWAYS">
+    <BorderPane VBox.vgrow="ALWAYS" >
         <top>
-            <VBox spacing="20">
+            <VBox spacing="20" >
                 <FlowPane hgap="20">
+                    <ImageView  preserveRatio="true" fitHeight="100" fitWidth="100">
+                        <Image url="@flb.PNG"/>
+                    </ImageView>
                     <TextField promptText="search" fx:id="search"/>
                     <Button text="Search" onAction="#search"/>
                     <Button text="Refresh" onAction="#refresh"/>
@@ -48,8 +53,8 @@
                     <TableView fx:id="productTable" AnchorPane.bottomAnchor="5" AnchorPane.leftAnchor="5"
                                AnchorPane.rightAnchor="5" AnchorPane.topAnchor="5">
                         <columns>
-                            <TableColumn fx:id="columnPicture" prefWidth="105"  text="Picture"/>
-                            <TableColumn fx:id="columnProductTitle" prefWidth="180"  text="Product title"/>
+                            <TableColumn fx:id="columnPicture" prefWidth="105" text="Picture"/>
+                            <TableColumn fx:id="columnProductTitle" prefWidth="180" text="Product title"/>
                             <TableColumn fx:id="columnSubCategory" prefWidth="180" text="Subcategory"/>
                             <TableColumn fx:id="columnMainCategory" prefWidth="180" text="Maincategory"/>
                             <TableColumn fx:id="columnPrice" prefWidth="180" text="Price"/>
