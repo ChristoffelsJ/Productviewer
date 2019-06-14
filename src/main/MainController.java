@@ -63,16 +63,6 @@ public class MainController {
         columnPicture.setCellValueFactory(new PropertyValueFactory<>("image"));
         productTable.getItems().setAll(generateInitialProducts());
         editableColumn();
-//        loadData();
-    }
-
-    /** this method loads the data off the list off products
-     *
-     */
-   private void loadData(){
-        ObservableList<Product> productObservableList = FXCollections.observableArrayList();
-        productObservableList.addAll(ProductDAO.getProduct());
-        productTable.setItems(productObservableList);
     }
 
     /** This is for making the tableview editable, also to save the edits to the database.
@@ -100,15 +90,15 @@ public class MainController {
             product.setSubCategory((event.getNewValue()));
             updateData("subCategory", event.getNewValue(), product.getProductId());
         });
-
         dataMain.addAll(CategoryDAO.getInitialMainCategory());
         columnMainCategory.setCellFactory(ComboBoxTableCell.forTableColumn(new DefaultStringConverter(),dataMain));
         columnMainCategory.setOnEditCommit(event -> {
-            Product product = event.getRowValue();
-            product.setMainCategory((event.getNewValue()));
-            updateData("mainCategory", event.getNewValue(), product.getProductId());
-            updateData("subCategory", CategoryDAO.getInitialSubCategory(product.getMainCategory()).get(0),product.getProductId());
-            loadData();
+                    Product product = event.getRowValue();
+                    product.setMainCategory((event.getNewValue()));
+                    updateData("mainCategory", event.getNewValue(), product.getProductId());
+                    columnSubCategory.setCellFactory(ComboBoxTableCell.forTableColumn(new DefaultStringConverter(),dataSub));
+                    product.setSubCategory(CategoryDAO.getInitialSubCategory(product.getMainCategory()).get(0));
+                    updateData("subCategory", CategoryDAO.getInitialSubCategory(product.getMainCategory()).get(0), product.getProductId());
         });
 
         columnPrice.setCellFactory(TextFieldTableCell.forTableColumn());

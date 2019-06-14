@@ -15,19 +15,28 @@ import static main.MainController.throwErrorStatic;
  *
  */
 public class DBUtil {
+    private static final String USER_NAME;
+    private static final String PASSWORD;
+    private static final String URL;
+
+    static {
+        Properties properties = new Properties();
+        try {
+            properties.load(new FileInputStream("MYSQLconnection.properties"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        USER_NAME = properties.getProperty("userName");
+        PASSWORD = properties.getProperty("password");
+        URL = properties.getProperty("url");
+    }
     /** connection method
      *
      * @return a connection
      * @throws SQLException
-     * @throws IOException
      */
-    public static Connection getConnection() throws SQLException, IOException {
-        Properties properties = new Properties();
-        properties.load(new FileInputStream("MYSQLconnection.properties"));
-        String userName = properties.getProperty("userName");
-        String password = properties.getProperty("password");
-        String url = properties.getProperty("url");
-        return DriverManager.getConnection(url, userName, password);
+    public static Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(URL, USER_NAME, PASSWORD);
     }
 
     /** execute a query
@@ -42,8 +51,6 @@ public class DBUtil {
             System.out.println("Error when executing the querry");
             throwErrorStatic("Error when executing the querry");
             ex.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
@@ -65,9 +72,6 @@ public class DBUtil {
             System.out.println("Error when executing the count querry");
             throwErrorStatic("Error when executing the querry");
             throw ex;
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw e;
         }
     }
 
@@ -83,8 +87,6 @@ public class DBUtil {
             System.out.println("Error when updating the query");
             throwErrorStatic("Error when updating the query");
             ex.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
@@ -144,7 +146,7 @@ public class DBUtil {
                 String category = resultSet.getString("mainCategory");
                 mainCategoryList.add(category);
             }
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException ex) {
             System.out.println("Error while filling the mainCategory List");
             throwErrorStatic("Error while filling the mainCategory List");
         }
@@ -164,7 +166,7 @@ public class DBUtil {
                 String category = resultSet.getString("subCategory");
                 subCategoryList.add(category);
             }
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException ex) {
             System.out.println("Error while filling the subCategory List");
             throwErrorStatic("Error while filling the subCategory List");
 

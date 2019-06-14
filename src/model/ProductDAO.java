@@ -126,5 +126,4 @@ public class ProductDAO {
         return DBUtil.fillListWithProducts(query);
     }
 
-
 }
