@@ -3,6 +3,8 @@
 <?import javafx.scene.layout.*?>
 
 <?import javafx.stage.FileChooser?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <VBox xmlns:fx="http://javafx.com/fxml"
       fx:controller="main.MainController"
       fx:id="pane">
@@ -43,21 +45,19 @@
             </VBox>
         </top>
         <center>
-            <ScrollPane VBox.vgrow="ALWAYS">
-                <GridPane alignment="CENTER" hgap="10" vgap="10">
+
                     <TableView fx:id="productTable" AnchorPane.bottomAnchor="5" AnchorPane.leftAnchor="5"
-                               AnchorPane.rightAnchor="5" AnchorPane.topAnchor="5">
+                               AnchorPane.rightAnchor="5" AnchorPane.topAnchor="5" >
                         <columns>
                             <TableColumn fx:id="columnPicture" prefWidth="105"  text="Picture"/>
-                            <TableColumn fx:id="columnProductTitle" prefWidth="180"  text="Product title"/>
-                            <TableColumn fx:id="columnSubCategory" prefWidth="180" text="Subcategory"/>
-                            <TableColumn fx:id="columnMainCategory" prefWidth="180" text="Maincategory"/>
-                            <TableColumn fx:id="columnPrice" prefWidth="180" text="Price"/>
-                            <TableColumn fx:id="columnProductDescription" prefWidth="180.0" text="Description"/>
+                            <TableColumn fx:id="columnProductTitle" prefWidth="200"  text="Product title"/>
+                            <TableColumn fx:id="columnSubCategory" prefWidth="200" text="Subcategory"/>
+                            <TableColumn fx:id="columnMainCategory" prefWidth="200" text="Maincategory"/>
+                            <TableColumn fx:id="columnPrice" prefWidth="200" text="Price"/>
+                            <TableColumn fx:id="columnProductDescription" prefWidth="280" text="Description"/>
                         </columns>
                     </TableView>
-                </GridPane>
-            </ScrollPane>
+
         </center>
     </BorderPane>
 </VBox>

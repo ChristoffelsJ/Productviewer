@@ -103,10 +103,10 @@ public class DBUtil {
 
                     byte[] contents = new byte[1024];
                     int size;
-                    while ((size = is.read(contents)) != -1) {
-                        os.write(contents, 0, size);
-                    }
-                    Image image = new Image("file:photo.jpg", 100, 80, true, true);
+//                    while ((size = is.read(contents)) != -1) {
+//                        os.write(contents, 0, size);
+//                    }
+                    Image image = new Image(is, 100, 80, true, true);
                     imageView.setImage(image);
 
                     Product product = new Product.Builder()
