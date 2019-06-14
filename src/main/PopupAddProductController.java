@@ -111,11 +111,9 @@ public class PopupAddProductController {
      */
     @FXML
     private void addProduct(ActionEvent actionEvent) throws IOException {
-
         if (imagePath == null) {
             imagePath = Paths.get("standardImage.jpg");
         }
-
         try {
             if (productTitle.getText().equals("") || price.getText().equals("") || description.getText().equals("")) {
                 throwErrorStatic("You need to fill in all the fields");

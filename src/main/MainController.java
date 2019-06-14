@@ -63,7 +63,7 @@ public class MainController {
         columnPicture.setCellValueFactory(new PropertyValueFactory<>("image"));
         productTable.getItems().setAll(generateInitialProducts());
         editableColumn();
-        loadData();
+//        loadData();
     }
 
     /** this method loads the data off the list off products
