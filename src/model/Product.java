@@ -1,6 +1,5 @@
 package model;
 
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import java.io.*;
 
@@ -47,7 +46,6 @@ public class Product {
         private String price;
         private String description;
         private int productId;
-        private InputStream iS;
         private ImageView image;
         private String imagePath;
 
@@ -208,7 +206,7 @@ public class Product {
 
     /**
      *
-     * @return
+     * @return description
      */
     public String getDescription() {
         return description;
@@ -216,7 +214,7 @@ public class Product {
 
     /**
      *
-     * @param description
+     * @param description description
      */
     public void setDescription(String description) {
         this.description = description;

@@ -1,6 +1,5 @@
 package model;
 
-import java.sql.SQLException;
 import java.util.List;
 
 /** Data Access Object for category
@@ -20,10 +19,8 @@ public class CategoryDAO {
      *
      * @param mainCategory give the main category
      * @return list of all the sub category
-     * @throws SQLException
-     * @throws ClassNotFoundException
      */
-    public static List<String> getInitialSubCategory(String mainCategory) throws SQLException, ClassNotFoundException {
+    public static List<String> getInitialSubCategory(String mainCategory){
         String query = "select subCategory FROM category WHERE mainCategory = '" + mainCategory + "'";
         return util.DBUtil.fillListWithSubCategory(query);
     }

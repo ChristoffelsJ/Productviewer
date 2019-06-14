@@ -12,7 +12,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import static main.MainController.throwErrorStatic;
-import static main.MainController.throwPositiveStatic;
+
 /** Data Access Object for product
  *
  */
@@ -25,12 +25,10 @@ public class ProductDAO {
      * @param price price
      * @param description description
      * @param imagePath image path
-     * @param productId id
-     * @throws SQLException
-     * @throws ClassNotFoundException
-     * @throws IOException
+     * @throws SQLException because of the connection to the databse
+     * @throws IOException because of the inputStream
      */
-    public static void addProduct(String productTitle, String subCategory, String mainCategory, String price, String description, Path imagePath, int productId) throws SQLException, ClassNotFoundException, IOException {
+    public static void addProduct(String productTitle, String subCategory, String mainCategory, String price, String description, Path imagePath) throws SQLException, IOException {
         String stringPath = imagePath.toString().replace("\\","/");
         String update = "INSERT INTO products (productTitle, subCategory, mainCategory, price, productDescription, image, imagePath)" +
                 " VALUES ('" + productTitle + "','" + subCategory + "', '" + mainCategory + "','" + price + "','" + description + "',?, '" + stringPath + "')";
@@ -39,11 +37,11 @@ public class ProductDAO {
             PreparedStatement pstmt = con.prepareStatement(update)){
             pstmt.setBinaryStream(1, inputStream);
             pstmt.executeUpdate();
-//            throwPositiveStatic("Great success");
+
 
         } catch (SQLException ex) {
             System.out.println("Error when implementing data in database");
-            throwErrorStatic("Error when implementing data in database");
+
             throw ex;
         }
 
@@ -52,7 +50,7 @@ public class ProductDAO {
     /** query for adding a product
      *
      * @param product product
-     * @throws SQLException
+     * @throws SQLException because of the connection to the database
      */
     public static void addProduct(Product product) throws SQLException {
 
@@ -64,7 +62,7 @@ public class ProductDAO {
                  PreparedStatement pstmt = con.prepareStatement(update)) {
                 pstmt.setBinaryStream(1, inputStream);
                 pstmt.executeUpdate();
-                //throwPositiveStatic("Great success");
+
 
 
             } catch (SQLException ex) {
@@ -82,7 +80,7 @@ public class ProductDAO {
                  PreparedStatement pstmt = con.prepareStatement(update)) {
                 pstmt.setBinaryStream(1, inputStream);
                 pstmt.executeUpdate();
-                throwPositiveStatic("Great success");
+
 
 
             } catch (SQLException ex) {
@@ -96,19 +94,6 @@ public class ProductDAO {
         }
     }
 
-    /** query for changing a product
-     *
-     * @param productTitle title
-     * @param category category
-     * @param price  price
-     * @param description description
-     * @param productID id
-     */
-    public static void changeProducts(String productTitle, String category, String price, String description, int productID){
-
-        String update = "UPDATE products SET productTitle = '" + productTitle + "', price= '" + price + "',productDescription='" + description + "', subCategory=" + category + " where productId=" + productID;
-        DBUtil.updateQuery(update);
-    }
 
     /** query for getting a list of all products
      *
@@ -128,7 +113,7 @@ public class ProductDAO {
         String query = "SELECT * FROM products WHERE productTitle LIKE '" + "%" + search + "%" + "' " +
                 "OR subCategory LIKE '" + "%" + search + "%" + "'" +
                 "OR mainCategory LIKE '" + "%" + search + "%" + "'" +
-                "OR productID LIKE '" + "%" + search + "%" + "'";;
+                "OR productID LIKE '" + "%" + search + "%" + "'";
         return DBUtil.fillListWithProducts(query);
     }
 

@@ -50,13 +50,11 @@ public class MainController {
     private Pane pane;
     private Path imagePath;
 
-    /** initialize method
+    /** initialize method, here the tableview is made
      *
-     * @throws SQLException
-     * @throws ClassNotFoundException
      */
     @FXML
-    public void initialize() throws SQLException, ClassNotFoundException {
+    public void initialize() {
         columnProductTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
         columnSubCategory.setCellValueFactory(new PropertyValueFactory<>("subCategory"));
         columnMainCategory.setCellValueFactory(new PropertyValueFactory<>("mainCategory"));
@@ -77,13 +75,12 @@ public class MainController {
         productTable.setItems(productObservableList);
     }
 
-    /** This is for making the tableview editable.
+    /** This is for making the tableview editable, also to save the edits to the database.
      *
-     * @throws SQLException
-     * @throws ClassNotFoundException
      */
-    //tableview editable maken en er voor zorgen dat deze zijn gegevens opslaat in de database
-    private void editableColumn() throws SQLException, ClassNotFoundException {
+    private void editableColumn() {
+        ObservableList <String> dataSub  = FXCollections.observableArrayList();
+        ObservableList <String> dataMain  = FXCollections.observableArrayList();
 
         columnProductTitle.setCellFactory(TextFieldTableCell.forTableColumn());
         columnProductTitle.setOnEditCommit(event -> {
@@ -92,14 +89,9 @@ public class MainController {
             updateData("productTitle", event.getNewValue(), product.getProductId());
         });
 
-        ObservableList <String> dataSub  = FXCollections.observableArrayList();
-        columnSubCategory.setOnEditStart(event -> {Product product = event.getRowValue();
-            try {
-                dataSub.clear();
-                 dataSub.addAll(CategoryDAO.getInitialSubCategory(product.getMainCategory()));
-            } catch (SQLException | ClassNotFoundException e) {
-                e.printStackTrace();
-            }
+            columnSubCategory.setOnEditStart(event -> {Product product = event.getRowValue();
+            dataSub.clear();
+            dataSub.addAll(CategoryDAO.getInitialSubCategory(product.getMainCategory()));
         });
 
         columnSubCategory.setCellFactory(ComboBoxTableCell.forTableColumn(new DefaultStringConverter(),dataSub));
@@ -109,13 +101,14 @@ public class MainController {
             updateData("subCategory", event.getNewValue(), product.getProductId());
         });
 
-        ObservableList <String> dataMain  = FXCollections.observableArrayList();
         dataMain.addAll(CategoryDAO.getInitialMainCategory());
         columnMainCategory.setCellFactory(ComboBoxTableCell.forTableColumn(new DefaultStringConverter(),dataMain));
         columnMainCategory.setOnEditCommit(event -> {
             Product product = event.getRowValue();
             product.setMainCategory((event.getNewValue()));
             updateData("mainCategory", event.getNewValue(), product.getProductId());
+            updateData("subCategory", CategoryDAO.getInitialSubCategory(product.getMainCategory()).get(0),product.getProductId());
+            loadData();
         });
 
         columnPrice.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -143,13 +136,17 @@ public class MainController {
             File selectedFile = chooser.showOpenDialog(new Stage());
 
             if (selectedFile != null) {
-                 imagePath = selectedFile.toPath();
-                    updateDataImage(product.getProductId(), imagePath);
+                imagePath = selectedFile.toPath();
+                updateDataImage(product.getProductId(), imagePath);
             }
         });
             productTable.setEditable(true);
     }
 
+    /**update the path from the image
+     * @param id give the product id
+     * @param imagePath give the path for the image
+     */
     private void updateDataImage(int id, Path imagePath) {
         String stringPath = imagePath.toString().replace("\\","/");
         String update = "UPDATE products SET image = ? WHERE productId = " + id + "";
@@ -165,6 +162,7 @@ public class MainController {
             e.printStackTrace();
         }
         DBUtil.updateQuery(update1);
+        initialize();
     }
 
     /** this is the query for updating the database
@@ -199,11 +197,9 @@ public class MainController {
     /** calls the method initialize
      *
      * @param actionEvent Button press refresh
-     * @throws SQLException
-     * @throws ClassNotFoundException
      */
     @FXML
-    private void refresh(ActionEvent actionEvent) throws SQLException, ClassNotFoundException {
+    private void refresh(ActionEvent actionEvent){
         initialize();
     }
 
@@ -220,8 +216,8 @@ public class MainController {
     /** opening a CSV file of products.
      *
      * @param actionEvent press openProductsCSV
-     * @throws ClassNotFoundException
-     * @throws SQLException
+     * @throws ClassNotFoundException for refering to createProduct method
+     * @throws SQLException because it connects with the database
      */
     @FXML
     private void openProductCSV(ActionEvent actionEvent) throws ClassNotFoundException, SQLException {
@@ -239,7 +235,7 @@ public class MainController {
                     } else {
                         String[] productLine = line.split(";");
                         List<String> productLineList = new LinkedList<>(Arrays.asList(productLine));
-                        if (productLineList.size() > 6) { // maak hier pop-up van! + zet default value van switch op dit ipv de if else
+                        if (productLineList.size() >6) { // maak hier pop-up van! + zet default value van switch op dit ipv de if else
                             System.out.println("Error in the CSV file!");
                             throwErrorStatic(actionEvent, "Error in the CSV file!");
                             break;
@@ -295,7 +291,7 @@ public class MainController {
                     lineCounter++;
                 }
                 initialize();
-//                throwPositiveStatic("Great success");
+
 
 
             } catch (IOException e) {
@@ -310,9 +306,9 @@ public class MainController {
      *
      * @param productLineList give a list of products
      * @return a new products
-     * @throws SQLException
-     * @throws ClassNotFoundException
-     * @throws IOException
+     * @throws SQLException because of the connection to the database
+     * @throws ClassNotFoundException because of the checkForCategory method
+     * @throws IOException because of the checkForCategory method
      */
     private static Product createProduct(List<String> productLineList) throws SQLException, ClassNotFoundException, IOException {
         String mainCategory;
@@ -344,7 +340,7 @@ public class MainController {
     /** opening a CSV file of Category.
      *
      * @param actionEvent when press openCaegoryCSV
-     * @throws SQLException
+     * @throws SQLException because of the connection to the database
      */
     @FXML
     public void OpenCategoryCSV(ActionEvent actionEvent) throws SQLException {
@@ -395,6 +391,15 @@ public class MainController {
         }
     }
 
+    /**
+     *
+     * this method creates a category if necessary
+     * @param categoryLineList a list of categories
+     * @return a new sub and maincategory if needed, otherwise null
+     * @throws SQLException because of the connection to the database
+     * @throws IOException because of the checkForCategory method
+     * @throws ClassNotFoundException because of the checkForCategory method
+     */
     private Category createCategory(List<String> categoryLineList) throws SQLException, IOException, ClassNotFoundException {
         String mainCategory;
         String subCategory;
@@ -403,7 +408,7 @@ public class MainController {
             mainCategory = categoryLineList.get(1);
             return new Category(subCategory, mainCategory);
         } else {
-            return null; //is dit niet gevaarlijk ivm nullpointers?
+            return null;
         }
     }
 
@@ -508,7 +513,7 @@ public class MainController {
             Parent root1 = fxmlLoader.load();
             Stage stage = new Stage();
             stage.setTitle("ERROR!!!");
-            stage.setScene(new Scene(root1, 800, 520));
+            stage.setScene(new Scene(root1, 400, 80));
             stage.show();
         } catch (Exception e) {
             System.out.println("Something went wrong when opening the Error pop-up");
@@ -516,7 +521,8 @@ public class MainController {
         }
     }
 
-    /**
+
+    /**method for opening an error popup
      *
      */
     @FXML
@@ -526,7 +532,7 @@ public class MainController {
             Parent root1 = fxmlLoader.load();
             Stage stage = new Stage();
             stage.setTitle("ERROR!!!");
-            stage.setScene(new Scene(root1, 800, 520));
+            stage.setScene(new Scene(root1, 300, 60));
             stage.show();
         } catch (Exception e) {
             System.out.println("Something went wrong when opening the Error pop-up");
@@ -537,41 +543,8 @@ public class MainController {
 
     /**
      *
-     */
-    @FXML
-    private void openPopupPositive() {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("PopupPositive.fxml"));
-            Parent root1 = fxmlLoader.load();
-            Stage stage = new Stage();
-            stage.setTitle("Success...");
-            stage.setScene(new Scene(root1, 800, 520));
-            stage.show();
-        } catch (Exception e) {
-            System.out.println("Something went wrong when opening the positive pop-up");
-            e.printStackTrace();
-
-        }
-    }
-
-    /**
-     *
-     * @param positiveMessage
-     */
-    public void throwPositive(String positiveMessage) {
-
-        PopupMessageClass.setErrormessage(positiveMessage);
-        openPopupPositive();
-    }
-    public static void throwPositiveStatic(String positiveMessage) {
-        MainController mainController = new MainController();
-        mainController.throwPositive(positiveMessage);
-    }
-
-    /**
-     *
-     * @param actionEvent
-     * @param errorMessage
+     * @param actionEvent possible event we need to open the popup
+     * @param errorMessage message the popup needs to show
      */
     public void throwError(ActionEvent actionEvent, String errorMessage) {
 
@@ -581,7 +554,7 @@ public class MainController {
 
     /**
      *
-     * @param errorMessage
+     * @param errorMessage message the popup needs to show
      */
     public void throwError(String errorMessage) {
 
@@ -589,19 +562,19 @@ public class MainController {
         openPopupError();
     }
 
-    /**
+    /**this is the static method we can use in the entire project with an event and a message
      *
-     * @param actionEvent
-     * @param errorMessage
+     * @param actionEvent possible event we need to open the popup
+     * @param errorMessage message the popup needs to show
      */
     public static void throwErrorStatic(ActionEvent actionEvent, String errorMessage) {
         MainController mainController = new MainController();
         mainController.throwError(actionEvent, errorMessage);
     }
 
-    /**
+    /**this is the static method we can use in the entire project with only a message
      *
-     * @param errorMessage
+     * @param errorMessage message the popup needs to show
      */
     public static void throwErrorStatic(String errorMessage) {
         MainController mainController = new MainController();
