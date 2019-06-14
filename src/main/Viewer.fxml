@@ -31,10 +31,13 @@
         </MenuBar>
     </VBox>
 
-    <BorderPane VBox.vgrow="ALWAYS">
+    <BorderPane VBox.vgrow="ALWAYS" >
         <top>
-            <VBox spacing="20">
+            <VBox spacing="20" >
                 <FlowPane hgap="20">
+                    <ImageView  preserveRatio="true" fitHeight="100" fitWidth="100">
+                        <Image url="@flb.PNG"/>
+                    </ImageView>
                     <TextField promptText="search" fx:id="search"/>
                     <Button text="Search" onAction="#search"/>
                     <Button text="Refresh" onAction="#refresh"/>
