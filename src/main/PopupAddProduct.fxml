@@ -50,14 +50,8 @@
                  <center>
                      <Button fx:id="addProductButton"  prefHeight="70" prefWidth="200"  onAction="#addProduct" text="Add Product" textAlignment="CENTER" style="-fx-font-size:20" />
                  </center>
-
-
-
-
              </BorderPane>
-
          </FlowPane>
      </center>
-
  </BorderPane>
 </AnchorPane>

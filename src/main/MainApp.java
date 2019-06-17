@@ -26,7 +26,6 @@ public class MainApp extends Application {
         Scene scene = new Scene(root, 1200, 600);
         stage.setTitle("ProductViewer");
         stage.setScene(scene);
-//       stage.setMaximized(true);
         stage.isResizable();
         stage.show();
 
