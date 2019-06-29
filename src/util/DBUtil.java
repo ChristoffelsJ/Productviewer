@@ -21,6 +21,7 @@ public class DBUtil {
      * @throws SQLException
      * @throws IOException
      */
+    //TODO properties ophalen telkense als we een getConnection doen?
     public static Connection getConnection() throws SQLException, IOException {
         Properties properties = new Properties();
         properties.load(new FileInputStream("MYSQLconnection.properties"));
@@ -42,6 +43,7 @@ public class DBUtil {
             System.out.println("Error when executing the querry");
             throwErrorStatic("Error when executing the querry");
             ex.printStackTrace();
+            //TODO Waarom geen popup bij een IOException?
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -101,11 +103,13 @@ public class DBUtil {
                 ImageView imageView = new ImageView();
                 try (InputStream is = resultSet.getBinaryStream("image"); OutputStream os = new FileOutputStream(new File("photo.jpg"));) {
 
+                    //TODO Magic Number 1024?
                     byte[] contents = new byte[1024];
                     int size;
                     while ((size = is.read(contents)) != -1) {
                         os.write(contents, 0, size);
                     }
+                    //TODO inputstream rechtstreeks meegeven
                     Image image = new Image("file:photo.jpg", 100, 80, true, true);
                     imageView.setImage(image);
 
@@ -137,6 +141,8 @@ public class DBUtil {
      * @return lsit of main category
      */
     // main category uit database halen en in een List zetten
+    //TODO wordt maar op 1 plaats gebruikt, waarom definiëren we de query op een andere plaats? Naam is te specifiek om andere queries mee te geven.
+    //TODO Dit kan beter in de DAO staan
     public static List<String> fillListWithMainCategory(String query){
         List<String> mainCategoryList = new ArrayList<>();
         try (Connection connection = getConnection(); Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery(query)) {
@@ -206,6 +212,7 @@ public class DBUtil {
                 sb.append(resultSet.getString("imagePath"));
                 sb.append("\r\n");
             }
+            //TODO FileWrite moet op een deftige manier gesloten worden (try with resources)
             FileWriter fileWriter = new FileWriter(file);
             fileWriter.write(sb.toString());
             fileWriter.close();
@@ -242,6 +249,7 @@ public class DBUtil {
                 sb.append(";");
                 sb.append("\r\n");
             }
+            //TODO FileWrite moet op een deftige manier gesloten worden (try with resources)
             FileWriter fileWriter = new FileWriter(file);
             fileWriter.write(sb.toString());
             fileWriter.close();
@@ -263,6 +271,7 @@ public class DBUtil {
      * @throws ClassNotFoundException
      * @throws IOException
      */
+    //TODO ClassNotFoundException wordt niet effectief gegooid, dit zorgt er nu voor dat iedereen die deze methode oproept er last van heeft
     public static boolean checkForCategory(String query) throws SQLException, ClassNotFoundException, IOException {
         return executeCountQuery(query) > 0;
     }

@@ -147,6 +147,7 @@ public class MainController {
      * @param id give the product id
      * @param imagePath give the path for the image
      */
+    //TODO imagePath is al een instantie variabele, meegeven als parameter heeft geen nut.
     private void updateDataImage(int id, Path imagePath) {
         String stringPath = imagePath.toString().replace("\\","/");
         String update = "UPDATE products SET image = ? WHERE productId = " + id + "";
@@ -159,6 +160,7 @@ public class MainController {
             preparedStatement.executeUpdate();
 
         } catch (IOException | SQLException e) {
+            //TODO waarom wordt dit niet getoond in een pop up?
             e.printStackTrace();
         }
         DBUtil.updateQuery(update1);
@@ -208,6 +210,7 @@ public class MainController {
      * @param actionEvent when press exit.
      */
     @FXML
+    //TODO geen hoofdletter!!!
     private void Exit(ActionEvent actionEvent) {
         Platform.exit();
 
@@ -343,6 +346,7 @@ public class MainController {
      * @throws SQLException because of the connection to the database
      */
     @FXML
+    //TODO Hoofdletter voor methode
     public void OpenCategoryCSV(ActionEvent actionEvent) throws SQLException {
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
         fileChooser.getExtensionFilters().add(extFilter);
@@ -401,6 +405,7 @@ public class MainController {
      * @throws ClassNotFoundException because of the checkForCategory method
      */
     private Category createCategory(List<String> categoryLineList) throws SQLException, IOException, ClassNotFoundException {
+        //TODO Deze zijn niet nodig buiten de if block, verplaats deze daar naartoe
         String mainCategory;
         String subCategory;
         if (!DBUtil.checkForCategory("SELECT COUNT(*) AS total FROM category WHERE subCategory = '" + categoryLineList.get(0) + "'")) {
@@ -507,6 +512,7 @@ public class MainController {
      * @param actionEvent When a exception is throw
      */
     @FXML
+    //TODO Action Event wordt niet gebruikt, deze wordt niet in een FXML gebruikt. Dit zorgt voor onnodig werk als we deze methode oproepen
     private void openPopupError(ActionEvent actionEvent) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("PopupError.fxml"));
@@ -526,6 +532,7 @@ public class MainController {
      *
      */
     @FXML
+    //TODO geen FXML nodig
     private void openPopupError() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("PopupError.fxml"));
@@ -576,6 +583,7 @@ public class MainController {
      *
      * @param errorMessage message the popup needs to show
      */
+    //TODO: waarom is deze methode gemaakt? Aangezien throwError enkel hier aangeroepen wordt kon deze rechtstreeks static gemaakt worden.
     public static void throwErrorStatic(String errorMessage) {
         MainController mainController = new MainController();
         mainController.throwError(errorMessage);
